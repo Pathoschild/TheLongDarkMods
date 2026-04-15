@@ -42,12 +42,12 @@ public class ModEntry : MelonMod
                 // warp home
                 if (GameManager.m_ActiveScene != homeScene)
                 {
-                    string? savedScene = this.DestinationManager.GetDestination()?.Scene;
+                    string question = $"Travel home to {this.GetSceneDisplayName(homeScene)}?";
+                    if (this.DestinationManager.GetDestination()?.Scene is { } savedScene && savedScene != GameManager.m_ActiveScene)
+                        question += $"\n\nWhen you travel back later, you'll arrive here instead of {this.GetSceneDisplayName(savedScene)}.";
 
                     this.ShowConfirmDialogue(
-                        savedScene is not null && savedScene != GameManager.m_ActiveScene
-                            ? $"Travel home to {homeScene}?\n\nWhen you travel back later, you'll arrive here instead of {savedScene}."
-                            : $"Travel home to {homeScene}?",
+                        question,
                         () =>
                         {
                             this.DestinationManager.SetDestination();
@@ -63,7 +63,7 @@ public class ModEntry : MelonMod
                     if (destination != null)
                     {
                         this.ShowConfirmDialogue(
-                            $"Travel back to {destination.Scene}?",
+                            $"Travel back to {this.GetSceneDisplayName(destination.Scene)}?",
                             () =>
                             {
                                 this.WarpingBackTo = destination;
@@ -127,5 +127,12 @@ public class ModEntry : MelonMod
             confirmCallback: onConfirm,
             cancelCallback: null
         );
+    }
+
+    /// <summary>Get the localized name for a scene.</summary>
+    /// <param name="name">The internal scene name.</param>
+    private string GetSceneDisplayName(string name)
+    {
+        return InterfaceManager.GetNameForScene(name);
     }
 }

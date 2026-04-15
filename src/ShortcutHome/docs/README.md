@@ -2,6 +2,8 @@
 safehouse and your main home. This lets you explore the world without the tedium of transferring
 your hoard to another base in each region.
 
+> ![](images/travel.png)
+
 > [!NOTE]  
 > **This is an early proof-of-concept mod.**  
 > Use at your own risk. The mod is currently unbalanced, lacks safeguards, and can only set
