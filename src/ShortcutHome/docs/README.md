@@ -11,7 +11,6 @@ your hoard to another base in each region.
 > - Add custom decor items: one as the 'anchor' in your home location, and one in other decoratable
 >   safehouses to act as the other end of the fast travel connection. Maybe based on the small
 >   painting of a house?
-> - Add confirmation dialogue before fast traveling.
 
 ## Contents
 * [Install](#install)
@@ -28,11 +27,6 @@ your hoard to another base in each region.
 ## Use
 [Configure the mod](#configure) to set your home base, then press `F1` (configurable) to fast
 travel back home. While inside your home, press it again to fast travel back to where you were.
-
-> [!WARNING]  
-> Pressing `F1` while anywhere other than your home base will set that location as the new fast
-> travel destination. Be careful not to warp home, go outside, then press `F1` expecting to return
-> to your original location!
 
 ## Configure
 From the game's Options menu, click "Mod Settings" and then navigate to "Shortcut Home".
