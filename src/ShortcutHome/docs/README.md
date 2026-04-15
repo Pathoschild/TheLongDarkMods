@@ -6,8 +6,8 @@ your hoard to another base in each region.
 
 > [!NOTE]  
 > **This is an early proof-of-concept mod.**  
-> Use at your own risk. The mod is currently unbalanced, lacks safeguards, and can only set
-> specific predefined locations as your home base. This will be improved before release.
+> Use at your own risk. The mod is currently unbalanced and lacks safeguards. This will be improved
+> before release.
 >
 > TO DO BEFORE RELEASE:
 > - Add custom decor items: one as the 'anchor' in your home location, and one in other decoratable
@@ -27,12 +27,23 @@ your hoard to another base in each region.
 3. Launch the game.
 
 ## Use
-[Configure the mod](#configure) to set your home base, then press `F1` (configurable) to fast
-travel back home. While inside your home, press it again to fast travel back to where you were.
+### First-time setup
+When you first use the mod in a save, you'll need to set your home location.
+
+To do that:
+1. Load your save.
+2. Walk into your home location.
+3. Press the numpad `.` key to set it. (It'll ask you to confirm.)
+
+### Normal use
+Just press the numpad `0` key to fast travel to your home. When you're home, press the same key to
+return to your departure point.
+
+In either case, it'll ask for confirmation (so you don't fast travel by mistake).
 
 ## Configure
-From the game's Options menu, click "Mod Settings" and then navigate to "Shortcut Home".
-Hover the cursor over a field for details.
+From the game's Options menu, click "Mod Settings" and then navigate to "Shortcut Home". Hover the
+cursor over a field for details.
 
 > ![](images/config.png)
 

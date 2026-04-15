@@ -1,4 +1,3 @@
-using System;
 using Il2Cpp;
 using MelonLoader;
 using Pathoschild.TheLongDarkMods.ShortcutHome.Framework;
@@ -15,11 +14,11 @@ public class ModEntry : MelonMod
     /// <summary>The mod settings.</summary>
     private readonly ModConfig Config = new();
 
-    /// <summary>Tracks the destination endpoint which the player last warped from, if any.</summary>
+    /// <summary>Tracks the persisted fast travel destinations.</summary>
     private readonly DestinationManager DestinationManager = new();
 
-    /// <summary>The destination which the player is currently warping back to, if applicable.</summary>
-    private Destination? WarpingBackTo;
+    /// <summary>The destination which the player is currently traveling to, if applicable.</summary>
+    private Destination? TravelingTo;
 
 
     /*********
@@ -34,46 +33,11 @@ public class ModEntry : MelonMod
     /// <inheritdoc />
     public override void OnUpdate()
     {
-        // initiate warp
-        if (InputManager.GetKeyDown(InputManager.m_CurrentContext, this.Config.FastTravelKey) && this.Config.GetHomeScene() is { } homeScene)
-        {
-            if (GameManager.m_Instance is not null && !GameManager.IsMainMenuActive() && GameManager.m_ActiveScene is not (null or "" or "MainMenu"))
-            {
-                // warp home
-                if (GameManager.m_ActiveScene != homeScene)
-                {
-                    string question = $"Travel home to {this.GetSceneDisplayName(homeScene)}?";
-                    if (this.DestinationManager.GetDestination()?.Scene is { } savedScene && savedScene != GameManager.m_ActiveScene)
-                        question += $"\n\nWhen you travel back later, you'll arrive here instead of {this.GetSceneDisplayName(savedScene)}.";
+        if (InteractionHelper.IsKeyDown(this.Config.SetHomeKey) && this.IsSaveLoaded())
+            this.OnInteractivelySetHome();
 
-                    this.ShowConfirmDialogue(
-                        question,
-                        () =>
-                        {
-                            this.DestinationManager.SetDestination();
-                            GameManager.LoadSceneWithLoadingScreen(homeScene);
-                        }
-                    );
-                }
-
-                // else warp back
-                else
-                {
-                    Destination? destination = this.DestinationManager.GetDestination();
-                    if (destination != null)
-                    {
-                        this.ShowConfirmDialogue(
-                            $"Travel back to {this.GetSceneDisplayName(destination.Scene)}?",
-                            () =>
-                            {
-                                this.WarpingBackTo = destination;
-                                GameManager.LoadSceneWithLoadingScreen(destination.Scene);
-                            }
-                        );
-                    }
-                }
-            }
-        }
+        else if (InteractionHelper.IsKeyDown(this.Config.FastTravelKey) && this.IsSaveLoaded())
+            this.OnInteractivelyFastTravel();
     }
 
     /// <inheritdoc />
@@ -83,8 +47,8 @@ public class ModEntry : MelonMod
         if (sceneName is "Empty")
             return;
 
-        // update position after warp
-        Destination? destination = this.WarpingBackTo;
+        // update position after travel
+        Destination? destination = this.TravelingTo;
         if (destination is not null)
         {
             if (sceneName != destination.Scene)
@@ -95,38 +59,102 @@ public class ModEntry : MelonMod
                 player.position = destination.Position;
             }
 
-            this.WarpingBackTo = null;
+            this.TravelingTo = null;
         }
     }
 
     /*********
     ** Private methods
     *********/
-    /// <summary>Show a confirmation dialogue box which lets the player confirm or cancel.</summary>
-    /// <param name="question">The question text to display.</param>
-    /// <param name="onConfirm">The action to perform when the player confirms.</param>
-    private void ShowConfirmDialogue(string question, Action onConfirm)
+    /// <summary>Handle the player requesting to set their home location.</summary>
+    private void OnInteractivelySetHome()
     {
-        // get confirmation UI
-        Panel_Confirmation? confirmPanel = InterfaceManager.GetPanel<Panel_Confirmation>();
-        if (confirmPanel is null)
+        string sceneId = GameManager.m_ActiveScene;
+        Destination? savedHome = this.DestinationManager.GetData().GetHome();
+
+        // update position in same home
+        if (savedHome != null && savedHome.Scene == sceneId)
         {
-            MelonLogger.Warning($"Can't show confirmation dialogue: {nameof(Panel_Confirmation)} not found.");
+            InteractionHelper.ShowConfirmDialogue(
+                "This is already home! Do you want to update the arrival position?",
+                () => this.DestinationManager.SetDestination(DestinationType.Home)
+            );
+        }
+
+        // else replace home
+        else
+        {
+            string question = $"Set {this.GetSceneDisplayName(sceneId)} as your home?";
+            if (savedHome != null)
+                question += $"\n\nThis will replace your previous home ({this.GetSceneDisplayName(savedHome.Scene)}).";
+
+            InteractionHelper.ShowConfirmDialogue(
+                question,
+                () => this.DestinationManager.SetDestination(DestinationType.Home)
+            );
+        }
+    }
+
+    /// <summary>Handle the player requesting to fast travel.</summary>
+    private void OnInteractivelyFastTravel()
+    {
+        string sceneId = GameManager.m_ActiveScene;
+        DataModel data = this.DestinationManager.GetData();
+        Destination? home = data.GetHome();
+        Destination? returnPoint = data.GetReturnPoint();
+
+        // not set up yet
+        if (home is null)
+        {
+            InteractionHelper.ShowMessageBox($"You haven't set your home yet.\n\nPress {this.Config.SetHomeKey} to set your current location as home.");
             return;
         }
 
-        // skip if it's already open
-        if (confirmPanel.isActiveAndEnabled)
-            return;
+        // travel home
+        if (home.Scene != sceneId)
+        {
+            string question = $"Travel home to {this.GetSceneDisplayName(home.Scene)}?";
+            if (returnPoint != null && returnPoint.Scene != sceneId)
+                question += $"\n\nWhen you travel back later, you'll arrive here instead of {this.GetSceneDisplayName(returnPoint.Scene)}.";
 
-        // show question
-        confirmPanel.ShowConfirmPanel(
-            locID: question,
-            buttonPromptLocId1: "Yes",
-            buttonPromptLocId2: "No",
-            confirmCallback: onConfirm,
-            cancelCallback: null
+            InteractionHelper.ShowConfirmDialogue(
+                question,
+                () =>
+                {
+                    this.DestinationManager.SetDestination(DestinationType.ReturnPoint);
+                    this.FastTravelTo(home);
+                }
+            );
+            return;
+        }
+
+        // travel to return point
+        if (returnPoint is null)
+        {
+            InteractionHelper.ShowMessageBox("You're already home, and haven't fast traveled yet.\n\nAfter you fast travel home at least once, you'll be able to fast travel back to your departure point.");
+            return;
+        }
+        InteractionHelper.ShowConfirmDialogue(
+            $"Travel back to {this.GetSceneDisplayName(returnPoint.Scene)}?",
+            () => this.FastTravelTo(returnPoint)
         );
+    }
+
+    /// <summary>Whether the save is loaded and ready.</summary>
+    private bool IsSaveLoaded()
+    {
+        return
+            GameManager.m_Instance is not null
+            && !GameManager.IsMainMenuActive()
+            && GameManager.m_ActiveScene is not (null or "" or "MainMenu");
+    }
+
+    /// <summary>Fast travel to the given destination.</summary>
+    /// <param name="destination">The destination to travel to.</param>
+    private void FastTravelTo(Destination destination)
+    {
+        this.TravelingTo = destination;
+        GameManager.LoadSceneWithLoadingScreen(destination.Scene);
     }
 
     /// <summary>Get the localized name for a scene.</summary>

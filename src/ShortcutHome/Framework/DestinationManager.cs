@@ -6,45 +6,37 @@ using UnityEngine;
 
 namespace Pathoschild.TheLongDarkMods.ShortcutHome.Framework;
 
-/// <summary>Tracks the destination endpoint which the player last warped from, if any.</summary>
+/// <summary>Tracks persisted destination endpoints.</summary>
 internal class DestinationManager
 {
     /*********
     ** Public methods
     *********/
-    /// <summary>Get the last saved destination, if any.</summary>
-    public Destination? GetDestination()
+    /// <summary>Get the saved data.</summary>
+    public DataModel GetData()
     {
-        string? rawData = this.CreateDataManager().Load();
+        ModDataManager dataManager = this.CreateDataManager();
+        DataModel? state = this.DeserializeRaw(dataManager.Load());
 
-        if (rawData is not null)
-        {
-            try
-            {
-                DataModel? state = JsonSerializer.Deserialize<DataModel>(rawData);
-                if (state?.Scene != null)
-                    return new Destination(state.Scene, new Vector3(state.X, state.Y, state.Z));
-            }
-            catch (JsonException ex)
-            {
-                MelonLogger.Error("Can't restore saved warp info.", ex);
-            }
-        }
-
-        return null;
+        return state?.Destinations != null
+            ? state
+            : new DataModel();
     }
 
     /// <summary>Set the player's current position as the tracked destination.</summary>
-    public void SetDestination()
+    /// <param name="type">The destination type to set.</param>
+    public void SetDestination(DestinationType type)
     {
         Transform player = GameManager.GetPlayerObject().transform;
-
         var destination = new Destination(GameManager.m_ActiveScene, player.position);
 
-        this.CreateDataManager().Save(
-            JsonSerializer.Serialize(
-                new DataModel(destination)
-            )
+        ModDataManager dataManager = this.CreateDataManager();
+        DataModel data = this.DeserializeRaw(dataManager.Load()) ?? new DataModel();
+
+        data.Destinations[type] = new DataDestinationModel(destination);
+
+        dataManager.Save(
+            this.Serialize(data)
         );
     }
 
@@ -56,5 +48,33 @@ internal class DestinationManager
     private ModDataManager CreateDataManager()
     {
         return new ModDataManager("ShortcutHome");
+    }
+
+    /// <summary>Deserialize raw data into the data model, if it's valid.</summary>
+    /// <param name="rawData">The raw data to deserialize.</param>
+    private DataModel? DeserializeRaw(string? rawData)
+    {
+        if (rawData is not null)
+        {
+            try
+            {
+                DataModel? state = JsonSerializer.Deserialize<DataModel>(rawData);
+                if (state?.Destinations != null)
+                    return state;
+            }
+            catch (JsonException ex)
+            {
+                MelonLogger.Error("Can't load saved destinations; the data will be reset.", ex);
+            }
+        }
+
+        return null;
+    }
+
+    /// <summary>Serialize a data model into raw data.</summary>
+    /// <param name="data">The data to serialize.</param>
+    private string Serialize(DataModel data)
+    {
+        return JsonSerializer.Serialize(data);
     }
 }
