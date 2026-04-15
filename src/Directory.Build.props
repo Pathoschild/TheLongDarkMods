@@ -1,0 +1,22 @@
+<Project>
+  <!-- common build settings -->
+  <PropertyGroup>
+    <!-- metadata -->
+    <Authors>Pathoschild</Authors>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/Pathoschild/TheLongDarkMods</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+
+    <!-- build options -->
+    <TargetFramework>net6.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <DebugType>embedded</DebugType>
+
+    <!-- directory paths -->
+    <GamePath>C:\Program Files\Epic Games\TheLongDark</GamePath>
+    <ModsPath>$(GamePath)\Mods</ModsPath>
+    <ReleasesPath>$(MSBuildThisFileDirectory)\..\_releases</ReleasesPath>
+  </PropertyGroup>
+</Project>
