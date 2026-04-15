@@ -2,7 +2,8 @@ This repository contains my MelonLoader mods for [The Long Dark] **survival mode
 See the individual mods for documentation and release notes.
 
 ## Mods
-* 
+* **Auto-Fill Map on Explore** <small>([source](AutoFillMapOnExplore))</small>  
+  _Fills in the map around you as you explore._
 
 ## Compiling the mods
 Installing stable releases from [Nexus Mods] or [TLDMods] is recommended for most users. If you

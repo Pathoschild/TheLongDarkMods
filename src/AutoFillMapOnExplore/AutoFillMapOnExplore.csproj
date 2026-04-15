@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>Pathoschild.TheLongDarkMods.AutoFillMapOnExplore</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="STBlade.Modding.TLD.Il2CppAssemblies.Windows" />
+    <PackageReference Include="STBlade.Modding.TLD.ModSettings" />
+  </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(ModsPath)" />
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(ReleasesPath)" />
+  </Target>
+</Project>
