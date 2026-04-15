@@ -9,4 +9,5 @@
     <File Path="Directory.Packages.props" />
   </Folder>
   <Project Path="AutoFillMapOnExplore/AutoFillMapOnExplore.csproj" />
+  <Project Path="ShortcutHome/ShortcutHome.csproj" />
 </Solution>
