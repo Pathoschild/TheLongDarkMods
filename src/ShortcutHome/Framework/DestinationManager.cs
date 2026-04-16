@@ -10,8 +10,22 @@ namespace Pathoschild.TheLongDarkMods.ShortcutHome.Framework;
 internal class DestinationManager
 {
     /*********
+    ** Fields
+    *********/
+    /// <summary>The log instance.</summary>
+    private readonly MelonLogger.Instance Log;
+
+
+    /*********
     ** Public methods
     *********/
+    /// <summary>Construct an instance.</summary>
+    /// <param name="log">The log instance.</param>
+    public DestinationManager(MelonLogger.Instance log)
+    {
+        this.Log = log;
+    }
+
     /// <summary>Get the saved data.</summary>
     public DataModel GetData()
     {
@@ -65,7 +79,7 @@ internal class DestinationManager
             }
             catch (JsonException ex)
             {
-                MelonLogger.Error("Can't load saved destinations; the data will be reset.", ex);
+                this.Log.Error("Can't load saved destinations; the data will be reset.", ex);
             }
         }
 

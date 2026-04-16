@@ -14,8 +14,14 @@ public class ModEntry : MelonMod
     /// <summary>The mod settings.</summary>
     private readonly ModConfig Config = new();
 
+    /// <summary>The log instance.</summary>
+    private MelonLogger.Instance Log = null!; // set in OnInitializeMelon
+
     /// <summary>Tracks the persisted fast travel destinations.</summary>
-    private readonly DestinationManager DestinationManager = new();
+    private DestinationManager DestinationManager = null!; // set in OnInitializeMelon
+
+    /// <summary>Provides utility methods for reading input and showing UI.</summary>
+    private InteractionHelper InteractionHelper = null!; // set in OnInitializeMelon
 
     /// <summary>The destination which the player is currently traveling to, if applicable.</summary>
     private Destination? TravelingTo;
@@ -27,16 +33,20 @@ public class ModEntry : MelonMod
     /// <inheritdoc />
     public override void OnInitializeMelon()
     {
+        this.Log = Melon<ModEntry>.Logger;
+        this.DestinationManager = new DestinationManager(this.Log);
+        this.InteractionHelper = new InteractionHelper(this.Log);
+
         this.Config.AddToModSettings(ModInfo.DisplayName);
     }
 
     /// <inheritdoc />
     public override void OnUpdate()
     {
-        if (InteractionHelper.IsKeyDown(this.Config.SetHomeKey) && this.IsSaveLoaded())
+        if (this.InteractionHelper.IsKeyDown(this.Config.SetHomeKey) && this.IsSaveLoaded())
             this.OnInteractivelySetHome();
 
-        else if (InteractionHelper.IsKeyDown(this.Config.FastTravelKey) && this.IsSaveLoaded())
+        else if (this.InteractionHelper.IsKeyDown(this.Config.FastTravelKey) && this.IsSaveLoaded())
             this.OnInteractivelyFastTravel();
     }
 
@@ -52,7 +62,7 @@ public class ModEntry : MelonMod
         if (destination is not null)
         {
             if (sceneName != destination.Scene)
-                MelonLogger.Warning($"Failed setting position after warp back: arrived in scene '{sceneName}' instead of the expected '{destination.Scene}'.");
+                this.Log.Warning($"Failed setting position after warp back: arrived in scene '{sceneName}' instead of the expected '{destination.Scene}'.");
             else
             {
                 Transform player = GameManager.GetPlayerObject().transform;
@@ -85,7 +95,7 @@ public class ModEntry : MelonMod
         // update position in same home
         if (savedHome != null && savedHome.Scene == sceneId)
         {
-            InteractionHelper.ShowConfirmDialogue(
+            this.InteractionHelper.ShowConfirmDialogue(
                 "This is already home! Do you want to update the arrival position?",
                 () => this.DestinationManager.SetDestination(DestinationType.Home)
             );
@@ -98,7 +108,7 @@ public class ModEntry : MelonMod
             if (savedHome != null)
                 question += $"\n\nThis will replace your previous home ({this.GetSceneDisplayName(savedHome.Scene)}).";
 
-            InteractionHelper.ShowConfirmDialogue(
+            this.InteractionHelper.ShowConfirmDialogue(
                 question,
                 () => this.DestinationManager.SetDestination(DestinationType.Home)
             );
@@ -116,7 +126,7 @@ public class ModEntry : MelonMod
         // not set up yet
         if (home is null)
         {
-            InteractionHelper.ShowMessageBox($"You haven't set your home yet.\n\nPress {this.Config.SetHomeKey} to set your current location as home.");
+            this.InteractionHelper.ShowMessageBox($"You haven't set your home yet.\n\nPress {this.Config.SetHomeKey} to set your current location as home.");
             return;
         }
 
@@ -127,7 +137,7 @@ public class ModEntry : MelonMod
             if (returnPoint != null && returnPoint.Scene != sceneId)
                 question += $"\n\nWhen you travel back later, you'll arrive here instead of {this.GetSceneDisplayName(returnPoint.Scene)}.";
 
-            InteractionHelper.ShowConfirmDialogue(
+            this.InteractionHelper.ShowConfirmDialogue(
                 question,
                 () =>
                 {
@@ -141,10 +151,10 @@ public class ModEntry : MelonMod
         // travel to return point
         if (returnPoint is null)
         {
-            InteractionHelper.ShowMessageBox("You're already home, and haven't fast traveled yet.\n\nAfter you fast travel home at least once, you'll be able to fast travel back to your departure point.");
+            this.InteractionHelper.ShowMessageBox("You're already home, and haven't fast traveled yet.\n\nAfter you fast travel home at least once, you'll be able to fast travel back to your departure point.");
             return;
         }
-        InteractionHelper.ShowConfirmDialogue(
+        this.InteractionHelper.ShowConfirmDialogue(
             $"Travel back to {this.GetSceneDisplayName(returnPoint.Scene)}?",
             () => this.FastTravelTo(returnPoint)
         );
