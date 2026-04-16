@@ -163,8 +163,46 @@ public class ModEntry : MelonMod
     /// <param name="destination">The destination to travel to.</param>
     private void FastTravelTo(Destination destination)
     {
-        this.TravelingTo = destination;
-        GameManager.LoadSceneWithLoadingScreen(destination.Scene);
+        // collect info
+        Transform player = GameManager.GetPlayerObject().transform;
+        string fromSceneId = GameManager.m_ActiveScene;
+        bool fromOutside = GameManager.IsOutDoorsScene(fromSceneId);
+
+        // trigger autosave
+        // (This is needed to persist any changes made to the location; otherwise they'd be discarded when we leave.)
+        SaveGameSystem.SaveGame("autosave", fromSceneId);
+
+        // fade out and warp
+        CameraFade.FadeOut(
+            time: GameManager.m_SceneTransitionFadeOutTime,
+            onFadeFinished: (System.Action)(() =>
+            {
+                var transition = new SceneTransitionData
+                {
+                    m_SceneSaveFilenameCurrent = fromSceneId,
+                    m_SceneSaveFilenameNextLoad = destination.Scene,
+                    m_TeleportPlayerSaveGamePosition = true // mark as normal transition (e.g. not a new-game spawn)
+                };
+
+                if (GameManager.m_SceneTransitionData is { } prevTransition)
+                {
+                    transition.m_PosBeforeInteriorLoad = prevTransition.m_PosBeforeInteriorLoad;
+                    transition.m_GameRandomSeed = prevTransition.m_GameRandomSeed;
+                    transition.m_LastOutdoorScene = prevTransition.m_LastOutdoorScene;
+                }
+
+                if (fromOutside)
+                {
+                    transition.m_PosBeforeInteriorLoad = player.position;
+                    transition.m_LastOutdoorScene = fromSceneId;
+                }
+
+                GameManager.m_SceneTransitionData = transition;
+
+                this.TravelingTo = destination;
+                GameManager.LoadScene(destination.Scene, SaveGameSystem.GetCurrentSaveName());
+            })
+        );
     }
 
     /// <summary>Get the localized name for a scene.</summary>
