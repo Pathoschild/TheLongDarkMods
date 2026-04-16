@@ -4,7 +4,7 @@ using Il2Cpp;
 using MelonLoader;
 using UnityEngine;
 
-namespace Pathoschild.TheLongDarkMods.ShortcutHome.Framework;
+namespace Pathoschild.TheLongDarkMods.Common;
 
 /// <summary>Provides utility methods for reading input and showing UI.</summary>
 internal class InteractionHelper

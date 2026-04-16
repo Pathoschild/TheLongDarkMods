@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using Il2Cpp;
 using MelonLoader;
 using Pathoschild.TheLongDarkMods.AutoFillMapOnExplore.Framework;
+using Pathoschild.TheLongDarkMods.Common;
 using UnityEngine;
 
 namespace Pathoschild.TheLongDarkMods.AutoFillMapOnExplore;
@@ -61,7 +62,7 @@ public class ModEntry : MelonMod
     /// <returns>Returns whether the map is available.</returns>
     private bool TryGetMapPanel([NotNullWhen(true)] out Panel_Map? map)
     {
-        if (GameManager.m_Instance is not null && !GameManager.IsMainMenuActive() && GameManager.m_ActiveScene is not (null or "" or "MainMenu"))
+        if (SceneHelper.IsSaveLoaded())
         {
             map = InterfaceManager.GetPanel<Panel_Map>();
             return map != null;

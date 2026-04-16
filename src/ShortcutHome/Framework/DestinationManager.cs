@@ -2,6 +2,7 @@ using System.Text.Json;
 using Il2Cpp;
 using MelonLoader;
 using ModData;
+using Pathoschild.TheLongDarkMods.Common;
 using UnityEngine;
 
 namespace Pathoschild.TheLongDarkMods.ShortcutHome.Framework;
@@ -43,7 +44,7 @@ internal class DestinationManager
     {
         vp_FPSCamera camera = GameManager.GetVpFPSCamera();
         Transform player = GameManager.GetPlayerObject().transform;
-        var destination = new Destination(GameManager.m_ActiveScene, player.position, camera.m_Pitch, camera.m_Yaw);
+        var destination = new Destination(SceneHelper.GetSceneName(), player.position, camera.m_Pitch, camera.m_Yaw);
 
         ModDataManager dataManager = this.CreateDataManager();
         DataModel data = this.DeserializeRaw(dataManager.Load()) ?? new DataModel();

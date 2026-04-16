@@ -12,4 +12,6 @@
     <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(ModsPath)" />
     <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(ReleasesPath)" />
   </Target>
+
+  <Import Project="..\Common\Common.projitems" Label="Shared" />
 </Project>

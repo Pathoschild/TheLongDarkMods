@@ -1,5 +1,6 @@
 using Il2Cpp;
 using MelonLoader;
+using Pathoschild.TheLongDarkMods.Common;
 using Pathoschild.TheLongDarkMods.ShortcutHome.Framework;
 using UnityEngine;
 
@@ -43,10 +44,10 @@ public class ModEntry : MelonMod
     /// <inheritdoc />
     public override void OnUpdate()
     {
-        if (this.InteractionHelper.IsKeyDown(this.Config.SetHomeKey) && this.IsSaveLoaded())
+        if (this.InteractionHelper.IsKeyDown(this.Config.SetHomeKey) && SceneHelper.IsSaveLoaded())
             this.OnInteractivelySetHome();
 
-        else if (this.InteractionHelper.IsKeyDown(this.Config.FastTravelKey) && this.IsSaveLoaded())
+        else if (this.InteractionHelper.IsKeyDown(this.Config.FastTravelKey) && SceneHelper.IsSaveLoaded())
             this.OnInteractivelyFastTravel();
     }
 
@@ -89,7 +90,7 @@ public class ModEntry : MelonMod
     /// <summary>Handle the player requesting to set their home location.</summary>
     private void OnInteractivelySetHome()
     {
-        string sceneId = GameManager.m_ActiveScene;
+        string sceneId = SceneHelper.GetSceneName();
         Destination? savedHome = this.DestinationManager.GetData().GetHome();
 
         // update position in same home
@@ -118,7 +119,7 @@ public class ModEntry : MelonMod
     /// <summary>Handle the player requesting to fast travel.</summary>
     private void OnInteractivelyFastTravel()
     {
-        string sceneId = GameManager.m_ActiveScene;
+        string sceneId = SceneHelper.GetSceneName();
         DataModel data = this.DestinationManager.GetData();
         Destination? home = data.GetHome();
         Destination? returnPoint = data.GetReturnPoint();
@@ -160,22 +161,13 @@ public class ModEntry : MelonMod
         );
     }
 
-    /// <summary>Whether the save is loaded and ready.</summary>
-    private bool IsSaveLoaded()
-    {
-        return
-            GameManager.m_Instance is not null
-            && !GameManager.IsMainMenuActive()
-            && GameManager.m_ActiveScene is not (null or "" or "MainMenu");
-    }
-
     /// <summary>Fast travel to the given destination.</summary>
     /// <param name="destination">The destination to travel to.</param>
     private void FastTravelTo(Destination destination)
     {
         // collect info
         Transform player = GameManager.GetPlayerObject().transform;
-        string fromSceneId = GameManager.m_ActiveScene;
+        string fromSceneId = SceneHelper.GetSceneName();
         bool fromOutside = GameManager.IsOutDoorsScene(fromSceneId);
 
         // trigger autosave
