@@ -27,8 +27,9 @@ internal class DestinationManager
     /// <param name="type">The destination type to set.</param>
     public void SetDestination(DestinationType type)
     {
+        vp_FPSCamera camera = GameManager.GetVpFPSCamera();
         Transform player = GameManager.GetPlayerObject().transform;
-        var destination = new Destination(GameManager.m_ActiveScene, player.position);
+        var destination = new Destination(GameManager.m_ActiveScene, player.position, camera.m_Pitch, camera.m_Yaw);
 
         ModDataManager dataManager = this.CreateDataManager();
         DataModel data = this.DeserializeRaw(dataManager.Load()) ?? new DataModel();

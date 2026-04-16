@@ -37,7 +37,7 @@ internal class DataModel
     private Destination? GetDestination(DestinationType type)
     {
         return this.Destinations.TryGetValue(type, out DataDestinationModel? raw)
-            ? new Destination(raw.Scene, new Vector3(raw.X, raw.Y, raw.Z))
+            ? new Destination(raw.Scene, new Vector3(raw.X, raw.Y, raw.Z), raw.CameraPitch, raw.CameraYaw)
             : null;
     }
 }

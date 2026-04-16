@@ -56,7 +56,17 @@ public class ModEntry : MelonMod
             else
             {
                 Transform player = GameManager.GetPlayerObject().transform;
+                vp_FPSCamera camera = GameManager.GetVpFPSCamera();
+
                 player.position = destination.Position;
+
+                camera.m_Pitch = destination.CameraPitch;
+                camera.m_TargetPitch = destination.CameraPitch;
+                camera.m_CurrentPitch = destination.CameraPitch;
+
+                camera.m_Yaw = destination.CameraYaw;
+                camera.m_TargetYaw = destination.CameraYaw;
+                camera.m_CurrentYaw = destination.CameraYaw;
             }
 
             this.TravelingTo = null;
