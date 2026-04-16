@@ -1,4 +1,5 @@
 using Il2Cpp;
+using UnitySceneManager = UnityEngine.SceneManagement.SceneManager;
 
 namespace Pathoschild.TheLongDarkMods.Common;
 
@@ -17,6 +18,6 @@ internal static class SceneHelper
     /// <summary>Get the active scene name.</summary>
     public static string GetSceneName()
     {
-        return GameManager.m_ActiveScene;
+        return UnitySceneManager.GetActiveScene().name;
     }
 }
