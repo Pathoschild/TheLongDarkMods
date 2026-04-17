@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Il2Cpp;
 using MelonLoader;
 using MelonLoader.Utils;
+using Pathoschild.TheLongDarkMods.SaveBackup.Framework;
 
 namespace Pathoschild.TheLongDarkMods.SaveBackup;
 
@@ -19,31 +20,33 @@ public class ModEntry : MelonMod
     /*********
     ** Fields
     *********/
-    /// <summary>The number of backups to keep.</summary>
-    private readonly int BackupsToKeep = 10;
-
     /// <summary>The folder containing saves to back up.</summary>
     private readonly string SavesPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Hinterland", "TheLongDark");
 
     /// <summary>The absolute path to the folder in which to store save backups.</summary>
     private readonly string BackupFolder = Path.Combine(MelonEnvironment.ModsDirectory, "SaveBackup");
 
-    /// <summary>A unique name for the save backup to create.</summary>
-    private string BackupName = null!; // set in OnLateInitializeMelon
+    /// <summary>The mod settings.</summary>
+    private readonly ModConfig Config = new();
 
     /// <summary>The log instance.</summary>
-    private MelonLogger.Instance Log = null!; // set in OnLateInitializeMelon
+    private MelonLogger.Instance Log = null!; // set in OnInitializeMelon
 
 
     /*********
     ** Public methods
     *********/
     /// <inheritdoc />
-    public override void OnLateInitializeMelon()
+    public override void OnInitializeMelon()
     {
         this.Log = Melon<ModEntry>.Logger;
-        this.BackupName = $"{DateTime.Now:yyyy-MM-dd} (MelonLoader {BuildInfo.Version}, The Long Dark {GameManager.GetVersionString().Trim()})";
 
+        this.Config.AddToModSettings(ModInfo.DisplayName);
+    }
+
+    /// <inheritdoc />
+    public override void OnLateInitializeMelon()
+    {
         try
         {
             // init backup folder
@@ -51,9 +54,10 @@ public class ModEntry : MelonMod
             backupFolder.Create();
 
             // back up & prune saves
+            string backupName = $"{DateTime.Now:yyyy-MM-dd} (MelonLoader {BuildInfo.Version}, The Long Dark {GameManager.GetVersionString().Trim()})";
             Task
-                .Run(() => this.CreateBackup(backupFolder))
-                .ContinueWith(_ => this.PruneBackups(backupFolder, this.BackupsToKeep));
+                .Run(() => this.CreateBackup(backupFolder, backupName))
+                .ContinueWith(_ => this.PruneBackups(backupFolder, this.Config.BackupCount));
         }
         catch (Exception ex)
         {
@@ -67,13 +71,14 @@ public class ModEntry : MelonMod
     *********/
     /// <summary>Back up the current saves.</summary>
     /// <param name="backupFolder">The folder containing save backups.</param>
-    private void CreateBackup(DirectoryInfo backupFolder)
+    /// <param name="backupName">The name of the backup folder or zip to create.</param>
+    private void CreateBackup(DirectoryInfo backupFolder, string backupName)
     {
         try
         {
             // get target path
-            FileInfo targetFile = new(Path.Combine(backupFolder.FullName, $"{this.BackupName}.zip"));
-            DirectoryInfo fallbackDir = new(Path.Combine(backupFolder.FullName, this.BackupName));
+            FileInfo targetFile = new(Path.Combine(backupFolder.FullName, $"{backupName}.zip"));
+            DirectoryInfo fallbackDir = new(Path.Combine(backupFolder.FullName, backupName));
             if (targetFile.Exists || fallbackDir.Exists)
             {
                 this.Log.Msg("Already backed up today.");

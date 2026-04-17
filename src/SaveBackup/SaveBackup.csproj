@@ -5,6 +5,7 @@
 
   <ItemGroup>
     <PackageReference Include="STBlade.Modding.TLD.Il2CppAssemblies.Windows" />
+    <PackageReference Include="STBlade.Modding.TLD.ModSettings" />
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">

@@ -5,6 +5,7 @@ something goes wrong (e.g. your save file gets corrupted).
 ## Contents
 * [Install](#install)
 * [Use](#use)
+* [Configure](#configure)
 * [Compatibility](#compatibility)
 * [See also](#see-also)
 
@@ -17,12 +18,18 @@ something goes wrong (e.g. your save file gets corrupted).
 Just play normally! When you launch the game:
 1. A zip of your saves will be added to `Mods/SaveBackup` (if you don't have one for today).  
    _After a MelonLoader or game update, it may add an extra backup just in case they break saves._
-2. It'll keep the last 10 backups.
+2. It'll keep the last 10 backups by default (configurable).
 
 This all happens in the background, so it doesn't affect the game's startup time.
 
 To restore a backup, just copy the files from the zip back into your saves folder at
 `%localappdata%\Hinterland\TheLongDark`. (You can paste that exact path into Windows Explorer.)
+
+## Configure
+From the game's Options menu, click "Mod Settings" and then navigate to "Save Backup". Hover the
+cursor over a field for details.
+
+> ![](images/config.png)
 
 ## Compatibility
 The mod is compatible with The Long Dark 2.50+ and MelonLoader 0.7.2+, both survival mode and
