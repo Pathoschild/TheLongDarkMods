@@ -3,6 +3,7 @@ using MelonLoader;
 using Pathoschild.TheLongDarkMods.Common;
 using Pathoschild.TheLongDarkMods.ShortcutHome.Framework;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Pathoschild.TheLongDarkMods.ShortcutHome;
 
@@ -58,6 +59,37 @@ public class ModEntry : MelonMod
         if (sceneName is "Empty")
             return;
 
+        // log debug info
+        if (this.Config.LogDebugInfo)
+        {
+            Destination currentLocation = this.DestinationManager.GetCurrentLocation();
+            SceneTransitionData transition = GameManager.m_SceneTransitionData;
+            Scene unityScene = SceneHelper.GetScene();
+
+            this.Log.Msg(
+                $"""
+                Scene initialized:
+                    buildIndex: {buildIndex}
+                    sceneName: '{sceneName}'
+
+                    location: {currentLocation}
+                    save name: '{SaveGameSystem.GetCurrentSaveName()}'
+                    m_SceneWasRestored: {GameManager.m_SceneWasRestored}
+
+                    Unity scene:
+                        name: {unityScene.name}
+                        build index: {unityScene.buildIndex}
+                        guid: {unityScene.guid}
+                        path: {unityScene.path}
+                        isSubScene: {unityScene.isSubScene}
+
+                    TravelingTo: {this.TravelingTo?.ToString() ?? "null"}
+
+                {this.GetTransitionDebugSummary("m_SceneTransitionData", transition)}
+                """
+            );
+        }
+
         // update position after travel
         Destination? destination = this.TravelingTo;
         if (destination is not null)
@@ -105,9 +137,9 @@ public class ModEntry : MelonMod
         // else replace home
         else
         {
-            string question = $"Set {this.GetSceneDisplayName(sceneId)} as your home?";
+            string question = $"Set {SceneHelper.GetSceneDisplayName(sceneId)} as your home?";
             if (savedHome != null)
-                question += $"\n\nThis will replace your previous home ({this.GetSceneDisplayName(savedHome.Scene)}).";
+                question += $"\n\nThis will replace your previous home ({SceneHelper.GetSceneDisplayName(savedHome.Scene)}).";
 
             this.InteractionHelper.ShowConfirmDialogue(
                 question,
@@ -134,9 +166,9 @@ public class ModEntry : MelonMod
         // travel home
         if (home.Scene != sceneId)
         {
-            string question = $"Travel home to {this.GetSceneDisplayName(home.Scene)}?";
+            string question = $"Travel home to {SceneHelper.GetSceneDisplayName(home.Scene)}?";
             if (returnPoint != null && returnPoint.Scene != sceneId)
-                question += $"\n\nWhen you travel back later, you'll arrive here instead of {this.GetSceneDisplayName(returnPoint.Scene)}.";
+                question += $"\n\nWhen you travel back later, you'll arrive here instead of {SceneHelper.GetSceneDisplayName(returnPoint.Scene)}.";
 
             this.InteractionHelper.ShowConfirmDialogue(
                 question,
@@ -156,7 +188,7 @@ public class ModEntry : MelonMod
             return;
         }
         this.InteractionHelper.ShowConfirmDialogue(
-            $"Travel back to {this.GetSceneDisplayName(returnPoint.Scene)}?",
+            $"Travel back to {SceneHelper.GetSceneDisplayName(returnPoint.Scene)}?",
             () => this.FastTravelTo(returnPoint)
         );
     }
@@ -179,6 +211,7 @@ public class ModEntry : MelonMod
             time: GameManager.m_SceneTransitionFadeOutTime,
             onFadeFinished: (System.Action)(() =>
             {
+                // prepare transition
                 var transition = new SceneTransitionData
                 {
                     m_SceneSaveFilenameCurrent = fromSceneId,
@@ -201,16 +234,48 @@ public class ModEntry : MelonMod
 
                 GameManager.m_SceneTransitionData = transition;
 
+                // log debug info
+                if (this.Config.LogDebugInfo)
+                {
+                    this.Log.Msg(
+                        $"""
+                        Starting fast travel:
+                            from scene: '{fromSceneId}'
+                            save name: '{SaveGameSystem.GetCurrentSaveName()}'
+
+                            destination: {destination}
+
+                        {this.GetTransitionDebugSummary("transition", transition)}
+                        """
+                    );
+                }
+
+                // start transition
                 this.TravelingTo = destination;
                 GameManager.LoadScene(destination.Scene, SaveGameSystem.GetCurrentSaveName());
             })
         );
     }
 
-    /// <summary>Get the localized name for a scene.</summary>
-    /// <param name="name">The internal scene name.</param>
-    private string GetSceneDisplayName(string name)
+    /// <summary>Get a debug log representation of a scene transition.</summary>
+    /// <param name="label">The label for the section.</param>
+    /// <param name="transition">The scene transition to dump.</param>
+    /// <param name="indent">The left indent with which to prefix each line.</param>
+    private string GetTransitionDebugSummary(string label, SceneTransitionData transition, string indent = "    ")
     {
-        return InterfaceManager.GetNameForScene(name);
+        return $"""
+        {indent}{label}:
+        {indent}    m_TeleportPlayerSaveGamePosition: {transition.m_TeleportPlayerSaveGamePosition}
+        {indent}    m_SpawnPointName: {transition.m_SpawnPointName ?? "<null>"}
+        {indent}    m_SpawnPointAudio: {transition.m_SpawnPointAudio ?? "<null>"}
+        {indent}    m_ForceNextSceneLoadTriggerScene: {transition.m_ForceNextSceneLoadTriggerScene ?? "<null>"}
+        {indent}    m_PosBeforeInteriorLoad: {transition.m_PosBeforeInteriorLoad}
+        {indent}    m_SceneSaveFilenameCurrent: {transition.m_SceneSaveFilenameCurrent ?? "<null>"}
+        {indent}    m_SceneSaveFilenameNextLoad: {transition.m_SceneSaveFilenameNextLoad ?? "<null>"}
+        {indent}    m_SceneLocationLocIDOverride: {transition.m_SceneLocationLocIDOverride ?? "<null>"}
+        {indent}    m_GameRandomSeed: {transition.m_GameRandomSeed}
+        {indent}    m_Location: {transition.m_Location ?? "<null>"}
+        {indent}    m_LastOutdoorScene: {transition.m_LastOutdoorScene ?? "<null>"}
+        """;
     }
 }

@@ -38,13 +38,20 @@ internal class DestinationManager
             : new DataModel();
     }
 
+    /// <summary>Get the destination info for the player's current position.</summary>
+    public Destination GetCurrentLocation()
+    {
+        vp_FPSCamera camera = GameManager.GetVpFPSCamera();
+        Transform player = GameManager.GetPlayerObject().transform;
+
+        return new Destination(SceneHelper.GetSceneName(), player.position, camera.m_Pitch, camera.m_Yaw);
+    }
+
     /// <summary>Set the player's current position as the tracked destination.</summary>
     /// <param name="type">The destination type to set.</param>
     public void SetDestination(DestinationType type)
     {
-        vp_FPSCamera camera = GameManager.GetVpFPSCamera();
-        Transform player = GameManager.GetPlayerObject().transform;
-        var destination = new Destination(SceneHelper.GetSceneName(), player.position, camera.m_Pitch, camera.m_Yaw);
+        var destination = this.GetCurrentLocation();
 
         ModDataManager dataManager = this.CreateDataManager();
         DataModel data = this.DeserializeRaw(dataManager.Load()) ?? new DataModel();

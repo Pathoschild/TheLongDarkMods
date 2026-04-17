@@ -12,6 +12,6 @@ internal record Destination(string Scene, Vector3 Position, float CameraPitch, f
     /// <inheritdoc />
     public override string ToString()
     {
-        return $"{this.Scene} ({this.Position})";
+        return $"(scene: '{this.Scene}', position: {this.Position}, pitch: {this.CameraPitch}, yaw: {this.CameraYaw})";
     }
 }
