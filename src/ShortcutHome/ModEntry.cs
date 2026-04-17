@@ -2,6 +2,7 @@ using Il2Cpp;
 using MelonLoader;
 using Pathoschild.TheLongDarkMods.Common;
 using Pathoschild.TheLongDarkMods.ShortcutHome.Framework;
+using Pathoschild.TheLongDarkMods.ShortcutHome.Framework.DataModels;
 using UnityEngine;
 
 namespace Pathoschild.TheLongDarkMods.ShortcutHome;
@@ -148,7 +149,7 @@ public class ModEntry : MelonMod
     private void OnInteractivelyFastTravel()
     {
         string sceneId = SceneHelper.GetSceneName();
-        DataModel data = this.DestinationManager.GetData();
+        SaveModel data = this.DestinationManager.GetData();
         Destination? home = data.GetHome();
         Destination? returnPoint = data.GetReturnPoint();
 

@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 
-namespace Pathoschild.TheLongDarkMods.ShortcutHome.Framework;
+namespace Pathoschild.TheLongDarkMods.ShortcutHome.Framework.DataModels;
 
 /// <summary>The data model for data persisted to ModData.</summary>
-internal class DataModel
+internal class SaveModel
 {
     /*********
     ** Accessors

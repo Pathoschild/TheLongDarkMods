@@ -1,7 +1,7 @@
 using System.Text.Json.Serialization;
 using Il2Cpp;
 
-namespace Pathoschild.TheLongDarkMods.ShortcutHome.Framework;
+namespace Pathoschild.TheLongDarkMods.ShortcutHome.Framework.DataModels;
 
 /// <summary>The metadata for a transition from one scene to another.</summary>
 /// <remarks>This is a JSON-serializable equivalent to <see cref="SceneTransitionData"/>.</remarks>

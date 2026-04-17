@@ -1,7 +1,7 @@
 using System.Text.Json.Serialization;
 using UnityEngine;
 
-namespace Pathoschild.TheLongDarkMods.ShortcutHome.Framework;
+namespace Pathoschild.TheLongDarkMods.ShortcutHome.Framework.DataModels;
 
 /// <summary>A JSON-serializable representation of a <see cref="Vector3"/> value.</summary>
 internal struct Vector3Model

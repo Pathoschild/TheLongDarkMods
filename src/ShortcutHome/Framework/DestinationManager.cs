@@ -3,6 +3,7 @@ using Il2Cpp;
 using MelonLoader;
 using ModData;
 using Pathoschild.TheLongDarkMods.Common;
+using Pathoschild.TheLongDarkMods.ShortcutHome.Framework.DataModels;
 using UnityEngine;
 
 namespace Pathoschild.TheLongDarkMods.ShortcutHome.Framework;
@@ -28,12 +29,12 @@ internal class DestinationManager
     }
 
     /// <summary>Get the saved data.</summary>
-    public DataModel GetData()
+    public SaveModel GetData()
     {
         ModDataManager dataManager = this.CreateDataManager();
-        DataModel? data = this.DeserializeRaw(dataManager.Load());
+        SaveModel? data = this.DeserializeRaw(dataManager.Load());
 
-        return data ?? new DataModel();
+        return data ?? new SaveModel();
     }
 
     /// <summary>Get the destination info for the player's current position.</summary>
@@ -51,7 +52,7 @@ internal class DestinationManager
     public void SetDestination(DestinationType type)
     {
         ModDataManager dataManager = this.CreateDataManager();
-        DataModel data = this.DeserializeRaw(dataManager.Load()) ?? new DataModel();
+        SaveModel data = this.DeserializeRaw(dataManager.Load()) ?? new SaveModel();
         data.Destinations[type] = this.GetCurrentLocation();
 
         dataManager.Save(
@@ -71,13 +72,13 @@ internal class DestinationManager
 
     /// <summary>Deserialize raw data into the data model, if it's valid.</summary>
     /// <param name="rawData">The raw data to deserialize.</param>
-    private DataModel? DeserializeRaw(string? rawData)
+    private SaveModel? DeserializeRaw(string? rawData)
     {
         if (rawData is not null)
         {
             try
             {
-                DataModel? data = JsonSerializer.Deserialize<DataModel>(rawData);
+                SaveModel? data = JsonSerializer.Deserialize<SaveModel>(rawData);
                 if (data?.Destinations != null)
                     return data;
             }
@@ -92,7 +93,7 @@ internal class DestinationManager
 
     /// <summary>Serialize a data model into raw data.</summary>
     /// <param name="data">The data to serialize.</param>
-    private string Serialize(DataModel data)
+    private string Serialize(SaveModel data)
     {
         return JsonSerializer.Serialize(data);
     }

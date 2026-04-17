@@ -1,5 +1,6 @@
 using System.Text.Json.Serialization;
 using Il2Cpp;
+using Pathoschild.TheLongDarkMods.ShortcutHome.Framework.DataModels;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
