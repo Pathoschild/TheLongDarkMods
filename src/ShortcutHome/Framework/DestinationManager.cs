@@ -31,11 +31,9 @@ internal class DestinationManager
     public DataModel GetData()
     {
         ModDataManager dataManager = this.CreateDataManager();
-        DataModel? state = this.DeserializeRaw(dataManager.Load());
+        DataModel? data = this.DeserializeRaw(dataManager.Load());
 
-        return state?.Destinations != null
-            ? state
-            : new DataModel();
+        return data ?? new DataModel();
     }
 
     /// <summary>Get the destination info for the player's current position.</summary>
@@ -43,20 +41,18 @@ internal class DestinationManager
     {
         vp_FPSCamera camera = GameManager.GetVpFPSCamera();
         Transform player = GameManager.GetPlayerObject().transform;
+        SceneTransitionData transition = GameManager.m_SceneTransitionData;
 
-        return new Destination(SceneHelper.GetSceneName(), player.position, camera.m_Pitch, camera.m_Yaw);
+        return new Destination(SceneHelper.GetScene(), player.position, camera.m_Pitch, camera.m_Yaw, transition);
     }
 
     /// <summary>Set the player's current position as the tracked destination.</summary>
     /// <param name="type">The destination type to set.</param>
     public void SetDestination(DestinationType type)
     {
-        var destination = this.GetCurrentLocation();
-
         ModDataManager dataManager = this.CreateDataManager();
         DataModel data = this.DeserializeRaw(dataManager.Load()) ?? new DataModel();
-
-        data.Destinations[type] = new DataDestinationModel(destination);
+        data.Destinations[type] = this.GetCurrentLocation();
 
         dataManager.Save(
             this.Serialize(data)
@@ -81,9 +77,9 @@ internal class DestinationManager
         {
             try
             {
-                DataModel? state = JsonSerializer.Deserialize<DataModel>(rawData);
-                if (state?.Destinations != null)
-                    return state;
+                DataModel? data = JsonSerializer.Deserialize<DataModel>(rawData);
+                if (data?.Destinations != null)
+                    return data;
             }
             catch (JsonException ex)
             {
