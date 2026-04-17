@@ -10,5 +10,6 @@
   </Folder>
   <Project Path="AutoFillMapOnExplore/AutoFillMapOnExplore.csproj" />
   <Project Path="Common/Common.shproj" />
+  <Project Path="SaveBackup/SaveBackup.csproj" />
   <Project Path="ShortcutHome/ShortcutHome.csproj" />
 </Solution>

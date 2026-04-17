@@ -4,6 +4,8 @@ See the individual mods for documentation and release notes.
 ## Mods
 * **Auto-Fill Map on Explore** <small>([readme](src/AutoFillMapOnExplore#readme))</small>  
   _Fills in the map around you as you explore._
+* **Save Backup** <small>([readme](src/SaveBackup#readme))</small>  
+  _Automatically backs up all your saves once per real day into its subfolder._
 * **Shortcut Home** <small>([readme](src/ShortcutHome#readme))</small>  
   _Lets you fast travel from a safehouse in any region to your main home._
 
