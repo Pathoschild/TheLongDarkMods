@@ -215,7 +215,11 @@ public class ModEntry : MelonMod
         // not set yet
         if (destination is null)
         {
-            this.InteractionHelper.ShowMessageBox($"You haven't saved anywhere as fast travel point {slotIndex + 1} yet.\n\nPress {this.Config.SaveModifierKey} + {this.GetKeyForSlot(slotIndex)} to save your current location to it.");
+            string message = $"You haven't saved anywhere as fast travel point {slotIndex + 1} yet.";
+            if (this.Config.ShowUsageHints)
+                message += $"\n\nPress {this.Config.SaveModifierKey} + {this.GetKeyForSlot(slotIndex)} to save your current location to it.";
+
+            this.InteractionHelper.ShowMessageBox(message);
             return;
         }
 
@@ -225,7 +229,8 @@ public class ModEntry : MelonMod
         {
             if (returnPoint != null && returnPoint.Scene.Name != here.Scene.Name)
                 question += $"\n\nThis will replace your previous return point ({returnPoint.GetDisplayName()}).";
-            question += $"\n\nYou can return here later by pressing {this.Config.ReturnPointKey}.";
+            if (this.Config.ShowUsageHints)
+                question += $"\n\nYou can return here later by pressing {this.Config.ReturnPointKey}.";
         }
 
         this.InteractionHelper.ShowConfirmDialogue(
@@ -248,7 +253,11 @@ public class ModEntry : MelonMod
 
         if (returnPoint is null)
         {
-            this.InteractionHelper.ShowMessageBox($"You haven't fast traveled anywhere yet.\n\nAfter you fast travel at least once, you'll be able to return to your departure point by pressing {this.Config.ReturnPointKey}.");
+            string message = "You haven't fast traveled anywhere yet.";
+            if (this.Config.ShowUsageHints)
+                message += $"\n\nAfter you fast travel at least once, you'll be able to return to your departure point by pressing {this.Config.ReturnPointKey}.";
+
+            this.InteractionHelper.ShowMessageBox(message);
             return;
         }
 

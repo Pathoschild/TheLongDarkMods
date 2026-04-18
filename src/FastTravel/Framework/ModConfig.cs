@@ -80,7 +80,11 @@ internal class ModConfig : JsonModSettings
     [Description("Press this button to return to where you were before your *most recent* fast travel.")]
     public KeyCode ReturnPointKey = KeyCode.Keypad0;
 
-    [Section("Debug options")]
+    [Section("Other")]
+    [Name("Show usage hints")]
+    [Description("Whether in-game messages should include usage hints like \"You can return here later by pressing <key>\".\n\nDisable if you're familiar with the mod and want less immersion-breaking messages.")]
+    public bool ShowUsageHints = true;
+
     [Name("Log debug info")]
     [Description("Whether to log debug information about scene transitions and fast travel. This is meant for troubleshooting, and has no effect on the in-game behavior.")]
     public bool LogDebugInfo = false;
