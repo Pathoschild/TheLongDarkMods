@@ -9,6 +9,27 @@ internal class ModConfig : JsonModSettings
     /*********
     ** Accessors
     *********/
+    [Section("Restrictions")]
+    [Name("Can travel")]
+    [Description("Whether fast traveling is enabled at all.\n\nDisable if you only want to fast travel in specific cases (e.g. when transferring from one base to another).")]
+    public bool CanTravel = true;
+
+    [Name("Can travel from outside")]
+    [Description("Whether you can fast travel while you're outside.\n\nDisable to avoid the temptation of escaping risky situations with fast travel.")]
+    public bool CanTravelFromOutside = false;
+
+    [Name("Can travel from non-safehouse interior")]
+    [Description("Whether you can fast travel from non-customizable interiors like caves.")]
+    public bool CanTravelFromNonSafehouseInterior = false;
+
+    [Name("Can travel to same location")]
+    [Description("Whether you can fast travel from one point to another in the same location.\n\nThis is often unintended.")]
+    public bool CanTravelToSameScene = false;
+
+    [Name("Can edit destinations")]
+    [Description("Whether you can edit your fast travel destinations.\n\nDisabling it after you've set up your options can avoid accidental changes.")]
+    public bool CanEditDestinations = true;
+
     [Section("Modifier keys")]
     [Name("Save destination")]
     [Description("Save your current place as a fast travel destination by holding this key, then pressing the destination key below you want to bind it to.")]
@@ -18,7 +39,7 @@ internal class ModConfig : JsonModSettings
     [Description("Forget a destination by holding this key, then pressing the destination key below you want to delete.")]
     public KeyCode DeleteModifierKey = KeyCode.KeypadMinus;
 
-    [Section("Destinations")]
+    [Section("Fast travel keys")]
     [Name("Fast travel point 1")]
     [Description("Press this button to fast travel to your first saved destination. You can change this point using the 'modifier keys' above.")]
     public KeyCode Destination1 = KeyCode.Keypad1;

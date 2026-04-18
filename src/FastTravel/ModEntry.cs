@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using Il2Cpp;
 using MelonLoader;
 using Pathoschild.TheLongDarkMods.Common;
@@ -143,6 +144,12 @@ public class ModEntry : MelonMod
     /// <param name="slotIndex">The destination index.</param>
     private void InteractivelyDelete(int slotIndex)
     {
+        if (!this.Config.CanEditDestinations)
+        {
+            this.Log.Warning("Can't edit fast travel destinations (per your mod settings).");
+            return;
+        }
+
         SaveModel data = this.DestinationManager.GetData();
         Destination? slot = data.Get(slotIndex);
 
@@ -163,6 +170,14 @@ public class ModEntry : MelonMod
     /// <param name="slotIndex">The destination index.</param>
     private void InteractivelySave(int slotIndex)
     {
+        // check restriction
+        if (!this.Config.CanEditDestinations)
+        {
+            this.Log.Warning("Can't edit fast travel destinations (per your mod settings).");
+            return;
+        }
+
+        // apply
         SaveModel data = this.DestinationManager.GetData();
         Destination here = this.DestinationManager.GetCurrentLocation();
         Destination? slot = data.Get(slotIndex);
@@ -189,6 +204,13 @@ public class ModEntry : MelonMod
         Destination here = this.DestinationManager.GetCurrentLocation();
         Destination? destination = data.Get(slotIndex);
         Destination? returnPoint = data.ReturnPoint;
+
+        // check restrictions
+        if (this.HasFastTravelRestrictions(here, destination, out string? reasonPhrase))
+        {
+            this.Log.Warning($"Can't fast travel {reasonPhrase} (per your mod settings).");
+            return;
+        }
 
         // not set yet
         if (destination is null)
@@ -317,6 +339,49 @@ public class ModEntry : MelonMod
             8 => this.Config.Destination9,
             _ => throw new InvalidOperationException($"Unsupported destination slot {slotIndex}.")
         };
+    }
+
+    /// <summary>Get whether the player's mod settings prohibit a fast travel.</summary>
+    /// <param name="from">The scene from which the player would travel.</param>
+    /// <param name="to">The scene in which the player would arrive.</param>
+    /// <param name="restrictionPhrase">If restrictions are in place, a phrase which can fit in the sentence <c>Can't fast travel {0}</c>.</param>
+    /// <returns>Returns whether restrictions prohibit this fast travel.</returns>
+    private bool HasFastTravelRestrictions(Destination from, Destination? to, [NotNullWhen(true)] out string? restrictionPhrase)
+    {
+        // disabled
+        if (!this.Config.CanTravel)
+        {
+            restrictionPhrase = "at all";
+            return true;
+        }
+
+        // travel from
+        if (!this.Config.CanTravelFromOutside || !this.Config.CanTravelFromNonSafehouseInterior)
+        {
+            bool isOutdoors = GameManager.IsOutDoorsScene(from.Scene.Name);
+
+            if (!this.Config.CanTravelFromOutside && isOutdoors)
+            {
+                restrictionPhrase = "from outside";
+                return true;
+            }
+
+            if (!this.Config.CanTravelFromNonSafehouseInterior && !isOutdoors && !GameManager.GetSafehouseManager().InCustomizableSafehouse())
+            {
+                restrictionPhrase = "from non-safehouse interior";
+                return true;
+            }
+        }
+
+        // travel to same scene
+        if (!this.Config.CanTravelToSameScene && from.Scene.Name == to?.Scene.Name)
+        {
+            restrictionPhrase = "to the same location";
+            return true;
+        }
+
+        restrictionPhrase = null;
+        return false;
     }
 
     /// <summary>Get a debug log representation of a scene transition.</summary>
