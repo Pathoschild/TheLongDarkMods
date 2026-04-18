@@ -1,11 +1,12 @@
+using System;
 using Il2Cpp;
 using MelonLoader;
 using Pathoschild.TheLongDarkMods.Common;
-using Pathoschild.TheLongDarkMods.ShortcutHome.Framework;
-using Pathoschild.TheLongDarkMods.ShortcutHome.Framework.DataModels;
+using Pathoschild.TheLongDarkMods.FastTravel.Framework;
+using Pathoschild.TheLongDarkMods.FastTravel.Framework.DataModels;
 using UnityEngine;
 
-namespace Pathoschild.TheLongDarkMods.ShortcutHome;
+namespace Pathoschild.TheLongDarkMods.FastTravel;
 
 /// <inheritdoc />
 public class ModEntry : MelonMod
@@ -13,13 +14,16 @@ public class ModEntry : MelonMod
     /*********
     ** Fields
     *********/
+    /// <summary>The maximum number of destinations which the player can save.</summary>
+    private const int MaxDestinations = 9;
+
     /// <summary>The mod settings.</summary>
     private readonly ModConfig Config = new();
 
     /// <summary>The log instance.</summary>
     private MelonLogger.Instance Log = null!; // set in OnInitializeMelon
 
-    /// <summary>Tracks the persisted fast travel destinations.</summary>
+    /// <summary>Tracks the persisted destinations.</summary>
     private DestinationManager DestinationManager = null!; // set in OnInitializeMelon
 
     /// <summary>Provides utility methods for reading input and showing UI.</summary>
@@ -45,11 +49,30 @@ public class ModEntry : MelonMod
     /// <inheritdoc />
     public override void OnUpdate()
     {
-        if (this.InteractionHelper.IsKeyDown(this.Config.SetHomeKey) && SceneHelper.IsSaveLoaded())
-            this.OnInteractivelySetHome();
+        if (InputManager.HasPressedKey() && SceneHelper.IsSaveLoaded())
+        {
+            if (this.InteractionHelper.IsKeyJustPressed(this.Config.ReturnPointKey))
+                this.InteractivelyReturn();
+            else
+            {
+                for (int i = 0; i < MaxDestinations; i++)
+                {
+                    // skip if not pressed
+                    KeyCode key = this.GetKeyForSlot(i);
+                    if (!this.InteractionHelper.IsKeyJustPressed(key))
+                        continue;
 
-        else if (this.InteractionHelper.IsKeyDown(this.Config.FastTravelKey) && SceneHelper.IsSaveLoaded())
-            this.OnInteractivelyFastTravel();
+                    // apply
+                    if (this.InteractionHelper.IsKeyDown(this.Config.SaveModifierKey))
+                        this.InteractivelySave(i);
+                    else if (this.InteractionHelper.IsKeyDown(this.Config.DeleteModifierKey))
+                        this.InteractivelyDelete(i);
+                    else
+                        this.InteractivelyFastTravel(i);
+                    break;
+                }
+            }
+        }
     }
 
     /// <inheritdoc />
@@ -116,77 +139,109 @@ public class ModEntry : MelonMod
     /*********
     ** Private methods
     *********/
-    /// <summary>Handle the player requesting to set their home location.</summary>
-    private void OnInteractivelySetHome()
+    /// <summary>Delete a destination with player interaction.</summary>
+    /// <param name="slotIndex">The destination index.</param>
+    private void InteractivelyDelete(int slotIndex)
     {
-        string sceneId = SceneHelper.GetSceneName();
-        Destination? savedHome = this.DestinationManager.GetData().GetHome();
+        SaveModel data = this.DestinationManager.GetData();
+        Destination? slot = data.Get(slotIndex);
 
-        // update position in same home
-        if (savedHome != null && savedHome.Scene.Name == sceneId)
-        {
-            this.InteractionHelper.ShowConfirmDialogue(
-                "This is already home! Do you want to update the arrival position?",
-                () => this.DestinationManager.SetDestination(DestinationType.Home)
-            );
-        }
+        if (slot is null)
+            return; // nothing to delete
 
-        // else replace home
-        else
-        {
-            string question = $"Set {SceneHelper.GetSceneDisplayName(sceneId)} as your home?";
-            if (savedHome != null)
-                question += $"\n\nThis will replace your previous home ({SceneHelper.GetSceneDisplayName(savedHome.Scene.Name)}).";
-
-            this.InteractionHelper.ShowConfirmDialogue(
-                question,
-                () => this.DestinationManager.SetDestination(DestinationType.Home)
-            );
-        }
+        this.InteractionHelper.ShowConfirmDialogue(
+            $"Do you want to forget fast travel point {slotIndex + 1} ({slot.GetDisplayName()})?",
+            () =>
+            {
+                data.Set(slotIndex, null);
+                this.DestinationManager.SaveData(data);
+            }
+        );
     }
 
-    /// <summary>Handle the player requesting to fast travel.</summary>
-    private void OnInteractivelyFastTravel()
+    /// <summary>Save a destination with player interaction.</summary>
+    /// <param name="slotIndex">The destination index.</param>
+    private void InteractivelySave(int slotIndex)
     {
-        string sceneId = SceneHelper.GetSceneName();
         SaveModel data = this.DestinationManager.GetData();
-        Destination? home = data.GetHome();
-        Destination? returnPoint = data.GetReturnPoint();
+        Destination here = this.DestinationManager.GetCurrentLocation();
+        Destination? slot = data.Get(slotIndex);
 
-        // not set up yet
-        if (home is null)
+        string question = $"Save {here.GetDisplayName()} as fast travel point {slotIndex + 1}?";
+        if (slot != null)
+            question += $"\n\nThis will replace your previous saved point ({slot.GetDisplayName()}).";
+
+        this.InteractionHelper.ShowConfirmDialogue(
+            question,
+            () =>
+            {
+                data.Set(slotIndex, here);
+                this.DestinationManager.SaveData(data);
+            }
+        );
+    }
+
+    /// <summary>Fast travel to a saved destination with player interaction.</summary>
+    /// <param name="slotIndex">The destination index.</param>
+    private void InteractivelyFastTravel(int slotIndex)
+    {
+        SaveModel data = this.DestinationManager.GetData();
+        Destination here = this.DestinationManager.GetCurrentLocation();
+        Destination? destination = data.Get(slotIndex);
+        Destination? returnPoint = data.ReturnPoint;
+
+        // not set yet
+        if (destination is null)
         {
-            this.InteractionHelper.ShowMessageBox($"You haven't set your home yet.\n\nPress {this.Config.SetHomeKey} to set your current location as home.");
+            this.InteractionHelper.ShowMessageBox($"You haven't saved anywhere as fast travel point {slotIndex + 1} yet.\n\nPress {this.Config.SaveModifierKey} + {this.GetKeyForSlot(slotIndex)} to save your current location to it.");
             return;
         }
 
-        // travel home
-        if (home.Scene.Name != sceneId)
+        // else travel
+        string question = $"Travel to {destination.GetDisplayName()}?";
+        if (this.Config.ReturnPointKey != KeyCode.None)
         {
-            string question = $"Travel home to {SceneHelper.GetSceneDisplayName(home.Scene.Name)}?";
-            if (returnPoint != null && returnPoint.Scene.Name != sceneId)
-                question += $"\n\nWhen you travel back later, you'll arrive here instead of {SceneHelper.GetSceneDisplayName(returnPoint.Scene.Name)}.";
-
-            this.InteractionHelper.ShowConfirmDialogue(
-                question,
-                () =>
-                {
-                    this.DestinationManager.SetDestination(DestinationType.ReturnPoint);
-                    this.FastTravelTo(home);
-                }
-            );
-            return;
+            if (returnPoint != null && returnPoint.Scene.Name != here.Scene.Name)
+                question += $"\n\nThis will replace your previous return point ({returnPoint.GetDisplayName()}).";
+            question += $"\n\nYou can return here later by pressing {this.Config.ReturnPointKey}.";
         }
 
-        // travel to return point
+        this.InteractionHelper.ShowConfirmDialogue(
+            question,
+            () =>
+            {
+                data.ReturnPoint = here;
+                this.DestinationManager.SaveData(data);
+                this.FastTravelTo(destination);
+            }
+        );
+    }
+
+    /// <summary>Handle the player requesting to fast travel to their last return point.</summary>
+    private void InteractivelyReturn()
+    {
+        SaveModel data = this.DestinationManager.GetData();
+        Destination here = this.DestinationManager.GetCurrentLocation();
+        Destination? returnPoint = data.ReturnPoint;
+
         if (returnPoint is null)
         {
-            this.InteractionHelper.ShowMessageBox("You're already home, and haven't fast traveled yet.\n\nAfter you fast travel home at least once, you'll be able to fast travel back to your departure point.");
+            this.InteractionHelper.ShowMessageBox($"You haven't fast traveled anywhere yet.\n\nAfter you fast travel at least once, you'll be able to return to your departure point by pressing {this.Config.ReturnPointKey}.");
             return;
         }
+
+        string question = $"Travel back to {returnPoint.GetDisplayName()}?";
+        if (here.Scene.Name != returnPoint.Scene.Name)
+            question += $"\n\nThis will set {here.GetDisplayName()} as your new return point.";
+
         this.InteractionHelper.ShowConfirmDialogue(
-            $"Travel back to {SceneHelper.GetSceneDisplayName(returnPoint.Scene.Name)}?",
-            () => this.FastTravelTo(returnPoint)
+            question,
+            () =>
+            {
+                data.ReturnPoint = here;
+                this.DestinationManager.SaveData(data);
+                this.FastTravelTo(returnPoint);
+            }
         );
     }
 
@@ -202,7 +257,7 @@ public class ModEntry : MelonMod
         // fade out and warp
         CameraFade.FadeOut(
             time: GameManager.m_SceneTransitionFadeOutTime,
-            onFadeFinished: (System.Action)(() =>
+            onFadeFinished: (Action)(() =>
             {
                 TransitionModel original = destination.LastTransition;
 
@@ -243,6 +298,25 @@ public class ModEntry : MelonMod
                 GameManager.LoadScene(destination.Scene.Name, SaveGameSystem.GetCurrentSaveName()); // need to load the Unity scene name; the game will get the instance ID from the transition data
             })
         );
+    }
+
+    /// <summary>Get the key bound to a given fast travel slot.</summary>
+    /// <param name="slotIndex">The fast travel slot index.</param>
+    private KeyCode GetKeyForSlot(int slotIndex)
+    {
+        return slotIndex switch
+        {
+            0 => this.Config.Destination1,
+            1 => this.Config.Destination2,
+            2 => this.Config.Destination3,
+            3 => this.Config.Destination4,
+            4 => this.Config.Destination5,
+            5 => this.Config.Destination6,
+            6 => this.Config.Destination7,
+            7 => this.Config.Destination8,
+            8 => this.Config.Destination9,
+            _ => throw new InvalidOperationException($"Unsupported destination slot {slotIndex}.")
+        };
     }
 
     /// <summary>Get a debug log representation of a scene transition.</summary>

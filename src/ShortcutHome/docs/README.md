@@ -1,18 +1,15 @@
-**Shortcut Home** is a [The Long Dark] survival mode mod that lets you fast travel between a
-safehouse and your main home. This lets you explore the world without the tedium of transferring
-your hoard to another base in each region.
+**Fast Travel** is a [The Long Dark] survival mode mod that lets you save up to 9 places (like your
+home base), and fast travel to them anytime at the press of a button.
 
-> ![](images/travel.png)
+For example, you can have one home base while you explore the world without the tedium of
+transferring your hoard to each region.
 
-> [!NOTE]  
-> **This is an early proof-of-concept mod.**  
-> Use at your own risk. The mod is currently unbalanced and lacks safeguards. This will be improved
-> before release.
->
-> TO DO BEFORE RELEASE:
-> - Add custom decor items: one as the 'anchor' in your home location, and one in other decoratable
->   safehouses to act as the other end of the fast travel connection. Maybe based on the small
->   painting of a house?
+> ![](images/save-location.png)<br />![](images/travel.png)
+
+> [!WARNING]  
+> **This is an experimental mod.**  
+> This is still being developed and tested; it could conceivably lead to softlocks or permanent
+> save issues. Use at your own risk.
 
 ## Contents
 * [Install](#install)
@@ -27,22 +24,20 @@ your hoard to another base in each region.
 3. Launch the game.
 
 ## Use
-### First-time setup
-When you first use the mod in a save, you'll need to set your home location.
+You can save up to 9 places as a fast travel point. Each one is bound to a specific key (by default
+numpad 1 through 9); you can change all the keys in the [mod options](#configure) if needed.
 
-To do that:
-1. Load your save.
-2. Walk into your home location.
-3. Press the numpad `.` key to set it. (It'll ask you to confirm.)
+To use fast travel (with the default options):
+- Travel to a saved position anytime by pressing its key.
+- Save your current position as a fast travel point by pressing `[numpad +]` + destination key.
+- Delete a saved fast travel point by pressing `[numpad -]` + destination key.
+- Return to where you were before your _most recent_ fast travel by pressing `[numpad 0]`.
 
-### Normal use
-Just press the numpad `0` key to fast travel to your home. When you're home, press the same key to
-return to your departure point.
-
-In either case, it'll ask for confirmation (so you don't fast travel by mistake).
+The mod always asks for confirmation, so you can't fast travel or change your saved destinations by
+mistake.
 
 ## Configure
-From the game's Options menu, click "Mod Settings" and then navigate to "Shortcut Home". Hover the
+From the game's Options menu, click "Mod Settings" and then navigate to "Fast Travel". Hover the
 cursor over a field for details.
 
 > ![](images/config.png)

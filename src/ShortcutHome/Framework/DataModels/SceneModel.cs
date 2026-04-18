@@ -1,7 +1,7 @@
 using System.Text.Json.Serialization;
 using UnityEngine.SceneManagement;
 
-namespace Pathoschild.TheLongDarkMods.ShortcutHome.Framework.DataModels;
+namespace Pathoschild.TheLongDarkMods.FastTravel.Framework.DataModels;
 
 /// <summary>The metadata for a game scene (e.g. a location).</summary>
 /// <remarks>This is a JSON-serializable equivalent to <see cref="Scene"/>.</remarks>

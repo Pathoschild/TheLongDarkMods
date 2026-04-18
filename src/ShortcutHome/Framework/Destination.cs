@@ -1,10 +1,11 @@
 using System.Text.Json.Serialization;
 using Il2Cpp;
-using Pathoschild.TheLongDarkMods.ShortcutHome.Framework.DataModels;
+using Pathoschild.TheLongDarkMods.Common;
+using Pathoschild.TheLongDarkMods.FastTravel.Framework.DataModels;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace Pathoschild.TheLongDarkMods.ShortcutHome.Framework;
+namespace Pathoschild.TheLongDarkMods.FastTravel.Framework;
 
 /// <summary>The metadata for a player position in the world.</summary>
 /// <remarks>This deliberately stores more info than strictly needed, so that we can use other fields in future versions without breaking save changes.</remarks>
@@ -56,6 +57,12 @@ internal class Destination
     /// <param name="lastTransition"><inheritdoc cref="LastTransition" path="/summary"/></param>
     public Destination(Scene scene, Vector3 position, float cameraPitch, float cameraYaw, SceneTransitionData lastTransition)
         : this(new SceneModel(scene), new Vector3Model(position), cameraPitch, cameraYaw, new TransitionModel(lastTransition)) { }
+
+    /// <summary>Get the destination's translated display name.</summary>
+    public string GetDisplayName()
+    {
+        return SceneHelper.GetSceneDisplayName(this.Scene.Name);
+    }
 
     /// <inheritdoc />
     public override string ToString()

@@ -4,10 +4,11 @@ See the individual mods for documentation and release notes.
 ## Mods
 * **Auto-Fill Map on Explore** <small>([readme](src/AutoFillMapOnExplore#readme))</small>  
   _Fills in the map around you as you explore._
+* **Fast Travel** <small>([readme](src/ShortcutHome#readme))</small>  
+  _Lets you save up to 9 fast travel points (e.g. your home base), and fast travel to them anytime
+  at the press of a button._
 * **Save Backup** <small>([readme](src/SaveBackup#readme))</small>  
   _Automatically backs up all your saves once per real day into its subfolder._
-* **Shortcut Home** <small>([readme](src/ShortcutHome#readme))</small>  
-  _Lets you fast travel from a safehouse in any region to your main home._
 
 ## Compiling the mods
 Installing stable releases from [Nexus Mods] or [TLDMods] is recommended for most users. If you

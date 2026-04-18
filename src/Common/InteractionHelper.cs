@@ -30,6 +30,13 @@ internal class InteractionHelper
     /// <param name="key">The keyboard button to check.</param>
     public bool IsKeyDown(KeyCode key)
     {
+        return Input.GetKey(key);
+    }
+
+    /// <summary>Get whether a keyboard button was first pressed this tick. This returns false if the key was held down since a previous tick.</summary>
+    /// <param name="key">The keyboard button to check.</param>
+    public bool IsKeyJustPressed(KeyCode key)
+    {
         return InputManager.GetKeyDown(InputManager.m_CurrentContext, key);
     }
 

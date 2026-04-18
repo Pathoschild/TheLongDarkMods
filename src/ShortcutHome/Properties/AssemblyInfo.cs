@@ -1,6 +1,6 @@
 using System.Reflection;
 using MelonLoader;
-using Pathoschild.TheLongDarkMods.ShortcutHome;
+using Pathoschild.TheLongDarkMods.FastTravel;
 
 // assembly info
 [assembly: AssemblyTitle(ModInfo.DisplayName)]

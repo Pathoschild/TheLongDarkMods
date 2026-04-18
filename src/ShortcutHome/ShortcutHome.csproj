@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <RootNamespace>Pathoschild.TheLongDarkMods.ShortcutHome</RootNamespace>
+    <RootNamespace>Pathoschild.TheLongDarkMods.FastTravel</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

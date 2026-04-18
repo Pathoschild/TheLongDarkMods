@@ -3,10 +3,10 @@ using Il2Cpp;
 using MelonLoader;
 using ModData;
 using Pathoschild.TheLongDarkMods.Common;
-using Pathoschild.TheLongDarkMods.ShortcutHome.Framework.DataModels;
+using Pathoschild.TheLongDarkMods.FastTravel.Framework.DataModels;
 using UnityEngine;
 
-namespace Pathoschild.TheLongDarkMods.ShortcutHome.Framework;
+namespace Pathoschild.TheLongDarkMods.FastTravel.Framework;
 
 /// <summary>Tracks persisted destination endpoints.</summary>
 internal class DestinationManager
@@ -28,13 +28,22 @@ internal class DestinationManager
         this.Log = log;
     }
 
-    /// <summary>Get the saved data.</summary>
+    /// <summary>Get the saved data on disk.</summary>
     public SaveModel GetData()
     {
         ModDataManager dataManager = this.CreateDataManager();
         SaveModel? data = this.DeserializeRaw(dataManager.Load());
 
         return data ?? new SaveModel();
+    }
+
+    /// <summary>Save data back to disk.</summary>
+    /// <param name="data">The data to save.</param>
+    public void SaveData(SaveModel data)
+    {
+        this
+            .CreateDataManager()
+            .Save(this.Serialize(data));
     }
 
     /// <summary>Get the destination info for the player's current position.</summary>
@@ -47,19 +56,6 @@ internal class DestinationManager
         return new Destination(SceneHelper.GetScene(), player.position, camera.m_Pitch, camera.m_Yaw, transition);
     }
 
-    /// <summary>Set the player's current position as the tracked destination.</summary>
-    /// <param name="type">The destination type to set.</param>
-    public void SetDestination(DestinationType type)
-    {
-        ModDataManager dataManager = this.CreateDataManager();
-        SaveModel data = this.DeserializeRaw(dataManager.Load()) ?? new SaveModel();
-        data.Destinations[type] = this.GetCurrentLocation();
-
-        dataManager.Save(
-            this.Serialize(data)
-        );
-    }
-
 
     /*********
     ** Private methods
@@ -67,7 +63,7 @@ internal class DestinationManager
     /// <summary>Create a mod data manager.</summary>
     private ModDataManager CreateDataManager()
     {
-        return new ModDataManager("ShortcutHome");
+        return new ModDataManager("FastTravel");
     }
 
     /// <summary>Deserialize raw data into the data model, if it's valid.</summary>
