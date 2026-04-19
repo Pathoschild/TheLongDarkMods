@@ -225,12 +225,12 @@ public class ModEntry : MelonMod
 
         // else travel
         string question = $"Travel to {destination.GetDisplayName()}?";
-        if (this.Config.ReturnPointKey != KeyCode.None)
+        if (this.Config.ReturnPointKey != KeyCode.None && this.Config.ShowUsageHints)
         {
             if (returnPoint != null && returnPoint.Scene.Name != here.Scene.Name)
                 question += $"\n\nThis will replace your previous return point ({returnPoint.GetDisplayName()}).";
-            if (this.Config.ShowUsageHints)
-                question += $"\n\nYou can return here later by pressing {this.Config.ReturnPointKey}.";
+
+            question += $"\n\nYou can return here later by pressing {this.Config.ReturnPointKey}.";
         }
 
         this.InteractionHelper.ShowConfirmDialogue(
