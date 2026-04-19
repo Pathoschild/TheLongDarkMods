@@ -17,9 +17,6 @@ jobs:
               with:
                   dotnet-version: 6.0.x
 
-            - name: Install artifact client
-              uses: lhotari/gh-actions-artifact-client@v2
-
             #####
             ## Fetch code
             #####
@@ -86,18 +83,30 @@ jobs:
             - name: Build mods
               run: dotnet build src
 
-            - name: Upload artifacts
-              shell: pwsh
-              run: |
-                  if (!(Test-Path -Path "_releases")) {
-                      Write-Host "No files found at path '_releases'."
-                      exit 1
-                  }
+            - name: Upload AutoFillMapOnExplore
+              uses: actions/upload-artifact@v7
+              with:
+                  name: AutoFillMapOnExplore
+                  path: _releases/AutoFillMapOnExplore.dll
+                  archive: false
 
-                  foreach ($file in (Get-ChildItem -Path "_releases" -Filter "*.dll")) {
-                      Get-Content $file.FullName -AsByteStream | gh-actions-artifact-client.js upload $file.Name
-                  }
+            - name: Upload FastTravel
+              uses: actions/upload-artifact@v7
+              with:
+                  name: FastTravel
+                  path: _releases/FastTravel.dll
+                  archive: false
 
+            - name: Upload SaveBackup
+              uses: actions/upload-artifact@v7
+              with:
+                  name: SaveBackup
+                  path: _releases/SaveBackup.dll
+                  archive: false
+
+            #####
+            ## Attest uploads
+            #####
             - name: Generate artifact attestations
               id: attest
               uses: actions/attest-build-provenance@v2
