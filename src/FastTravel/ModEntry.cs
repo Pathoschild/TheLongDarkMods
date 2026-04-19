@@ -208,7 +208,7 @@ public class ModEntry : MelonMod
         Destination? returnPoint = data.ReturnPoint;
 
         // check restrictions
-        if (this.HasFastTravelRestrictions(here, destination, out string? reasonPhrase))
+        if (this.HasFastTravelRestrictions(here, destination, data, out string? reasonPhrase))
         {
             this.Log.Warning($"Can't fast travel {reasonPhrase} (per your mod settings).");
             return;
@@ -254,7 +254,7 @@ public class ModEntry : MelonMod
         Destination? returnPoint = data.ReturnPoint;
 
         // check restrictions
-        if (this.HasFastTravelRestrictions(here, returnPoint, out string? reasonPhrase))
+        if (this.HasFastTravelRestrictions(here, returnPoint, data, out string? reasonPhrase))
         {
             this.Log.Warning($"Can't fast travel {reasonPhrase} (per your mod settings).");
             return;
@@ -366,15 +366,42 @@ public class ModEntry : MelonMod
     /// <summary>Get whether the player's mod settings prohibit a fast travel.</summary>
     /// <param name="from">The scene from which the player would travel.</param>
     /// <param name="to">The scene in which the player would arrive.</param>
+    /// <param name="data">The saved fast travel destinations.</param>
     /// <param name="restrictionPhrase">If restrictions are in place, a phrase which can fit in the sentence <c>Can't fast travel {0}</c>.</param>
     /// <returns>Returns whether restrictions prohibit this fast travel.</returns>
-    private bool HasFastTravelRestrictions(Destination from, Destination? to, [NotNullWhen(true)] out string? restrictionPhrase)
+    private bool HasFastTravelRestrictions(Destination from, Destination? to, SaveModel data, [NotNullWhen(true)] out string? restrictionPhrase)
     {
         // disabled
         if (!this.Config.CanTravel)
         {
             restrictionPhrase = "at all";
             return true;
+        }
+
+        // only between fast travel points
+        if (this.Config.OnlyBetweenDestinations && to != null)
+        {
+            bool foundFrom = false;
+            bool foundTo = false;
+
+            foreach (var destination in data.Destinations)
+            {
+                string sceneName = destination.Value.Scene.Name;
+
+                if (sceneName == from.Scene.Name)
+                    foundFrom = true;
+                if (sceneName == to.Scene.Name)
+                    foundTo = true;
+
+                if (foundFrom && foundTo)
+                    break;
+            }
+
+            if (!foundFrom || !foundTo)
+            {
+                restrictionPhrase = "because you can only travel between saved fast travel points";
+                return true;
+            }
         }
 
         // travel from

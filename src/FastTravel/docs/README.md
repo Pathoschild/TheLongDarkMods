@@ -22,6 +22,7 @@ transferring your hoard to each region.
 1. Install [MelonLoader], [ModData][TLDMods], and [ModSettings][TLDMods].
 2. Download this mod's DLL directly into your game's `Mods` subfolder.
 3. Launch the game.
+4. _(Optional)_ Edit the [mod settings](#configure) to choose when you can fast travel.
 
 ## Use
 You can save up to 9 places as a fast travel point. Each one is bound to a specific key (by default
