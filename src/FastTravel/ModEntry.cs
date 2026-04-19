@@ -93,10 +93,12 @@ public class ModEntry : MelonMod
                 Scene initialized:
                     buildIndex: {buildIndex}
                     sceneName: '{sceneName}'
+                    save name: '{SaveGameSystem.GetCurrentSaveName()}'
 
                     location: {location}
-                    save name: '{SaveGameSystem.GetCurrentSaveName()}'
-                    m_SceneWasRestored: {GameManager.m_SceneWasRestored}
+                    is outside: {GameManager.IsOutDoorsScene(location.Scene.Name)}
+                    is safehouse: {GameManager.GetSafehouseManager().InCustomizableSafehouse()}
+                    was restored: {GameManager.m_SceneWasRestored}
 
                     Unity scene:
                         name: {location.Scene.Name}
@@ -251,6 +253,13 @@ public class ModEntry : MelonMod
         Destination here = this.DestinationManager.GetCurrentLocation();
         Destination? returnPoint = data.ReturnPoint;
 
+        // check restrictions
+        if (this.HasFastTravelRestrictions(here, returnPoint, out string? reasonPhrase))
+        {
+            this.Log.Warning($"Can't fast travel {reasonPhrase} (per your mod settings).");
+            return;
+        }
+
         if (returnPoint is null)
         {
             string message = "You haven't fast traveled anywhere yet.";
@@ -314,10 +323,14 @@ public class ModEntry : MelonMod
                     this.Log.Msg(
                         $"""
                         Starting fast travel:
-                            from scene: '{currentSceneName}'
                             save name: '{SaveGameSystem.GetCurrentSaveName()}'
 
+                            from location: '{currentSceneName}'
+                            from outside: {GameManager.IsOutDoorsScene(currentSceneName)}
+                            from safehouse: {GameManager.GetSafehouseManager().InCustomizableSafehouse()}
+
                             destination: {destination}
+                            destination is outside: {GameManager.IsOutDoorsScene(destination.Scene.Name)}
 
                         {this.GetTransitionDebugSummary("transition", new TransitionModel(GameManager.m_SceneTransitionData))}
                         """
