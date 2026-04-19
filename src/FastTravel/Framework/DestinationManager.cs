@@ -41,6 +41,8 @@ internal class DestinationManager
     /// <param name="data">The data to save.</param>
     public void SaveData(SaveModel data)
     {
+        data.Version = ModInfo.Version;
+
         this
             .CreateDataManager()
             .Save(this.Serialize(data));

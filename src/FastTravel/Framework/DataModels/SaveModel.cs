@@ -9,6 +9,9 @@ internal class SaveModel
     /*********
     ** Accessors
     *********/
+    /// <summary>The mod version which saved this data.</summary>
+    public string? Version { get; set; }
+
     /// <summary>The player's location before their most recent fast travel.</summary>
     public Destination? ReturnPoint { get; set; }
 
