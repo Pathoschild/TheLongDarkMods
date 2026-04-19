@@ -51,9 +51,15 @@ internal class DestinationManager
     {
         vp_FPSCamera camera = GameManager.GetVpFPSCamera();
         Transform player = GameManager.GetPlayerObject().transform;
-        SceneTransitionData transition = GameManager.m_SceneTransitionData;
 
-        return new Destination(SceneHelper.GetScene(), player.position, camera.m_Pitch, camera.m_Yaw, transition);
+        return new Destination(
+            region: SceneHelper.TryGetRegion(),
+            scene: SceneHelper.GetScene(),
+            position: player.position,
+            cameraPitch: camera.m_Pitch,
+            cameraYaw: camera.m_Yaw,
+            lastTransition: GameManager.m_SceneTransitionData
+        );
     }
 
 

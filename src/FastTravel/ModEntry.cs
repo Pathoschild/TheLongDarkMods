@@ -96,8 +96,8 @@ public class ModEntry : MelonMod
                     save name: '{SaveGameSystem.GetCurrentSaveName()}'
 
                     location: {location}
-                    is outside: {GameManager.IsOutDoorsScene(location.Scene.Name)}
-                    is safehouse: {GameManager.GetSafehouseManager().InCustomizableSafehouse()}
+                    is outside: {SceneHelper.IsOutdoors(location.Scene.Name)}
+                    is safehouse: {SceneHelper.IsCustomizableSafehouse()}
                     was restored: {GameManager.m_SceneWasRestored}
 
                     Unity scene:
@@ -186,7 +186,13 @@ public class ModEntry : MelonMod
 
         string question = $"Save {here.GetDisplayName()} as fast travel point {slotIndex + 1}?";
         if (slot != null)
-            question += $"\n\nThis will replace your previous saved point ({slot.GetDisplayName()}).";
+        {
+            string prevLabel = slot.Scene.Name == here.Scene.Name
+                ? "in this location"
+                : $"({slot.GetDisplayName()})";
+
+            question += $"\n\nThis will replace your previous saved point {prevLabel}.";
+        }
 
         this.InteractionHelper.ShowConfirmDialogue(
             question,
@@ -326,11 +332,11 @@ public class ModEntry : MelonMod
                             save name: '{SaveGameSystem.GetCurrentSaveName()}'
 
                             from location: '{currentSceneName}'
-                            from outside: {GameManager.IsOutDoorsScene(currentSceneName)}
-                            from safehouse: {GameManager.GetSafehouseManager().InCustomizableSafehouse()}
+                            from outside: {SceneHelper.IsOutdoors(currentSceneName)}
+                            from safehouse: {SceneHelper.IsCustomizableSafehouse()}
 
                             destination: {destination}
-                            destination is outside: {GameManager.IsOutDoorsScene(destination.Scene.Name)}
+                            destination is outside: {SceneHelper.IsOutdoors(destination.Scene.Name)}
 
                         {this.GetTransitionDebugSummary("transition", new TransitionModel(GameManager.m_SceneTransitionData))}
                         """
@@ -407,7 +413,7 @@ public class ModEntry : MelonMod
         // travel from
         if (!this.Config.CanTravelFromOutside || !this.Config.CanTravelFromNonSafehouseInterior)
         {
-            bool isOutdoors = GameManager.IsOutDoorsScene(from.Scene.Name);
+            bool isOutdoors = SceneHelper.IsOutdoors(from.Scene.Name);
 
             if (!this.Config.CanTravelFromOutside && isOutdoors)
             {
@@ -415,7 +421,7 @@ public class ModEntry : MelonMod
                 return true;
             }
 
-            if (!this.Config.CanTravelFromNonSafehouseInterior && !isOutdoors && !GameManager.GetSafehouseManager().InCustomizableSafehouse())
+            if (!this.Config.CanTravelFromNonSafehouseInterior && !isOutdoors && !SceneHelper.IsCustomizableSafehouse())
             {
                 restrictionPhrase = "from non-safehouse interior";
                 return true;

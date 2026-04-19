@@ -1,4 +1,5 @@
 using Il2Cpp;
+using Il2CppTLD.Scenes;
 using UnityEngine.SceneManagement;
 using UnitySceneManager = UnityEngine.SceneManagement.SceneManager;
 
@@ -22,6 +23,12 @@ internal static class SceneHelper
         return UnitySceneManager.GetActiveScene();
     }
 
+    /// <summary>Try to get the region containing the current scene.</summary>
+    public static RegionSpecification? TryGetRegion()
+    {
+        return GameManager.TryGetCurrentRegion();
+    }
+
     /// <summary>Get the active scene name.</summary>
     public static string GetSceneName()
     {
@@ -30,8 +37,21 @@ internal static class SceneHelper
 
     /// <summary>Get the localized name for a scene.</summary>
     /// <param name="name">The internal scene name.</param>
-    public static string GetSceneDisplayName(string name)
+    public static string GetDisplayName(string name)
     {
         return InterfaceManager.GetNameForScene(name);
+    }
+
+    /// <summary>Get whether a scene is outdoors.</summary>
+    /// <param name="name">The internal scene name.</param>
+    public static bool IsOutdoors(string name)
+    {
+        return GameManager.IsOutDoorsScene(name);
+    }
+
+    /// <summary>Get whether the current scene is a customizable safehouse location.</summary>
+    public static bool IsCustomizableSafehouse()
+    {
+        return GameManager.GetSafehouseManager().InCustomizableSafehouse();
     }
 }
