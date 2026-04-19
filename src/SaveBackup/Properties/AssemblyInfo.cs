@@ -5,7 +5,7 @@ using Pathoschild.TheLongDarkMods.SaveBackup;
 // assembly info
 [assembly: AssemblyTitle(ModInfo.DisplayName)]
 [assembly: AssemblyDescription(ModInfo.Description)]
-[assembly: AssemblyVersion(ModInfo.Version)]
+[assembly: AssemblyVersion(ModInfo.AssemblyVersion)]
 [assembly: AssemblyFileVersion(ModInfo.Version)]
 
 // MelonLoader info
