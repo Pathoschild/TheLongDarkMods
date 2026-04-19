@@ -11,8 +11,8 @@ See the individual mods for documentation and release notes.
   _Automatically backs up all your saves once per real day into its subfolder._
 
 ## Compiling the mods
-Installing stable releases from [Nexus Mods] or [TLDMods] is recommended for most users. If you
-really want to compile the mod yourself, read on.
+Installing stable releases from [Nexus Mods] is recommended for most users. If you really want to
+compile the mod yourself, read on.
 
 ### Compiling a mod for testing
 To compile a mod and add it to your game's `Mods` directory:
@@ -30,5 +30,4 @@ To package a mod for release:
 
 [Nexus Mods]: https://www.nexusmods.com/games/thelongdark
 [The Long Dark]: https://www.thelongdark.com
-[TLDMods]: https://tldmods.net
 [Visual Studio]: https://www.visualstudio.com/vs/community/

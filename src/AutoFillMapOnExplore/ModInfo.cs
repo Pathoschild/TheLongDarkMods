@@ -21,5 +21,5 @@ internal class ModInfo
     public const string Description = "Fills in the map around you as you explore.";
 
     /// <summary>The URL of the page where the player can find the mod.</summary>
-    public const string? DownloadLink = null; // TODO
+    public const string? DownloadLink = "https://www.nexusmods.com/thelongdark/mods/52";
 }

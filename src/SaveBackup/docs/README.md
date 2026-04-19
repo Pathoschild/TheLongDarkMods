@@ -1,6 +1,7 @@
 **Save Backup** is a [The Long Dark] mod that automatically backs up all your saves to its subfolder
-once per real day. Particularly when playing with mods, this offers an escape hatch in case
-something goes wrong (e.g. your save file gets corrupted).
+once per real day.
+
+Particularly when playing with mods, this lets you recover your save if something goes wrong.
 
 ## Contents
 * [Install](#install)
@@ -11,8 +12,8 @@ something goes wrong (e.g. your save file gets corrupted).
 * [See also](#see-also)
 
 ## Install
-1. Install [MelonLoader].
-2. Download this mod's DLL directly into your game's `Mods` subfolder.
+1. Install [MelonLoader] and [ModSettings][TLDMods].
+2. [Download this mod][mod page] directly into your game's `Mods` subfolder.
 3. Launch the game.
 
 ## Use
@@ -27,14 +28,14 @@ To restore a backup, just copy the files from the zip back into your saves folde
 `%localappdata%\Hinterland\TheLongDark`. (You can paste that exact path into Windows Explorer.)
 
 ## Configure
-From the game's Options menu, click "Mod Settings" and then navigate to "Save Backup". Hover the
-cursor over a field for details.
+From the game's Options menu, click "Mod Settings" and then navigate to "Save Backup". Point the
+cursor at any field to see an explanation on the right.
 
 > ![](images/config.png)
 
 ## Compatibility
-The mod is compatible with The Long Dark 2.50+ and MelonLoader 0.7.2+, both survival mode and
-Wintermute.
+- Compatible with The Long Dark 2.50+ (including 2.54) and MelonLoader 0.7.2+.
+- Works with both survival mode and Wintermute.
 
 ## Security
 This mod is fully open-source. All its source code is public in this repository, so anyone can
@@ -46,8 +47,11 @@ this code, and hasn't been modified in any way.
 
 ## See also
 * [Release notes](release-notes.md)
-* ~~Nexus mod~~ (not released yet)
+* [Nexus mod][mod page]
+
+[mod page]: https://www.nexusmods.com/thelongdark/mods/53
 
 [GitHub attestations]: https://docs.github.com/en/actions/concepts/security/artifact-attestations
 [MelonLoader]: https://tldmods.net/install.html
+[TLDMods]: https://tldmods.net
 [The Long Dark]: https://www.thelongdark.com

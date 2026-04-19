@@ -8,7 +8,7 @@ internal class ModInfo
 
     /// <summary>The semantic version for the mod.</summary>
     /// <remarks>This affects both the MelonLoader mod version and DLL version.</remarks>
-    public const string Version = "1.0.0";
+    public const string Version = "0.1.0";
 
     /// <summary>The assembly version, if different from the <see cref="Version"/>.</summary>
     /// <remarks>This is only needed when the version has a pre-release tag, which isn't valid in assembly versions.</remarks>
@@ -21,5 +21,5 @@ internal class ModInfo
     public const string Description = "Lets you save up to 9 places (like your home base), and fast travel to them anytime at the press of a button.";
 
     /// <summary>The URL of the page where the player can find the mod.</summary>
-    public const string? DownloadLink = null; // TODO
+    public const string? DownloadLink = "https://www.nexusmods.com/thelongdark/mods/54";
 }

@@ -7,9 +7,8 @@ transferring your hoard to each region.
 > ![](images/save-location.png)<br />![](images/travel.png)
 
 > [!WARNING]  
-> **This is an experimental mod.**  
-> This is still being developed and tested; it could conceivably lead to softlocks or permanent
-> save issues. Use at your own risk.
+> **This mod is still experimental.**  
+> I strongly recommend [keeping save backups](../SaveBackup) when using this mod.
 
 ## Contents
 * [Install](#install)
@@ -21,9 +20,10 @@ transferring your hoard to each region.
 
 ## Install
 1. Install [MelonLoader], [ModData][TLDMods], and [ModSettings][TLDMods].
-2. Download this mod's DLL directly into your game's `Mods` subfolder.
+2. [Download this mod][mod page] directly into your game's `Mods` subfolder.
 3. Launch the game.
-4. _(Optional)_ Edit the [mod settings](#configure) to choose when you can fast travel.
+
+You can [edit the mod settings](#configure) to choose when you can fast travel.
 
 ## Use
 You can save up to 9 places as a fast travel point. Each one is bound to a specific key (by default
@@ -39,13 +39,17 @@ The mod always asks for confirmation, so you can't fast travel or change your sa
 mistake.
 
 ## Configure
-From the game's Options menu, click "Mod Settings" and then navigate to "Fast Travel". Hover the
-cursor over a field for details.
+From the game's Options menu, click "Mod Settings" and then navigate to "Fast Travel". Point the
+cursor at any field to see an explanation on the right.
 
 > ![](images/config.png)
 
 ## Compatibility
-The mod is compatible with The Long Dark 2.50+ and MelonLoader 0.7.2+.
+- Compatible with The Long Dark 2.50+ (including 2.54) and MelonLoader 0.7.2+.
+- For **survival mode only**. Wintermute's story triggers are very fragile; you shouldn't use fast
+  travel in Wintermute even if you get it to work.
+
+Pairs well with [Save Backup](../SaveBackup) in case of any issue.
 
 ## Security
 This mod is fully open-source. All its source code is public in this repository, so anyone can
@@ -57,7 +61,9 @@ this code, and hasn't been modified in any way.
 
 ## See also
 * [Release notes](release-notes.md)
-* ~~Nexus mod~~ (not released yet)
+* [Nexus mod][mod page]
+
+[mod page]: https://www.nexusmods.com/thelongdark/mods/54
 
 [GitHub attestations]: https://docs.github.com/en/actions/concepts/security/artifact-attestations
 [MelonLoader]: https://tldmods.net/install.html
