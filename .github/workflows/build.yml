@@ -1,0 +1,106 @@
+name: Build releases
+on: [push, workflow_dispatch]
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        permissions:
+            id-token: write     # for attestation
+            attestations: write # for attestation
+
+        steps:
+            #####
+            ## Add dependencies
+            #####
+            - name: Install .NET 6
+              id: install-dotnet
+              uses: actions/setup-dotnet@v4
+              with:
+                  dotnet-version: 6.0.x
+
+            - name: Install artifact client
+              uses: lhotari/gh-actions-artifact-client@v2
+
+            #####
+            ## Fetch code
+            #####
+            - name: Fetch code
+              uses: actions/checkout@v4
+              with:
+                  fetch-tags: false
+
+            #####
+            ## Set pre-release versions
+            #####
+            - name: Set prerelease versions
+              shell: pwsh
+              run: |
+                  $modInfoFiles = Get-ChildItem -Recurse -File | Where-Object { $_.Name -eq "ModInfo.cs" }
+
+                  foreach ($modInfoFile in $modInfoFiles) {
+                      $fullPath = $modInfoFile.FullName
+                      $relativePath = Resolve-Path -Path $fullPath -Relative
+
+                      $content = Get-Content $fullPath -Raw
+
+                      # extract current version
+                      if ($content -notmatch 'const string Version = "(?<version>[^"]+)"') {
+                          Write-Warning "Skipped $($relativePath): no 'Version' field found."
+                          continue
+                      }
+                      $oldVersion = $matches['version']
+
+                      # parse current version
+                      if ($oldVersion -match '^(?<major>\d+)\.(?<minor>\d+)(?:\.(?<patch>\d+)?)(-(?<prerelease>[0-9A-Za-z.-]+))?$') {
+                          $oldMajor = [int]$matches['major']
+                          $oldMinor = [int]$matches['minor']
+                          $oldPatch = if ($matches['patch']) { [int]$matches['patch'] } else { 0 }
+                          $oldPrerelease = $matches['prerelease']
+                      }
+                      else {
+                          Write-Warning "Skipped $($relativePath): version '$oldVersion' couldn't be parsed as a semantic version number."
+                          continue
+                      }
+
+                      # build new version
+                      $newPatch = $oldPatch
+                      if (!$oldPrerelease) {
+                          $newPatch += 1
+                      }
+                      $timestamp = (Get-Date).ToString("yyyyMMddHHmm")
+                      $newPrerelease = '-alpha.{{timestamp}}' -replace '{{timestamp}}', $timestamp
+                      $newVersion = "$oldMajor.$oldMinor.$newPatch$newPrerelease"
+                      $newAssemblyVersion = "$oldMajor.$oldMinor.$newPatch" # assembly version doesn't allow pre-release tags
+
+                      # update project
+                      $newContent = $content -replace 'const string Version = .+', "const string Version = `"$newVersion`";"
+                      $newContent = $newContent -replace 'const string AssemblyVersion = .+', "const string AssemblyVersion = `"$newAssemblyVersion`";"
+                      Set-Content -Path $fullPath -Value $newContent
+
+                      Write-Host "Updated $($relativePath): $oldVersion -> $newVersion (assembly version $newAssemblyVersion)."
+                  }
+              if: github.ref_type != 'tag'
+
+            #####
+            ## Build & upload artifacts
+            #####
+            - name: Build mods
+              run: dotnet build src
+
+            - name: Upload artifacts
+              shell: pwsh
+              run: |
+                  if (!(Test-Path -Path "_releases")) {
+                      Write-Host "No files found at path '_releases'."
+                      exit 1
+                  }
+
+                  foreach ($file in (Get-ChildItem -Path "_releases" -Filter "*.dll")) {
+                      Get-Content $file.FullName -AsByteStream | gh-actions-artifact-client.js upload $file.Name
+                  }
+
+            - name: Generate artifact attestations
+              id: attest
+              uses: actions/attest-build-provenance@v2
+              with:
+                  subject-path: _releases/*.dll
+              if: github.ref_type == 'tag'

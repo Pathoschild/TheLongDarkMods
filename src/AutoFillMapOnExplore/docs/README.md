@@ -8,6 +8,7 @@ you as you explore.
 * [Use](#use)
 * [Configure](#configure)
 * [Compatibility](#compatibility)
+* [Security](#security)
 * [See also](#see-also)
 
 ## Install
@@ -38,10 +39,19 @@ The mod is compatible with The Long Dark 2.50+ and MelonLoader 0.7.2+.
 Pairs well with [Map Manager][TLDMods] to show your position on the map. If you use that mod, its
 "range multiplier" and "reveal vista locations" options apply to the map auto-fill too.
 
+## Security
+This mod is fully open-source. All its source code is public in this repository, so anyone can
+verify that it's not doing anything malicious.
+
+Each release also has a [public attestation][GitHub attestations], an unfalsifiable record which
+proves exactly how the release file was created. That lets anyone verify that it _only_ contains
+this code, and hasn't been modified in any way.
+
 ## See also
 * [Release notes](release-notes.md)
 * ~~Nexus mod~~ (not released yet)
 
+[GitHub attestations]: https://docs.github.com/en/actions/concepts/security/artifact-attestations
 [MelonLoader]: https://tldmods.net/install.html
 [TLDMods]: https://tldmods.net
 [The Long Dark]: https://www.thelongdark.com

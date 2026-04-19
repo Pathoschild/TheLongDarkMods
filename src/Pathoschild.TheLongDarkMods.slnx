@@ -8,6 +8,10 @@
     <File Path="Directory.Build.props" />
     <File Path="Directory.Packages.props" />
   </Folder>
+  <Folder Name="/root/.github/" />
+  <Folder Name="/root/.github/workflows/">
+    <File Path="../.github/workflows/build.yml" />
+  </Folder>
   <Project Path="AutoFillMapOnExplore/AutoFillMapOnExplore.csproj" />
   <Project Path="Common/Common.shproj" />
   <Project Path="FastTravel/FastTravel.csproj" />
