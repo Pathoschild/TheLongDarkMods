@@ -8,7 +8,7 @@ transferring your hoard to each region.
 
 > [!WARNING]  
 > **This mod is still experimental.**  
-> I strongly recommend [keeping save backups](../SaveBackup) when using this mod.
+> I strongly recommend [keeping save backups](../../SaveBackup#readme) when using this mod.
 
 ## Contents
 * [Install](#install)
