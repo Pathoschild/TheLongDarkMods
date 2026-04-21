@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using Il2Cpp;
 using MelonLoader;
 using Pathoschild.TheLongDarkMods.Common;
@@ -33,6 +34,9 @@ public class ModEntry : MelonMod
     /// <summary>The destination which the player is currently traveling to, if applicable.</summary>
     private Destination? TravelingTo;
 
+    /// <summary>An overlay which lists available fast travel destinations.</summary>
+    private DestinationListOverlay DestinationListOverlay = null!; // set in OnInitializeMelon
+
 
     /*********
     ** Public methods
@@ -43,6 +47,7 @@ public class ModEntry : MelonMod
         this.Log = Melon<ModEntry>.Logger;
         this.DestinationManager = new DestinationManager(this.Log);
         this.InteractionHelper = new InteractionHelper(this.Log);
+        this.DestinationListOverlay = DestinationListOverlay.Create();
 
         this.Config.AddToModSettings(ModInfo.DisplayName);
     }
@@ -50,10 +55,27 @@ public class ModEntry : MelonMod
     /// <inheritdoc />
     public override void OnUpdate()
     {
+        // hide overlay on exit
+        if (this.DestinationListOverlay.IsVisible && !SceneHelper.IsSaveLoaded())
+            this.DestinationListOverlay.Hide();
+
+        // handle key presses
         if (InputManager.HasPressedKey() && SceneHelper.IsSaveLoaded())
         {
-            if (this.InteractionHelper.IsKeyJustPressed(this.Config.ReturnPointKey))
+            // toggle overlay
+            if (this.InteractionHelper.IsKeyJustPressed(this.Config.ShowListKey))
+            {
+                if (this.DestinationListOverlay.IsVisible)
+                    this.DestinationListOverlay.Hide();
+                else
+                    this.ShowDestinationList(this.DestinationManager.GetData());
+            }
+
+            // return warp
+            else if (this.InteractionHelper.IsKeyJustPressed(this.Config.ReturnPointKey))
                 this.InteractivelyReturn();
+
+            // saved destination
             else
             {
                 for (int i = 0; i < MaxDestinations; i++)
@@ -164,6 +186,7 @@ public class ModEntry : MelonMod
             {
                 data.Set(slotIndex, null);
                 this.DestinationManager.SaveData(data);
+                this.UpdateDestinationListIfVisible(data);
             }
         );
     }
@@ -200,6 +223,7 @@ public class ModEntry : MelonMod
             {
                 data.Set(slotIndex, here);
                 this.DestinationManager.SaveData(data);
+                this.UpdateDestinationListIfVisible(data);
             }
         );
     }
@@ -247,6 +271,7 @@ public class ModEntry : MelonMod
             {
                 data.ReturnPoint = here;
                 this.DestinationManager.SaveData(data);
+                this.UpdateDestinationListIfVisible(data);
                 this.FastTravelTo(destination);
             }
         );
@@ -286,6 +311,7 @@ public class ModEntry : MelonMod
             {
                 data.ReturnPoint = here;
                 this.DestinationManager.SaveData(data);
+                this.UpdateDestinationListIfVisible(data);
                 this.FastTravelTo(returnPoint);
             }
         );
@@ -348,6 +374,41 @@ public class ModEntry : MelonMod
                 GameManager.LoadScene(destination.Scene.Name, SaveGameSystem.GetCurrentSaveName()); // need to load the Unity scene name; the game will get the instance ID from the transition data
             })
         );
+    }
+
+    /// <summary>Show or reset the destination list overlay.</summary>
+    /// <param name="data">The data to show.</param>
+    private void ShowDestinationList(SaveModel data)
+    {
+        string[] destinationLines = data.Destinations
+            .OrderBy(p => p.Key)
+            .Select(p => $"[{this.GetKeyForSlot(p.Key)}] {p.Value.GetDisplayName(showRegion: true)}")
+            .ToArray();
+
+        string summary =
+            $"""
+            Return point:
+               {(data.ReturnPoint is not null
+                   ? $"[{this.Config.ReturnPointKey}] {data.ReturnPoint.GetDisplayName(showRegion: true)}"
+                   : "None set."
+               )}
+
+            Saved destinations:
+               {(destinationLines.Length > 0
+                   ? string.Join("\n   ", destinationLines)
+                   : "None set."
+               )}
+            """;
+
+        this.DestinationListOverlay.Show(summary);
+    }
+
+    /// <summary>Update the destination list if it's currently being shown.</summary>
+    /// <param name="data">The data to show.</param>
+    private void UpdateDestinationListIfVisible(SaveModel data)
+    {
+        if (this.DestinationListOverlay.IsVisible)
+            this.ShowDestinationList(data);
     }
 
     /// <summary>Get the key bound to a given fast travel slot.</summary>

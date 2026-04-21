@@ -38,6 +38,8 @@ To use fast travel (with the default options):
 The mod always asks for confirmation, so you can't fast travel or change your saved destinations by
 mistake.
 
+You can view a list of saved destinations by pressing `[numpad period]`.
+
 ## Configure
 From the game's Options menu, click "Mod Settings" and then navigate to "Fast Travel". Point the
 cursor at any field to see an explanation on the right.
