@@ -53,6 +53,10 @@ internal class ModConfig : JsonModSettings
     ** Fast travel keys
     ****/
     [Section("Fast travel keys")]
+    [Name("Show destination list")]
+    [Description("Press this button to toggle an on-screen overlay which lists your saved destinations.")]
+    public KeyCode ShowListKey = KeyCode.KeypadPeriod;
+
     [Name("Fast travel point 1")]
     [Description("Press this button to fast travel to your first saved destination. You can change this point using the 'modifier keys' above.")]
     public KeyCode Destination1 = KeyCode.Keypad1;

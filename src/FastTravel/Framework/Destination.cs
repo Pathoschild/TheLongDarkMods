@@ -74,12 +74,17 @@ internal class Destination
     { }
 
     /// <summary>Get the destination's translated display name, including the region if it's not the one containing the player.</summary>
-    public string GetDisplayName()
+    /// <param name="showRegion">Whether to include the region name, or <c>null</c> to show it if different from the player's current region.</param>
+    public string GetDisplayName(bool? showRegion = false)
     {
         string name = SceneHelper.GetDisplayName(this.Scene.Name);
 
-        if (this.Region != null && !SceneHelper.IsOutdoors(this.Scene.Name) && this.Region.Id != SceneHelper.TryGetRegion()?.GetName())
-            name += $" in {Localization.Get(this.Region.NameLocalizationId)}"; // don't use `this.LastTransition.LastOutdoorScene`, since it sometimes shows the wrong location
+        if (this.Region != null)
+        {
+            showRegion ??= !SceneHelper.IsOutdoors(this.Scene.Name) && this.Region.Id != SceneHelper.TryGetRegion()?.GetName();
+            if (showRegion.Value)
+                name += $" in {Localization.Get(this.Region.NameLocalizationId)}"; // don't use `this.LastTransition.LastOutdoorScene`, since it sometimes shows the wrong location
+        }
 
         return name;
     }

@@ -8,7 +8,7 @@ transferring your hoard to each region.
 
 > [!WARNING]  
 > **This mod is still experimental.**  
-> I strongly recommend [keeping save backups](../SaveBackup) when using this mod.
+> I strongly recommend [keeping save backups](../../SaveBackup#readme) when using this mod.
 
 ## Contents
 * [Install](#install)
@@ -37,6 +37,8 @@ To use fast travel (with the default options):
 
 The mod always asks for confirmation, so you can't fast travel or change your saved destinations by
 mistake.
+
+You can view a list of saved destinations by pressing `[numpad period]`.
 
 ## Configure
 From the game's Options menu, click "Mod Settings" and then navigate to "Fast Travel". Point the

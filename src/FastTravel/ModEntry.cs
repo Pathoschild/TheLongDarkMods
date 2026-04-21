@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using Il2Cpp;
 using MelonLoader;
 using Pathoschild.TheLongDarkMods.Common;
@@ -30,8 +31,11 @@ public class ModEntry : MelonMod
     /// <summary>Provides utility methods for reading input and showing UI.</summary>
     private InteractionHelper InteractionHelper = null!; // set in OnInitializeMelon
 
-    /// <summary>The destination which the player is currently traveling to, if applicable.</summary>
-    private Destination? TravelingTo;
+    /// <summary>The player's most recent fast travel transition.</summary>
+    private FastTravelTransition? FastTravel;
+
+    /// <summary>An overlay which lists available fast travel destinations.</summary>
+    private DestinationListOverlay DestinationListOverlay = null!; // set in OnInitializeMelon
 
 
     /*********
@@ -43,6 +47,7 @@ public class ModEntry : MelonMod
         this.Log = Melon<ModEntry>.Logger;
         this.DestinationManager = new DestinationManager(this.Log);
         this.InteractionHelper = new InteractionHelper(this.Log);
+        this.DestinationListOverlay = DestinationListOverlay.Create();
 
         this.Config.AddToModSettings(ModInfo.DisplayName);
     }
@@ -50,10 +55,27 @@ public class ModEntry : MelonMod
     /// <inheritdoc />
     public override void OnUpdate()
     {
+        // hide overlay on exit
+        if (this.DestinationListOverlay.IsVisible && !SceneHelper.IsSaveLoaded())
+            this.DestinationListOverlay.Hide();
+
+        // handle key presses
         if (InputManager.HasPressedKey() && SceneHelper.IsSaveLoaded())
         {
-            if (this.InteractionHelper.IsKeyJustPressed(this.Config.ReturnPointKey))
+            // toggle overlay
+            if (this.InteractionHelper.IsKeyJustPressed(this.Config.ShowListKey))
+            {
+                if (this.DestinationListOverlay.IsVisible)
+                    this.DestinationListOverlay.Hide();
+                else
+                    this.ShowDestinationList(this.DestinationManager.GetData());
+            }
+
+            // return warp
+            else if (this.InteractionHelper.IsKeyJustPressed(this.Config.ReturnPointKey))
                 this.InteractivelyReturn();
+
+            // saved destination
             else
             {
                 for (int i = 0; i < MaxDestinations; i++)
@@ -106,7 +128,9 @@ public class ModEntry : MelonMod
                         path: {location.Scene.Path}
                         isSubScene: {location.Scene.IsSubScene}
 
-                    TravelingTo: {this.TravelingTo?.ToString() ?? "null"}
+                    Fast travel:
+                        from: {this.FastTravel?.From.ToString() ?? "null"}
+                        to:   {this.FastTravel?.To.ToString() ?? "null"}
 
                 {this.GetTransitionDebugSummary("transition", location.LastTransition)}
                 """
@@ -114,30 +138,18 @@ public class ModEntry : MelonMod
         }
 
         // update position after travel
-        Destination? destination = this.TravelingTo;
-        if (destination is not null)
+        if (this.FastTravel != null)
         {
+            Destination destination = this.FastTravel.To;
             if (sceneName != destination.Scene.Name)
                 this.Log.Warning($"Failed setting position after warp back: arrived in scene '{sceneName}' instead of the expected '{destination.Scene.Name}'.");
             else
-            {
-                Transform player = GameManager.GetPlayerObject().transform;
-                vp_FPSCamera camera = GameManager.GetVpFPSCamera();
+                this.SnapPlayerTo(destination.Position.ToVector3(), destination.CameraPitch, destination.CameraYaw);
 
-                player.position = destination.Position.ToVector3();
-
-                camera.m_Pitch = destination.CameraPitch;
-                camera.m_TargetPitch = destination.CameraPitch;
-                camera.m_CurrentPitch = destination.CameraPitch;
-
-                camera.m_Yaw = destination.CameraYaw;
-                camera.m_TargetYaw = destination.CameraYaw;
-                camera.m_CurrentYaw = destination.CameraYaw;
-            }
-
-            this.TravelingTo = null;
+            this.FastTravel = null;
         }
     }
+
 
     /*********
     ** Private methods
@@ -164,6 +176,7 @@ public class ModEntry : MelonMod
             {
                 data.Set(slotIndex, null);
                 this.DestinationManager.SaveData(data);
+                this.UpdateDestinationListIfVisible(data);
             }
         );
     }
@@ -200,6 +213,7 @@ public class ModEntry : MelonMod
             {
                 data.Set(slotIndex, here);
                 this.DestinationManager.SaveData(data);
+                this.UpdateDestinationListIfVisible(data);
             }
         );
     }
@@ -247,6 +261,7 @@ public class ModEntry : MelonMod
             {
                 data.ReturnPoint = here;
                 this.DestinationManager.SaveData(data);
+                this.UpdateDestinationListIfVisible(data);
                 this.FastTravelTo(destination);
             }
         );
@@ -286,6 +301,7 @@ public class ModEntry : MelonMod
             {
                 data.ReturnPoint = here;
                 this.DestinationManager.SaveData(data);
+                this.UpdateDestinationListIfVisible(data);
                 this.FastTravelTo(returnPoint);
             }
         );
@@ -344,10 +360,74 @@ public class ModEntry : MelonMod
                 }
 
                 // start transition
-                this.TravelingTo = destination;
+                this.FastTravel = new FastTravelTransition(this.DestinationManager.GetCurrentLocation(), destination);
                 GameManager.LoadScene(destination.Scene.Name, SaveGameSystem.GetCurrentSaveName()); // need to load the Unity scene name; the game will get the instance ID from the transition data
             })
         );
+    }
+
+    /// <summary>Snap the player to a position within their current scene.</summary>
+    /// <param name="position">The three-dimensional position within the scene.</param>
+    /// <param name="cameraPitch">The camera's vertical rotation angle in degrees.</param>
+    /// <param name="cameraYaw">The camera's horizontal rotation angle in degrees.</param>
+    private void SnapPlayerTo(Vector3 position, float cameraPitch, float cameraYaw)
+    {
+        GameObject player = GameManager.GetPlayerObject();
+        CharacterController playerController = player.GetComponent<CharacterController>();
+        vp_FPSCamera camera = GameManager.GetVpFPSCamera();
+
+        playerController?.enabled = false; // prevent Unity from snapping player back to its next calculated position (e.g. based on gravity)
+        try
+        {
+            player.transform.position = position;
+        }
+        finally
+        {
+            playerController?.enabled = true; // resume Unity control from new position
+        }
+
+        camera.m_Pitch = cameraPitch;
+        camera.m_TargetPitch = cameraPitch;
+        camera.m_CurrentPitch = cameraPitch;
+
+        camera.m_Yaw = cameraYaw;
+        camera.m_TargetYaw = cameraYaw;
+        camera.m_CurrentYaw = cameraYaw;
+    }
+
+    /// <summary>Show or reset the destination list overlay.</summary>
+    /// <param name="data">The data to show.</param>
+    private void ShowDestinationList(SaveModel data)
+    {
+        string[] destinationLines = data.Destinations
+            .OrderBy(p => p.Key)
+            .Select(p => $"[{this.GetKeyForSlot(p.Key)}] {p.Value.GetDisplayName(showRegion: true)}")
+            .ToArray();
+
+        string summary =
+            $"""
+            Return point:
+               {(data.ReturnPoint is not null
+                   ? $"[{this.Config.ReturnPointKey}] {data.ReturnPoint.GetDisplayName(showRegion: true)}"
+                   : "None set."
+               )}
+
+            Saved destinations:
+               {(destinationLines.Length > 0
+                   ? string.Join("\n   ", destinationLines)
+                   : "None set."
+               )}
+            """;
+
+        this.DestinationListOverlay.Show(summary);
+    }
+
+    /// <summary>Update the destination list if it's currently being shown.</summary>
+    /// <param name="data">The data to show.</param>
+    private void UpdateDestinationListIfVisible(SaveModel data)
+    {
+        if (this.DestinationListOverlay.IsVisible)
+            this.ShowDestinationList(data);
     }
 
     /// <summary>Get the key bound to a given fast travel slot.</summary>
