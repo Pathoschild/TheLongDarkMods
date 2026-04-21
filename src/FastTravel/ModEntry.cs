@@ -31,8 +31,8 @@ public class ModEntry : MelonMod
     /// <summary>Provides utility methods for reading input and showing UI.</summary>
     private InteractionHelper InteractionHelper = null!; // set in OnInitializeMelon
 
-    /// <summary>The destination which the player is currently traveling to, if applicable.</summary>
-    private Destination? TravelingTo;
+    /// <summary>The player's most recent fast travel transition.</summary>
+    private FastTravelTransition? FastTravel;
 
     /// <summary>An overlay which lists available fast travel destinations.</summary>
     private DestinationListOverlay DestinationListOverlay = null!; // set in OnInitializeMelon
@@ -128,7 +128,9 @@ public class ModEntry : MelonMod
                         path: {location.Scene.Path}
                         isSubScene: {location.Scene.IsSubScene}
 
-                    TravelingTo: {this.TravelingTo?.ToString() ?? "null"}
+                    Fast travel:
+                        from: {this.FastTravel?.From.ToString() ?? "null"}
+                        to:   {this.FastTravel?.To.ToString() ?? "null"}
 
                 {this.GetTransitionDebugSummary("transition", location.LastTransition)}
                 """
@@ -136,30 +138,18 @@ public class ModEntry : MelonMod
         }
 
         // update position after travel
-        Destination? destination = this.TravelingTo;
-        if (destination is not null)
+        if (this.FastTravel != null)
         {
+            Destination destination = this.FastTravel.To;
             if (sceneName != destination.Scene.Name)
                 this.Log.Warning($"Failed setting position after warp back: arrived in scene '{sceneName}' instead of the expected '{destination.Scene.Name}'.");
             else
-            {
-                Transform player = GameManager.GetPlayerObject().transform;
-                vp_FPSCamera camera = GameManager.GetVpFPSCamera();
+                this.SnapPlayerTo(destination.Position.ToVector3(), destination.CameraPitch, destination.CameraYaw);
 
-                player.position = destination.Position.ToVector3();
-
-                camera.m_Pitch = destination.CameraPitch;
-                camera.m_TargetPitch = destination.CameraPitch;
-                camera.m_CurrentPitch = destination.CameraPitch;
-
-                camera.m_Yaw = destination.CameraYaw;
-                camera.m_TargetYaw = destination.CameraYaw;
-                camera.m_CurrentYaw = destination.CameraYaw;
-            }
-
-            this.TravelingTo = null;
+            this.FastTravel = null;
         }
     }
+
 
     /*********
     ** Private methods
@@ -370,10 +360,30 @@ public class ModEntry : MelonMod
                 }
 
                 // start transition
-                this.TravelingTo = destination;
+                this.FastTravel = new FastTravelTransition(this.DestinationManager.GetCurrentLocation(), destination);
                 GameManager.LoadScene(destination.Scene.Name, SaveGameSystem.GetCurrentSaveName()); // need to load the Unity scene name; the game will get the instance ID from the transition data
             })
         );
+    }
+
+    /// <summary>Snap the player to a position within their current scene.</summary>
+    /// <param name="position">The three-dimensional position within the scene.</param>
+    /// <param name="cameraPitch">The camera's vertical rotation angle in degrees.</param>
+    /// <param name="cameraYaw">The camera's horizontal rotation angle in degrees.</param>
+    private void SnapPlayerTo(Vector3 position, float cameraPitch, float cameraYaw)
+    {
+        Transform player = GameManager.GetPlayerObject().transform;
+        vp_FPSCamera camera = GameManager.GetVpFPSCamera();
+
+        player.position = position;
+
+        camera.m_Pitch = cameraPitch;
+        camera.m_TargetPitch = cameraPitch;
+        camera.m_CurrentPitch = cameraPitch;
+
+        camera.m_Yaw = cameraYaw;
+        camera.m_TargetYaw = cameraYaw;
+        camera.m_CurrentYaw = cameraYaw;
     }
 
     /// <summary>Show or reset the destination list overlay.</summary>
