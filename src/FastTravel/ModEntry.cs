@@ -372,10 +372,19 @@ public class ModEntry : MelonMod
     /// <param name="cameraYaw">The camera's horizontal rotation angle in degrees.</param>
     private void SnapPlayerTo(Vector3 position, float cameraPitch, float cameraYaw)
     {
-        Transform player = GameManager.GetPlayerObject().transform;
+        GameObject player = GameManager.GetPlayerObject();
+        CharacterController playerController = player.GetComponent<CharacterController>();
         vp_FPSCamera camera = GameManager.GetVpFPSCamera();
 
-        player.position = position;
+        playerController?.enabled = false; // prevent Unity from snapping player back to its next calculated position (e.g. based on gravity)
+        try
+        {
+            player.transform.position = position;
+        }
+        finally
+        {
+            playerController?.enabled = true; // resume Unity control from new position
+        }
 
         camera.m_Pitch = cameraPitch;
         camera.m_TargetPitch = cameraPitch;
