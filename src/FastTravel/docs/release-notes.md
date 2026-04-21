@@ -2,7 +2,7 @@
 
 # Release notes
 ## 0.2.0
-Released 21 April 2026 for The Long Dark 2.50+.
+Released 21 April 2026 for The Long Dark 2.50+. See [build attestation](https://github.com/Pathoschild/TheLongDarkMods/attestations/25059440).
 
 * Added optional overlay to see your saved destinations (press `[numpad period]` by default).
 * The debug logs now show your fast travel origin.
