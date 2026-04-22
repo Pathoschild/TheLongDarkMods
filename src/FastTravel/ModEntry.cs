@@ -124,6 +124,7 @@ public class ModEntry : MelonMod
                     is outside: {SceneHelper.IsOutdoors(location.Scene.Name)}
                     is safehouse: {SceneHelper.IsCustomizableSafehouse()}
                     was restored: {GameManager.m_SceneWasRestored}
+                    weather: {GameManager.GetWeatherComponent().GetWeatherStage()}
 
                     Unity scene:
                         name: {location.Scene.Name}

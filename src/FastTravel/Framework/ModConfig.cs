@@ -22,9 +22,9 @@ internal class ModConfig : JsonModSettings
     public bool CanEditDestinations = true;
 
     /****
-    ** Restrictions
+    ** Restrict by location
     ****/
-    [Section("Restrictions")]
+    [Section("Restrict by location")]
     [Name("Can travel from outside")]
     [Description("Whether you can fast travel while you're outside.\n\nDisable to avoid the temptation of escaping risky situations with fast travel.")]
     public bool CanTravelFromOutside = true;
@@ -40,6 +40,34 @@ internal class ModConfig : JsonModSettings
     [Name("Can travel within same location")]
     [Description("Whether you can fast travel from one point to another in the same location.")]
     public bool CanTravelWithinScene = true;
+
+    /****
+    ** Restrict by weather
+    ****/
+    [Section("Restrict by weather")]
+    [Name("Can travel during aurora")]
+    [Description("Whether you can fast travel during an aurora.")]
+    public bool CanTravelDuringAurora = true;
+
+    [Name("Can travel through dense fog")]
+    [Description("Whether you can fast travel during dense fog in your departure region.")]
+    public bool CanTravelDuringDenseFog = true;
+
+    [Name("Can travel through glimmer fog")]
+    [Description("Whether you can fast travel during glimmer fog in your departure region.")]
+    public bool CanTravelDuringGlimmerFog = true;
+
+    [Name("Can travel through light snowfall")]
+    [Description("Whether you can fast travel during normal snowfall in your departure region.")]
+    public bool CanTravelDuringLightSnowfall = true;
+
+    [Name("Can travel through heavy snowfall")]
+    [Description("Whether you can fast travel during heavy snowfall in your departure region.")]
+    public bool CanTravelDuringHeavySnowfall = true;
+
+    [Name("Can travel through blizzard")]
+    [Description("Whether you can fast travel during a blizzard in your departure region.")]
+    public bool CanTravelDuringBlizzard = true;
 
     /****
     ** Modifier keys
