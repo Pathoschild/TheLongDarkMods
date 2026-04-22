@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Il2Cpp;
 using MelonLoader;
@@ -31,6 +30,9 @@ public class ModEntry : MelonMod
     /// <summary>Provides utility methods for reading input and showing UI.</summary>
     private InteractionHelper InteractionHelper = null!; // set in OnInitializeMelon
 
+    /// <summary>Handles checking for fast travel restrictions.</summary>
+    private FastTravelRestrictionHelper FastTravelRestrictions = null!; // set in OnInitializeMelon
+
     /// <summary>The player's most recent fast travel transition.</summary>
     private FastTravelTransition? FastTravel;
 
@@ -48,6 +50,7 @@ public class ModEntry : MelonMod
         this.DestinationManager = new DestinationManager(this.Log);
         this.InteractionHelper = new InteractionHelper(this.Log);
         this.DestinationListOverlay = DestinationListOverlay.Create();
+        this.FastTravelRestrictions = new FastTravelRestrictionHelper(this.Config);
 
         this.Config.AddToModSettings(ModInfo.DisplayName);
     }
@@ -228,7 +231,7 @@ public class ModEntry : MelonMod
         Destination? returnPoint = data.ReturnPoint;
 
         // check restrictions
-        if (this.HasFastTravelRestrictions(here, destination, data, out string? reasonPhrase))
+        if (!this.FastTravelRestrictions.IsAllowed(here, destination, data, out string? reasonPhrase))
         {
             this.Log.Warning($"Can't fast travel {reasonPhrase} (per your mod settings).");
             return;
@@ -275,7 +278,7 @@ public class ModEntry : MelonMod
         Destination? returnPoint = data.ReturnPoint;
 
         // check restrictions
-        if (this.HasFastTravelRestrictions(here, returnPoint, data, out string? reasonPhrase))
+        if (!this.FastTravelRestrictions.IsAllowed(here, returnPoint, data, out string? reasonPhrase))
         {
             this.Log.Warning($"Can't fast travel {reasonPhrase} (per your mod settings).");
             return;
@@ -447,55 +450,6 @@ public class ModEntry : MelonMod
             8 => this.Config.Destination9,
             _ => throw new InvalidOperationException($"Unsupported destination slot {slotIndex}.")
         };
-    }
-
-    /// <summary>Get whether the player's mod settings prohibit a fast travel.</summary>
-    /// <param name="from">The scene from which the player would travel.</param>
-    /// <param name="to">The scene in which the player would arrive.</param>
-    /// <param name="data">The saved fast travel destinations.</param>
-    /// <param name="restrictionPhrase">If restrictions are in place, a phrase which can fit in the sentence <c>Can't fast travel {0}</c>.</param>
-    /// <returns>Returns whether restrictions prohibit this fast travel.</returns>
-    private bool HasFastTravelRestrictions(Destination from, Destination? to, SaveModel data, [NotNullWhen(true)] out string? restrictionPhrase)
-    {
-        bool isOutdoors = SceneHelper.IsOutdoors(from.Scene.Name);
-
-        // disabled
-        if (!this.Config.CanTravel)
-        {
-            restrictionPhrase = "at all";
-            return true;
-        }
-
-        // from non-fast travel point
-        if (!this.Config.CanTravelFromNonFastTravelPoint && data.Destinations.All(p => p.Value.Scene.Name != from.Scene.Name))
-        {
-            restrictionPhrase = "from a non-saved destination";
-            return true;
-        }
-
-        // from outside
-        if (!this.Config.CanTravelFromOutside && isOutdoors)
-        {
-            restrictionPhrase = "from outside";
-            return true;
-        }
-
-        // from non-safehouse
-        if (!this.Config.CanTravelFromNonSafehouseInterior && !isOutdoors && !SceneHelper.IsCustomizableSafehouse())
-        {
-            restrictionPhrase = "from non-safehouse interior";
-            return true;
-        }
-
-        // from within scene
-        if (!this.Config.CanTravelWithinScene && from.Scene.Name == to?.Scene.Name)
-        {
-            restrictionPhrase = "to the same location";
-            return true;
-        }
-
-        restrictionPhrase = null;
-        return false;
     }
 
     /// <summary>Get a debug log representation of a scene transition.</summary>
