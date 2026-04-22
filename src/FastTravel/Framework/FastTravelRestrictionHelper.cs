@@ -72,6 +72,13 @@ internal class FastTravelRestrictionHelper
             return false;
         }
 
+        // under attack
+        if (!this.Config.CanTravelWhileUnderAttack && this.IsAnyAnimalHostile())
+        {
+            reasonPhrase = "while under attack";
+            return false;
+        }
+
         // restrict by weather
         if (!this.CanTravelDuringWeather(out reasonPhrase))
             return false;
@@ -119,5 +126,28 @@ internal class FastTravelRestrictionHelper
                 reasonPhrase = null;
                 return true;
         }
+    }
+
+    /// <summary>Get whether any animals are currently hostile towards the player.</summary>
+    private bool IsAnyAnimalHostile()
+    {
+        foreach (BaseAi animal in BaseAiManager.m_BaseAis)
+        {
+            if (!animal.IsPlayerFacingAi())
+                continue;
+
+            switch (animal.GetAiMode())
+            {
+                case AiMode.Attack:
+                case AiMode.HoldGround:
+                case AiMode.Howl:
+                case AiMode.PassingAttack:
+                case AiMode.Stalking:
+                case AiMode.Struggle:
+                    return true;
+            }
+        }
+
+        return false;
     }
 }

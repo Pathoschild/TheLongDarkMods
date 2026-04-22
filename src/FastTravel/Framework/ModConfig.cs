@@ -41,6 +41,10 @@ internal class ModConfig : JsonModSettings
     [Description("Whether you can fast travel from one point to another in the same location.")]
     public bool CanTravelWithinScene = true;
 
+    [Name("Can travel while under attack")]
+    [Description("Whether you can fast travel while hostile animals are attacking, stalking, or following you.")]
+    public bool CanTravelWhileUnderAttack = true;
+
     /****
     ** Restrict by weather
     ****/

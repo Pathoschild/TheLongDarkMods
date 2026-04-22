@@ -2,7 +2,7 @@
 
 # Release notes
 ## Upcoming release
-* Added optional restrictions by weather.
+* Added optional restrictions by weather or when under attack.
 * Changed most restrictions to disabled by default.  
   _This avoids unexpected new restrictions coming into effect when you update the mod. You can still explicitly enable any restrictions you want._
 
