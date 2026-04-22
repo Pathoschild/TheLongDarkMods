@@ -1,5 +1,5 @@
-**Save Backup** is a [The Long Dark] mod that automatically backs up all your saves to its subfolder
-once per real day.
+**Save Backup** is a [The Long Dark] mod that automatically creates hourly and daily backups of
+your save files.
 
 Particularly when playing with mods, this lets you recover your save if something goes wrong.
 
