@@ -1,6 +1,13 @@
 [← back to readme](README.md)
 
 # Release notes
+## 0.3.0
+Released 21 April 2026 for The Long Dark 2.50+.
+
+* Added optional restrictions by weather or when under attack.
+* Restrictions are no longer enabled by default.  
+  _This avoids unexpected new restrictions coming into effect when you update the mod. You can explicitly re-enable any restrictions you want._
+
 ## 0.2.0
 Released 21 April 2026 for The Long Dark 2.50+.
 
@@ -9,6 +16,9 @@ Released 21 April 2026 for The Long Dark 2.50+.
 * Fixed fast travel sometimes placing you at a different spot than intended.
 
 ## 0.1.0
-Released 19 April 2026 for The Long Dark 2.50+. See [build attestation](https://github.com/Pathoschild/TheLongDarkMods/attestations/24915076).
+Released 19 April 2026 for The Long Dark 2.50+.
 
 * Initial version.
+
+# See also
+- [Build attestations](https://github.com/Pathoschild/TheLongDarkMods/attestations)

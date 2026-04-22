@@ -8,8 +8,13 @@ internal class ModConfig : JsonModSettings
     /*********
     ** Accessors
     *********/
-    [Name("Number of backups")]
-    [Description("The number of daily backups to keep.")]
-    [Slider(1, 30)]
-    public int BackupCount = 10;
+    [Name("Number of daily backups")]
+    [Description("The number of daily backups to keep. Older backups are deleted automatically.")]
+    [Slider(0, 30)]
+    public int DailyBackupCount = 10;
+
+    [Name("Number of hourly backups")]
+    [Description("The number of hourly backups to keep. Older backups are deleted automatically.")]
+    [Slider(0, 30)]
+    public int HourlyBackupCount = 10;
 }

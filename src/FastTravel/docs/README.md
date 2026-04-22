@@ -34,11 +34,12 @@ To use fast travel (with the default options):
 - Save your current position as a fast travel point by pressing `[numpad +]` + destination key.
 - Delete a saved fast travel point by pressing `[numpad -]` + destination key.
 - Return to where you were before your _most recent_ fast travel by pressing `[numpad 0]`.
+- View a list of saved destinations by pressing `[numpad period]`.
 
 The mod always asks for confirmation, so you can't fast travel or change your saved destinations by
 mistake.
 
-You can view a list of saved destinations by pressing `[numpad period]`.
+You can fast travel freely by default. You can change that in the [mod options](#configure).
 
 ## Configure
 From the game's Options menu, click "Mod Settings" and then navigate to "Fast Travel". Point the

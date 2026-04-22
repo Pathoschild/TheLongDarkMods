@@ -10,32 +10,68 @@ internal class ModConfig : JsonModSettings
     ** Accessors
     *********/
     /****
-    ** Restrictions
+    ** Main options
     ****/
-    [Section("Restrictions")]
+    [Section("Main options")]
     [Name("Can travel")]
     [Description("Whether fast traveling is enabled at all.\n\nDisable if you only want to fast travel in specific cases (e.g. when transferring from one base to another).")]
     public bool CanTravel = true;
 
-    [Name("Can travel from outside")]
-    [Description("Whether you can fast travel while you're outside.\n\nDisable to avoid the temptation of escaping risky situations with fast travel.")]
-    public bool CanTravelFromOutside = false;
-
-    [Name("Can travel from non-safehouse interior")]
-    [Description("Whether you can fast travel from non-customizable interiors like caves.")]
-    public bool CanTravelFromNonSafehouseInterior = false;
-
-    [Name("Can travel to same location")]
-    [Description("Whether you can fast travel from one point to another in the same location.\n\nThis is often unintended.")]
-    public bool CanTravelToSameScene = false;
-
-    [Name("Only between destinations")]
-    [Description("Whether you can only fast travel between locations you've saved as a fast travel destination (e.g. between your main home bases).")]
-    public bool OnlyBetweenDestinations = false;
-
     [Name("Can edit destinations")]
     [Description("Whether you can edit your fast travel destinations.\n\nDisabling it after you've set up your options can avoid accidental changes.")]
     public bool CanEditDestinations = true;
+
+    /****
+    ** Restrict by location
+    ****/
+    [Section("Restrict by location")]
+    [Name("Can travel from outside")]
+    [Description("Whether you can fast travel while you're outside.\n\nDisable to avoid the temptation of escaping risky situations with fast travel.")]
+    public bool CanTravelFromOutside = true;
+
+    [Name("Can travel from non-safehouse interior")]
+    [Description("Whether you can fast travel from non-customizable interiors like caves.")]
+    public bool CanTravelFromNonSafehouseInterior = true;
+
+    [Name("Can travel from non-saved location")]
+    [Description("Whether you can fast travel from a location that doesn't contain a fast travel point.\n\nDisable if you only want point-to-point fast travel (e.g. between saved home bases).")]
+    public bool CanTravelFromNonFastTravelPoint = true;
+
+    [Name("Can travel within same location")]
+    [Description("Whether you can fast travel from one point to another in the same location.")]
+    public bool CanTravelWithinScene = true;
+
+    [Name("Can travel while under attack")]
+    [Description("Whether you can fast travel while hostile animals are attacking, stalking, or following you.")]
+    public bool CanTravelWhileUnderAttack = true;
+
+    /****
+    ** Restrict by weather
+    ****/
+    [Section("Restrict by weather")]
+    [Name("Can travel during aurora")]
+    [Description("Whether you can fast travel during an aurora.")]
+    public bool CanTravelDuringAurora = true;
+
+    [Name("Can travel through dense fog")]
+    [Description("Whether you can fast travel during dense fog in your departure region.")]
+    public bool CanTravelDuringDenseFog = true;
+
+    [Name("Can travel through glimmer fog")]
+    [Description("Whether you can fast travel during glimmer fog in your departure region.")]
+    public bool CanTravelDuringGlimmerFog = true;
+
+    [Name("Can travel through light snowfall")]
+    [Description("Whether you can fast travel during normal snowfall in your departure region.")]
+    public bool CanTravelDuringLightSnowfall = true;
+
+    [Name("Can travel through heavy snowfall")]
+    [Description("Whether you can fast travel during heavy snowfall in your departure region.")]
+    public bool CanTravelDuringHeavySnowfall = true;
+
+    [Name("Can travel through blizzard")]
+    [Description("Whether you can fast travel during a blizzard in your departure region.")]
+    public bool CanTravelDuringBlizzard = true;
 
     /****
     ** Modifier keys

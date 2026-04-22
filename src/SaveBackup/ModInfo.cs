@@ -8,7 +8,7 @@ internal class ModInfo
 
     /// <summary>The semantic version for the mod.</summary>
     /// <remarks>This affects both the MelonLoader mod version and DLL version.</remarks>
-    public const string Version = "1.0.0";
+    public const string Version = "1.1.0";
 
     /// <summary>The assembly version, if different from the <see cref="Version"/>.</summary>
     /// <remarks>This is only needed when the version has a pre-release tag, which isn't valid in assembly versions.</remarks>
@@ -18,7 +18,7 @@ internal class ModInfo
     public const string Author = "Pathoschild";
 
     /// <summary>A short human-readable description of the mod.</summary>
-    public const string Description = "Automatically backs up all your saves once per real day into its subfolder.";
+    public const string Description = "Automatically creates hourly and daily backups of your save files.";
 
     /// <summary>The URL of the page where the player can find the mod.</summary>
     public const string? DownloadLink = "https://www.nexusmods.com/thelongdark/mods/53";

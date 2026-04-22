@@ -5,6 +5,7 @@
     <File Path="../.gitignore" />
     <File Path="../LICENSE" />
     <File Path="../README.md" />
+    <File Path="../tldmods.json" />
     <File Path="Directory.Build.props" />
     <File Path="Directory.Packages.props" />
   </Folder>
