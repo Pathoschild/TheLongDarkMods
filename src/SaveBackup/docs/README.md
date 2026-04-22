@@ -17,10 +17,11 @@ Particularly when playing with mods, this lets you recover your save if somethin
 3. Launch the game.
 
 ## Use
-Just play normally! When you launch the game:
-1. A zip of your saves will be added to `Mods/SaveBackup` (if you don't have one for today).  
-   _After a MelonLoader or game update, it may add an extra backup just in case they break saves._
-2. It'll keep the last 10 backups by default (configurable).
+Just play normally!
+
+By default, the mod will create a backup (a) once per real day and (b) once per real hour. It'll
+keep the last 10 backups of each type. If you receive a MelonLoader or game update, it'll create a
+new backup just in case.
 
 This all happens in the background, so it doesn't affect the game's startup time.
 
