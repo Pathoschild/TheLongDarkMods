@@ -457,6 +457,8 @@ public class ModEntry : MelonMod
     /// <returns>Returns whether restrictions prohibit this fast travel.</returns>
     private bool HasFastTravelRestrictions(Destination from, Destination? to, SaveModel data, [NotNullWhen(true)] out string? restrictionPhrase)
     {
+        bool isOutdoors = SceneHelper.IsOutdoors(from.Scene.Name);
+
         // disabled
         if (!this.Config.CanTravel)
         {
@@ -464,52 +466,29 @@ public class ModEntry : MelonMod
             return true;
         }
 
-        // only between fast travel points
-        if (this.Config.OnlyBetweenDestinations && to != null)
+        // from non-fast travel point
+        if (!this.Config.CanTravelFromNonFastTravelPoint && data.Destinations.All(p => p.Value.Scene.Name != from.Scene.Name))
         {
-            bool foundFrom = false;
-            bool foundTo = false;
-
-            foreach (var destination in data.Destinations)
-            {
-                string sceneName = destination.Value.Scene.Name;
-
-                if (sceneName == from.Scene.Name)
-                    foundFrom = true;
-                if (sceneName == to.Scene.Name)
-                    foundTo = true;
-
-                if (foundFrom && foundTo)
-                    break;
-            }
-
-            if (!foundFrom || !foundTo)
-            {
-                restrictionPhrase = "because you can only travel between saved fast travel points";
-                return true;
-            }
+            restrictionPhrase = "from a non-saved destination";
+            return true;
         }
 
-        // travel from
-        if (!this.Config.CanTravelFromOutside || !this.Config.CanTravelFromNonSafehouseInterior)
+        // from outside
+        if (!this.Config.CanTravelFromOutside && isOutdoors)
         {
-            bool isOutdoors = SceneHelper.IsOutdoors(from.Scene.Name);
-
-            if (!this.Config.CanTravelFromOutside && isOutdoors)
-            {
-                restrictionPhrase = "from outside";
-                return true;
-            }
-
-            if (!this.Config.CanTravelFromNonSafehouseInterior && !isOutdoors && !SceneHelper.IsCustomizableSafehouse())
-            {
-                restrictionPhrase = "from non-safehouse interior";
-                return true;
-            }
+            restrictionPhrase = "from outside";
+            return true;
         }
 
-        // travel to same scene
-        if (!this.Config.CanTravelToSameScene && from.Scene.Name == to?.Scene.Name)
+        // from non-safehouse
+        if (!this.Config.CanTravelFromNonSafehouseInterior && !isOutdoors && !SceneHelper.IsCustomizableSafehouse())
+        {
+            restrictionPhrase = "from non-safehouse interior";
+            return true;
+        }
+
+        // from within scene
+        if (!this.Config.CanTravelWithinScene && from.Scene.Name == to?.Scene.Name)
         {
             restrictionPhrase = "to the same location";
             return true;

@@ -10,32 +10,36 @@ internal class ModConfig : JsonModSettings
     ** Accessors
     *********/
     /****
-    ** Restrictions
+    ** Main options
     ****/
-    [Section("Restrictions")]
+    [Section("Main options")]
     [Name("Can travel")]
     [Description("Whether fast traveling is enabled at all.\n\nDisable if you only want to fast travel in specific cases (e.g. when transferring from one base to another).")]
     public bool CanTravel = true;
 
-    [Name("Can travel from outside")]
-    [Description("Whether you can fast travel while you're outside.\n\nDisable to avoid the temptation of escaping risky situations with fast travel.")]
-    public bool CanTravelFromOutside = false;
-
-    [Name("Can travel from non-safehouse interior")]
-    [Description("Whether you can fast travel from non-customizable interiors like caves.")]
-    public bool CanTravelFromNonSafehouseInterior = false;
-
-    [Name("Can travel to same location")]
-    [Description("Whether you can fast travel from one point to another in the same location.\n\nThis is often unintended.")]
-    public bool CanTravelToSameScene = false;
-
-    [Name("Only between destinations")]
-    [Description("Whether you can only fast travel between locations you've saved as a fast travel destination (e.g. between your main home bases).")]
-    public bool OnlyBetweenDestinations = false;
-
     [Name("Can edit destinations")]
     [Description("Whether you can edit your fast travel destinations.\n\nDisabling it after you've set up your options can avoid accidental changes.")]
     public bool CanEditDestinations = true;
+
+    /****
+    ** Restrictions
+    ****/
+    [Section("Restrictions")]
+    [Name("Can travel from outside")]
+    [Description("Whether you can fast travel while you're outside.\n\nDisable to avoid the temptation of escaping risky situations with fast travel.")]
+    public bool CanTravelFromOutside = true;
+
+    [Name("Can travel from non-safehouse interior")]
+    [Description("Whether you can fast travel from non-customizable interiors like caves.")]
+    public bool CanTravelFromNonSafehouseInterior = true;
+
+    [Name("Can travel from non-saved location")]
+    [Description("Whether you can fast travel from a location that doesn't contain a fast travel point.\n\nDisable if you only want point-to-point fast travel (e.g. between saved home bases).")]
+    public bool CanTravelFromNonFastTravelPoint = true;
+
+    [Name("Can travel within same location")]
+    [Description("Whether you can fast travel from one point to another in the same location.")]
+    public bool CanTravelWithinScene = true;
 
     /****
     ** Modifier keys

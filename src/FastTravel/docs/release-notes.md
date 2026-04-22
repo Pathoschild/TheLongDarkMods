@@ -1,6 +1,10 @@
 [← back to readme](README.md)
 
 # Release notes
+## Upcoming release
+* Changed most restrictions to disabled by default.  
+  _This avoids unexpected new restrictions coming into effect when you update the mod. You can still explicitly enable any restrictions you want._
+
 ## 0.2.0
 Released 21 April 2026 for The Long Dark 2.50+. See [build attestation](https://github.com/Pathoschild/TheLongDarkMods/attestations/25059440).
 
