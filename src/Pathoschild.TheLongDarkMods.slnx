@@ -4,8 +4,8 @@
     <File Path="../.gitattributes" />
     <File Path="../.gitignore" />
     <File Path="../LICENSE" />
+    <File Path="../mod-list.json" />
     <File Path="../README.md" />
-    <File Path="../tldmods.json" />
     <File Path="Directory.Build.props" />
     <File Path="Directory.Packages.props" />
   </Folder>
