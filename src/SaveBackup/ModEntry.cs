@@ -35,8 +35,11 @@ public class ModEntry : MelonMod
     /// <summary>The log instance.</summary>
     private MelonLogger.Instance Log = null!; // set in OnInitializeMelon
 
-    /// <summary>A brief name for the backup (excluding the date).</summary>
-    private string BackupLabel = null!; // set in OnLateInitializeMelon
+    /// <summary>The loaded game version.</summary>
+    private string GameVersion = null!; // set in OnLateInitializeMelon
+
+    /// <summary>The loaded MelonLoader API version.</summary>
+    private string MelonLoaderVersion = null!; // set in OnLateInitializeMelon
 
     /// <summary>The next time when the mod should create save backups if needed.</summary>
     private DateTimeOffset NextBackupCheck = DateTimeOffset.MaxValue; // wait until migrations complete
@@ -56,7 +59,8 @@ public class ModEntry : MelonMod
     /// <inheritdoc />
     public override void OnLateInitializeMelon()
     {
-        this.BackupLabel = $"MelonLoader {BuildInfo.Version}, The Long Dark {GameManager.GetVersionString().Trim()}";
+        this.GameVersion = GameManager.GetVersionString().Trim();
+        this.MelonLoaderVersion = BuildInfo.Version;
 
         Task
             .Run(this.MoveLegacyBackups)
@@ -110,19 +114,33 @@ public class ModEntry : MelonMod
     /// <summary>Back up the current saves and prune older backups as needed.</summary>
     private void UpdateBackups()
     {
+        if (this.Config is { IncludeSurvival: false, IncludeWintermute: false })
+        {
+            this.Log.Warning("Can't create backups: you disabled both survival and Wintermute backups, so there's nothing to do.");
+            return;
+        }
+
+        string backupLabel = $"MelonLoader {this.MelonLoaderVersion}, The Long Dark {this.GameVersion}";
+        if (this.Config.IncludeSurvival != this.Config.IncludeWintermute)
+        {
+            backupLabel += this.Config.IncludeSurvival
+                ? ", survival only"
+                : ", Wintermute only";
+        }
+
         DateTimeOffset now = DateTimeOffset.Now;
 
         this.UpdateBackupsOfType(
             rootBackupsPath: this.BackupFolder,
             type: DailyFolderName,
-            name: $"{now:yyyy-MM-dd} ({this.BackupLabel})",
+            name: $"{now:yyyy-MM-dd} ({backupLabel})",
             backupsToKeep: this.Config.DailyBackupCount
         );
 
         this.UpdateBackupsOfType(
             rootBackupsPath: this.BackupFolder,
             type: HourlyFolderName,
-            name: $"{now:yyyy-MM-dd HH} ({this.BackupLabel})",
+            name: $"{now:yyyy-MM-dd HH} ({backupLabel})",
             backupsToKeep: this.Config.HourlyBackupCount
         );
     }
@@ -151,16 +169,31 @@ public class ModEntry : MelonMod
 
                 // copy saves to fallback directory
                 DirectoryInfo savesDir = new(this.SavesPath);
-                if (!this.RecursiveCopy(savesDir, fallbackDir, copyRoot: false))
-                    return;
+                bool copiedAny = false;
+
+                foreach (FileSystemInfo entry in savesDir.GetFileSystemInfos())
+                {
+                    bool isSurvival = entry is DirectoryInfo && entry.Name.Equals("Survival", StringComparison.OrdinalIgnoreCase);
+                    bool include = isSurvival
+                        ? this.Config.IncludeSurvival
+                        : this.Config.IncludeWintermute;
+
+                    if (!include)
+                        continue;
+
+                    copiedAny |= this.RecursiveCopy(entry, fallbackDir);
+                }
 
                 // compress backup if possible
-                if (!this.TryCompressDir(fallbackDir.FullName, targetFile, out Exception? compressError))
-                    this.Log.Msg($"Added {type} backup at {fallbackDir.FullName}. Couldn't compress backup:\n{compressError}");
-                else
+                if (copiedAny)
                 {
-                    this.Log.Msg($"Added {type} backup at {targetFile.FullName}.");
-                    fallbackDir.Delete(recursive: true);
+                    if (!this.TryCompressDir(fallbackDir.FullName, targetFile, out Exception? compressError))
+                        this.Log.Msg($"Added {type} backup at {fallbackDir.FullName}. Couldn't compress backup:\n{compressError}");
+                    else
+                    {
+                        this.Log.Msg($"Added {type} backup at {targetFile.FullName}.");
+                        fallbackDir.Delete(recursive: true);
+                    }
                 }
             }
 
@@ -234,10 +267,9 @@ public class ModEntry : MelonMod
 
     /// <summary>Recursively copy a directory or file.</summary>
     /// <param name="source">The file or folder to copy.</param>
-    /// <param name="targetFolder">The folder to copy into.</param>
-    /// <param name="copyRoot">Whether to copy the root folder itself, or <c>false</c> to only copy its contents.</param>
+    /// <param name="targetFolder">The folder to copy it into.</param>
     /// <returns>Returns whether any files were copied.</returns>
-    private bool RecursiveCopy(FileSystemInfo source, DirectoryInfo targetFolder, bool copyRoot = true)
+    private bool RecursiveCopy(FileSystemInfo source, DirectoryInfo targetFolder)
     {
         if (!source.Exists)
             return false;
@@ -253,7 +285,7 @@ public class ModEntry : MelonMod
                 break;
 
             case DirectoryInfo sourceDir:
-                DirectoryInfo targetSubfolder = copyRoot ? new DirectoryInfo(Path.Combine(targetFolder.FullName, sourceDir.Name)) : targetFolder;
+                DirectoryInfo targetSubfolder = new DirectoryInfo(Path.Combine(targetFolder.FullName, sourceDir.Name));
                 foreach (var entry in sourceDir.EnumerateFileSystemInfos())
                     anyCopied = this.RecursiveCopy(entry, targetSubfolder) || anyCopied;
                 break;
