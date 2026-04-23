@@ -1,6 +1,11 @@
 [← back to readme](README.md)
 
 # Release notes
+## 1.2.0
+Released 22 April 2026 for The Long Dark 2.50+.
+
+* Added options for which saves to back up (survival, Wintermute, or both).
+
 ## 1.1.0
 Released 21 April 2026 for The Long Dark 2.50+.
 

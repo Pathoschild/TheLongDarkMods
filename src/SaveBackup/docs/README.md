@@ -17,6 +17,7 @@ Particularly when playing with mods, this lets you recover your save if somethin
 3. Launch the game.
 
 ## Use
+### Survival mode
 Just play normally!
 
 By default, the mod will create a backup (a) once per real day and (b) once per real hour. It'll
@@ -27,6 +28,12 @@ This all happens in the background, so it doesn't affect the game's startup time
 
 To restore a backup, just copy the files from the zip back into your saves folder at
 `%localappdata%\Hinterland\TheLongDark`. (You can paste that exact path into Windows Explorer.)
+
+### Wintermute
+In Wintermute, backups are only created when you launch the game. The mod won't create new backups
+throughout your session, unless you add MelonLoader to the Wintermute version too.
+
+Otherwise, it works just like [in survival mode](#survival-mode).
 
 ## Configure
 From the game's Options menu, click "Mod Settings" and then navigate to "Save Backup". Point the
