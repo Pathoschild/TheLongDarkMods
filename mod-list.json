@@ -99,14 +99,14 @@
 		},
 		{
 			"type": "mod",
-			"version": "1.1.0",
+			"version": "1.2.0",
 			"name": "Save Backup",
 			"displayName": "",
 			"author": "",
 			"previousAuthors": "",
 			"released": "2026-04-19",
-			"updated": "2026-04-21",
-			"downloadURL": "https://github.com/Pathoschild/TheLongDarkMods/releases/download/save-backup%2F1.1.0/SaveBackup.dll",
+			"updated": "2026-04-22",
+			"downloadURL": "https://github.com/Pathoschild/TheLongDarkMods/releases/download/save-backup%2F1.2.0/SaveBackup.dll",
 			"modURL": "https://github.com/Pathoschild/TheLongDarkMods/tree/stable/src/SaveBackup#readme",
 			"description": "Automatically creates hourly and daily backups of your save files. Particularly when playing with mods, this lets you recover your save if something goes wrong.",
 			"tags": "backup, recovery, restore",
@@ -125,7 +125,7 @@
 			"status": {
 				"working": true,
 				"beta": false,
-				"patchnotes": "Added option for hourly backups; you can now set the backup count option to zero.",
+				"patchnotes": "Added options for which saves to back up (survival, Wintermute, or both).",
 				"notes": "",
 				"issues": ""
 			},
