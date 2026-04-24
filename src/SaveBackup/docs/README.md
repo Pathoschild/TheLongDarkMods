@@ -40,7 +40,7 @@ cursor at any field to see an explanation on the right.
 > ![](images/config.png)
 
 ## Compatibility
-- Compatible with The Long Dark 2.50+ (including 2.54) and MelonLoader 0.7.2+.
+- Compatible with The Long Dark 2.50+ (including 2.55) and MelonLoader 0.7.2+.
 - Works with both survival mode and Wintermute.
 
 ## Security
