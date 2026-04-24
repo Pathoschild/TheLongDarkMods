@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Il2Cpp;
 using MelonLoader;
 using MelonLoader.Utils;
+using Pathoschild.TheLongDarkMods.SaveBackup.assets;
 using Pathoschild.TheLongDarkMods.SaveBackup.Framework;
 
 namespace Pathoschild.TheLongDarkMods.SaveBackup;
@@ -174,6 +175,12 @@ public class ModEntry : MelonMod
                 Directory.CreateDirectory(Path.GetDirectoryName(copyToPath)!);
                 File.Copy(file.FullName, copyToPath);
             }
+
+            // add README
+            File.WriteAllText(
+                Path.Combine(fallbackDir.FullName, "README.txt"),
+                Resources.SaveFolderReadme
+            );
 
             // zip & delete folder
             if (!this.TryCompressDir(fallbackDir.FullName, targetFile, out Exception? compressError))

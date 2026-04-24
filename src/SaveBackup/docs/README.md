@@ -25,11 +25,7 @@ keep the last 10 backups of each type. If you receive a MelonLoader or game upda
 new backup just in case. This all happens in the background, so it doesn't affect the game's
 startup time.
 
-To restore a backup:
-1. Unzip the backup you want to restore.
-2. Copy the files from `Saves` back into `%localappdata%\Hinterland\TheLongDark`. (You can paste
-   that exact path into Windows Explorer.)
-3. Copy the files from `ModData` back into `Mods/ModData`.
+To restore a backup, just unzip it and follow the instructions in its `README.txt` file.
 
 ### Wintermute
 In Wintermute, backups are only created when you launch the game. The mod won't create new backups
