@@ -22,12 +22,14 @@ Just play normally!
 
 By default, the mod will create a backup (a) once per real day and (b) once per real hour. It'll
 keep the last 10 backups of each type. If you receive a MelonLoader or game update, it'll create a
-new backup just in case.
+new backup just in case. This all happens in the background, so it doesn't affect the game's
+startup time.
 
-This all happens in the background, so it doesn't affect the game's startup time.
-
-To restore a backup, just copy the files from the zip back into your saves folder at
-`%localappdata%\Hinterland\TheLongDark`. (You can paste that exact path into Windows Explorer.)
+To restore a backup:
+1. Unzip the backup you want to restore.
+2. Copy the files from `Saves` back into `%localappdata%\Hinterland\TheLongDark`. (You can paste
+   that exact path into Windows Explorer.)
+3. Copy the files from `ModData` back into `Mods/ModData`.
 
 ### Wintermute
 In Wintermute, backups are only created when you launch the game. The mod won't create new backups
