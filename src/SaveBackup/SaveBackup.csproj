@@ -8,6 +8,11 @@
     <PackageReference Include="STBlade.Modding.TLD.ModSettings" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="assets\Resources.Designer.cs" DesignTime="True" AutoGen="True" DependentUpon="Resources.resx" />
+    <EmbeddedResource Update="assets\Resources.resx" Generator="ResXFileCodeGenerator" LastGenOutput="Resources.Designer.cs" />
+  </ItemGroup>
+
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(ModsPath)" />
     <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(ReleasesPath)" />

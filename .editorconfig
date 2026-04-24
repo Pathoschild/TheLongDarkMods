@@ -19,7 +19,7 @@ indent_size = 2
 charset = utf-8-bom
 insert_final_newline = false
 
-[tldmods.json]
+[mod-list.json]
 indent_style = tab
 
 ##########

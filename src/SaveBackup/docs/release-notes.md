@@ -1,6 +1,12 @@
 [← back to readme](README.md)
 
 # Release notes
+## 1.3.0
+Released 23 April 2026 for The Long Dark 2.50+.
+
+* Backups now include mod save data (from `Mods/ModData/*`).
+* Backups now include a `README.txt` file explaining how to restore them.
+
 ## 1.2.0
 Released 22 April 2026 for The Long Dark 2.50+.
 

@@ -5,32 +5,10 @@
 	"supportURL": "https://www.patreon.com/Pathoschild",
 	"mods": [
 		{
-			"type": "mod",
-			"version": "1.0.0",
 			"name": "Auto-Fill Map on Explore",
-			"displayName": "",
-			"author": "",
-			"previousAuthors": "",
-			"released": "2026-04-19",
+			"version": "1.0.0",
 			"updated": "2026-04-19",
 			"downloadURL": "https://github.com/Pathoschild/TheLongDarkMods/releases/download/auto-fill-map-on-explore%2F1.0.0/AutoFillMapOnExplore.dll",
-			"modURL": "https://github.com/Pathoschild/TheLongDarkMods/tree/stable/src/AutoFillMapOnExplore#readme",
-			"description": "Fills in the map around you as you explore, with a configurable range. Fully compatible with Map Manager.",
-			"tags": "map, exploration, charcoal, navigation",
-			"categories": [
-				"Quality of Life",
-				"Gameplay"
-			],
-			"gameversion": [
-				"vanilla"
-			],
-			"images": [
-				"https://raw.githubusercontent.com/Pathoschild/TheLongDarkMods/stable/src/AutoFillMapOnExplore/docs/images/map.png",
-				"https://raw.githubusercontent.com/Pathoschild/TheLongDarkMods/stable/src/AutoFillMapOnExplore/docs/images/config.png"
-			],
-			"dependencies": [
-				"ModSettings"
-			],
 			"status": {
 				"working": true,
 				"beta": false,
@@ -39,9 +17,22 @@
 				"issues": ""
 			},
 			"testedon": {
-				"tldversion": "2.54",
+				"tldversion": "2.55",
 				"mlversion": "0.7.2"
 			},
+
+			"type": "mod",
+			"displayName": "",
+			"author": "",
+			"previousAuthors": "",
+			"released": "2026-04-19",
+			"modURL": "https://github.com/Pathoschild/TheLongDarkMods/tree/stable/src/AutoFillMapOnExplore#readme",
+			"description": "Fills in the map around you as you explore, with a configurable range. Fully compatible with Map Manager.",
+			"tags": "map, exploration, charcoal, navigation",
+			"categories": [ "Quality of Life", "Gameplay" ],
+			"gameversion": [ "vanilla" ],
+			"images": [ "https://raw.githubusercontent.com/Pathoschild/TheLongDarkMods/stable/src/AutoFillMapOnExplore/docs/images/map.png", "https://raw.githubusercontent.com/Pathoschild/TheLongDarkMods/stable/src/AutoFillMapOnExplore/docs/images/config.png" ],
+			"dependencies": [ "ModSettings" ],
 			"updater": {
 				"enable": true,
 				"downloads": []
@@ -50,35 +41,10 @@
 			"replaces": []
 		},
 		{
-			"type": "mod",
-			"version": "0.3.0",
 			"name": "Fast Travel",
-			"displayName": "",
-			"author": "",
-			"previousAuthors": "",
-			"released": "2026-04-19",
+			"version": "0.3.0",
 			"updated": "2026-04-21",
 			"downloadURL": "https://github.com/Pathoschild/TheLongDarkMods/releases/download/fast-travel%2F0.3.0/FastTravel.dll",
-			"modURL": "https://github.com/Pathoschild/TheLongDarkMods/tree/stable/src/FastTravel#readme",
-			"description": "Lets you save up to 9 places like your home base, and fast travel to them anytime at the press of a button. Includes balance options. For example, you can have one home base while you explore the world, without the tedium of transferring your hoard to each region.",
-			"tags": "fast travel, teleport, warp",
-			"categories": [
-				"Gameplay",
-				"Utility Mod",
-				"Cheats"
-			],
-			"gameversion": [
-				"vanilla"
-			],
-			"images": [
-				"https://raw.githubusercontent.com/Pathoschild/TheLongDarkMods/stable/src/FastTravel/docs/images/travel.png",
-				"https://raw.githubusercontent.com/Pathoschild/TheLongDarkMods/stable/src/FastTravel/docs/images/save-location.png",
-				"https://raw.githubusercontent.com/Pathoschild/TheLongDarkMods/stable/src/FastTravel/docs/images/config.png"
-			],
-			"dependencies": [
-				"ModSettings",
-				"ModData"
-			],
 			"status": {
 				"working": true,
 				"beta": true,
@@ -87,9 +53,22 @@
 				"issues": ""
 			},
 			"testedon": {
-				"tldversion": "2.54",
+				"tldversion": "2.55",
 				"mlversion": "0.7.2"
 			},
+
+			"type": "mod",
+			"displayName": "",
+			"author": "",
+			"previousAuthors": "",
+			"released": "2026-04-19",
+			"modURL": "https://github.com/Pathoschild/TheLongDarkMods/tree/stable/src/FastTravel#readme",
+			"description": "Lets you save up to 9 places like your home base, and fast travel to them anytime at the press of a button. Includes balance options. For example, you can have one home base while you explore the world, without the tedium of transferring your hoard to each region.",
+			"tags": "fast travel, teleport, warp",
+			"categories": [ "Gameplay", "Utility Mod", "Cheats" ],
+			"gameversion": [ "vanilla" ],
+			"images": [ "https://raw.githubusercontent.com/Pathoschild/TheLongDarkMods/stable/src/FastTravel/docs/images/travel.png", "https://raw.githubusercontent.com/Pathoschild/TheLongDarkMods/stable/src/FastTravel/docs/images/save-location.png", "https://raw.githubusercontent.com/Pathoschild/TheLongDarkMods/stable/src/FastTravel/docs/images/config.png" ],
+			"dependencies": [ "ModSettings", "ModData" ],
 			"updater": {
 				"enable": true,
 				"downloads": []
@@ -98,41 +77,34 @@
 			"replaces": []
 		},
 		{
-			"type": "mod",
-			"version": "1.2.0",
 			"name": "Save Backup",
-			"displayName": "",
-			"author": "",
-			"previousAuthors": "",
-			"released": "2026-04-19",
-			"updated": "2026-04-22",
-			"downloadURL": "https://github.com/Pathoschild/TheLongDarkMods/releases/download/save-backup%2F1.2.0/SaveBackup.dll",
-			"modURL": "https://github.com/Pathoschild/TheLongDarkMods/tree/stable/src/SaveBackup#readme",
-			"description": "Automatically creates hourly and daily backups of your save files. Particularly when playing with mods, this lets you recover your save if something goes wrong.",
-			"tags": "backup, recovery, restore",
-			"categories": [
-				"Utility Mod"
-			],
-			"gameversion": [
-				"vanilla"
-			],
-			"images": [
-				"https://raw.githubusercontent.com/Pathoschild/TheLongDarkMods/stable/src/SaveBackup/docs/images/config.png"
-			],
-			"dependencies": [
-				"ModSettings"
-			],
+			"version": "1.3.0",
+			"updated": "2026-04-24",
+			"downloadURL": "https://github.com/Pathoschild/TheLongDarkMods/releases/download/save-backup%2F1.3.0/SaveBackup.dll",
 			"status": {
 				"working": true,
 				"beta": false,
-				"patchnotes": "Added options for which saves to back up (survival, Wintermute, or both).",
+				"patchnotes": "Backups now include mod save data, and a README.txt explaining how to restore them.",
 				"notes": "",
 				"issues": ""
 			},
 			"testedon": {
-				"tldversion": "2.54",
+				"tldversion": "2.55",
 				"mlversion": "0.7.2"
 			},
+
+			"type": "mod",
+			"displayName": "",
+			"author": "",
+			"previousAuthors": "",
+			"released": "2026-04-19",
+			"modURL": "https://github.com/Pathoschild/TheLongDarkMods/tree/stable/src/SaveBackup#readme",
+			"description": "Automatically creates hourly and daily backups of your save files. Particularly when playing with mods, this lets you recover your save if something goes wrong.",
+			"tags": "backup, recovery, restore",
+			"categories": [ "Utility Mod" ],
+			"gameversion": [ "vanilla" ],
+			"images": [ "https://raw.githubusercontent.com/Pathoschild/TheLongDarkMods/stable/src/SaveBackup/docs/images/config.png" ],
+			"dependencies": [ "ModSettings" ],
 			"updater": {
 				"enable": true,
 				"downloads": []
