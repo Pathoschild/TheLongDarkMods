@@ -111,6 +111,42 @@
 			},
 			"aliases": [],
 			"replaces": []
+		},
+		{
+			"name": "Show Trader Trust",
+			"version": "1.0.0",
+			"updated": "2026-04-26",
+			"downloadURL": "https://github.com/Pathoschild/TheLongDarkMods/releases/download/show-trader-trust%2F1.0.0/ShowTraderTrust.dll",
+			"status": {
+				"working": true,
+				"beta": false,
+				"patchnotes": "Initial release.",
+				"notes": "",
+				"issues": ""
+			},
+			"testedon": {
+				"tldversion": "2.55",
+				"mlversion": "0.7.2"
+			},
+
+			"type": "mod",
+			"displayName": "",
+			"author": "",
+			"previousAuthors": "",
+			"released": "2026-04-26",
+			"modURL": "https://github.com/Pathoschild/TheLongDarkMods/tree/stable/src/ShowTraderTrust#readme",
+			"description": "Shows your current trust level with the trader when talking with him on the radio.",
+			"tags": "",
+			"categories": [ "Quality of Life" ],
+			"gameversion": [ "vanilla" ],
+			"images": [ "https://raw.githubusercontent.com/Pathoschild/TheLongDarkMods/stable/src/ShowTraderTrust/docs/images/overlay.png" ],
+			"dependencies": [],
+			"updater": {
+				"enable": true,
+				"downloads": []
+			},
+			"aliases": [],
+			"replaces": []
 		}
 	]
 }

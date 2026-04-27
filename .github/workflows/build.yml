@@ -104,6 +104,13 @@ jobs:
                   path: _releases/SaveBackup.dll
                   archive: false
 
+            - name: Upload ShowTraderTrust
+              uses: actions/upload-artifact@v7
+              with:
+                  name: ShowTraderTrust
+                  path: _releases/ShowTraderTrust.dll
+                  archive: false
+
             #####
             ## Attest uploads
             #####
