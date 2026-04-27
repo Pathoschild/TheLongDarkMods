@@ -17,4 +17,5 @@
   <Project Path="Common/Common.shproj" />
   <Project Path="FastTravel/FastTravel.csproj" />
   <Project Path="SaveBackup/SaveBackup.csproj" />
+  <Project Path="ShowTraderTrust/ShowTraderTrust.csproj" />
 </Solution>

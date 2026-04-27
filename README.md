@@ -9,6 +9,8 @@ See the individual mods for documentation and release notes.
   at the press of a button._
 * **Save Backup** <small>([readme](src/SaveBackup#readme))</small>  
   _Automatically backs up all your saves once per real day into its subfolder._
+* **Show Trader Trust** <small>([readme](src/ShowTraderTrust#readme))</small>  
+  _Shows your current trust level with the trader when talking with him on the radio._
 
 ## Compiling the mods
 Installing stable releases from [Nexus Mods] is recommended for most users. If you really want to

@@ -21,5 +21,8 @@ internal class ModInfo
     public const string Description = "Lets you save up to 9 places (like your home base), and fast travel to them anytime at the press of a button.";
 
     /// <summary>The URL of the page where the player can find the mod.</summary>
-    public const string? DownloadLink = "https://www.nexusmods.com/thelongdark/mods/54";
+    public const string DownloadLink = "https://www.nexusmods.com/thelongdark/mods/54";
+
+    /// <summary>The unique internal ID.</summary>
+    public const string UniqueId = "Pathoschild.FastTravel";
 }
