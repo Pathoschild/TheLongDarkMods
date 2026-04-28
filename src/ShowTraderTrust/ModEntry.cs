@@ -34,7 +34,7 @@ public class ModEntry : MelonMod
     /// <inheritdoc />
     public override void OnUpdate()
     {
-        TraderRadio? radio = SceneHelper.IsSaveLoaded() && SceneHelper.GetSceneName() is not "Empty" && !InterfaceManager.IsPanelEnabled<Panel_PauseMenu>()
+        TraderRadio? radio = SceneHelper.IsPlayableScene() && !InterfaceManager.IsPanelEnabled<Panel_PauseMenu>()
             ? (this.TraderRadio ??= new Lazy<TraderRadio?>(Object.FindObjectOfType<TraderRadio>)).Value
             : null;
 

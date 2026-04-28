@@ -8,13 +8,20 @@ namespace Pathoschild.TheLongDarkMods.Common;
 /// <summary>Provides utility methods for working with the game's Unity scenes.</summary>
 internal static class SceneHelper
 {
-    /// <summary>Whether the save is loaded and ready.</summary>
+    /// <summary>Get whether the save is loaded and ready.</summary>
     public static bool IsSaveLoaded()
     {
         return
             GameManager.m_Instance is not null
-            && !GameManager.IsMainMenuActive()
-            && SceneHelper.GetSceneName() is not (null or "" or "MainMenu");
+            && !GameManager.IsMainMenuActive();
+    }
+
+    /// <summary>Get whether the save is loaded and ready, and the player isn't in the transitional 'empty' scene.</summary>
+    public static bool IsPlayableScene()
+    {
+        return
+            SceneHelper.IsSaveLoaded()
+            && SceneHelper.GetSceneName() is not "Empty"; // note: `GameManager.IsEmptySceneActive()` returns false when the scene is 'Empty'
     }
 
     /// <summary>Get the active scene.</summary>

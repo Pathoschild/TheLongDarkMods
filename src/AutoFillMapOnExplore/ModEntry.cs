@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics.CodeAnalysis;
 using Il2Cpp;
 using MelonLoader;
 using Pathoschild.TheLongDarkMods.AutoFillMapOnExplore.Framework;
@@ -38,7 +37,8 @@ public class ModEntry : MelonMod
         if (
             config.Enabled
             && (DateTime.UtcNow - this.LastMapAutoFill).TotalSeconds > config.AutoFillSeconds
-            && this.TryGetMapPanel(out Panel_Map? map)
+            && SceneHelper.IsPlayableScene()
+            && InterfaceManager.GetPanel<Panel_Map>() is { } map
             && map.SceneCanBeMapped(map.GetMapNameOfCurrentScene())
         )
         {
@@ -51,24 +51,5 @@ public class ModEntry : MelonMod
                 overridePostion: Vector3.zero
             );
         }
-    }
-
-
-    /*********
-    ** Private methods
-    *********/
-    /// <summary>Get the map panel, if the game is ready.</summary>
-    /// <param name="map">The map panel, if applicable.</param>
-    /// <returns>Returns whether the map is available.</returns>
-    private bool TryGetMapPanel([NotNullWhen(true)] out Panel_Map? map)
-    {
-        if (SceneHelper.IsSaveLoaded())
-        {
-            map = InterfaceManager.GetPanel<Panel_Map>();
-            return map != null;
-        }
-
-        map = null;
-        return false;
     }
 }
