@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Pathoschild.TheLongDarkMods.Common.Overlays;
 
-/// <summary>A minimal overlay which shows text with a light background in the bottom-right corner of the screen.</summary>
+/// <summary>A minimal overlay which shows text with a light background.</summary>
 internal class SimpleTextOverlay
 {
     /*********
