@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Pathoschild.TheLongDarkMods.ShowTraderTrust.Framework;
 
-/// <summary>An overlay which shows trader trust in the bottom-right corner.</summary>
+/// <summary>An overlay which shows trader trust at the bottom of the screen.</summary>
 [RegisterTypeInIl2Cpp]
 internal class TraderTrustOverlay : MonoBehaviour
 {
@@ -15,6 +15,13 @@ internal class TraderTrustOverlay : MonoBehaviour
     *********/
     /// <summary>The overlay renderer.</summary>
     private readonly SimpleTextOverlay Overlay = new();
+
+
+    /*********
+    ** Accessors
+    *********/
+    /// <summary>Whether the overlay is currently visible.</summary>
+    public bool IsVisible => this.Overlay.IsVisible;
 
 
     /*********

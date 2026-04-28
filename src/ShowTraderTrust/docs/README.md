@@ -6,7 +6,6 @@ with the [trader][] when talking with him on the radio.
 ## Contents
 * [Install](#install)
 * [Use](#use)
-* [Configure](#configure)
 * [Compatibility](#compatibility)
 * [Security](#security)
 * [See also](#see-also)

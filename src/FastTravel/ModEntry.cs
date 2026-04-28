@@ -104,8 +104,8 @@ public class ModEntry : MelonMod
     /// <inheritdoc />
     public override void OnSceneWasInitialized(int buildIndex, string sceneName)
     {
-        // ignore intermediate scene
-        if (sceneName is "Empty")
+        // skip if save isn't loaded, or we're in the mid-warp 'Empty' scene
+        if (!SceneHelper.IsPlayableScene())
             return;
 
         // log debug info

@@ -1,6 +1,11 @@
 [← back to readme](README.md)
 
 # Release notes
+## 0.3.1
+Released 28 April 2026 for The Long Dark 2.50+.
+
+* Internal changes to be more futureproof.
+
 ## 0.3.0
 Released 21 April 2026 for The Long Dark 2.50+.
 
