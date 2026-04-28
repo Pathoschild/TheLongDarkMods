@@ -6,13 +6,13 @@
 	"mods": [
 		{
 			"name": "Auto-Fill Map on Explore",
-			"version": "1.0.0",
-			"updated": "2026-04-19",
-			"downloadURL": "https://github.com/Pathoschild/TheLongDarkMods/releases/download/auto-fill-map-on-explore%2F1.0.0/AutoFillMapOnExplore.dll",
+			"version": "1.0.1",
+			"updated": "2026-04-28",
+			"downloadURL": "https://github.com/Pathoschild/TheLongDarkMods/releases/download/auto-fill-map-on-explore%2F1.0.1/AutoFillMapOnExplore.dll",
 			"status": {
 				"working": true,
 				"beta": false,
-				"patchnotes": "Initial release.",
+				"patchnotes": "Internal changes to be more futureproof.",
 				"notes": "",
 				"issues": ""
 			},
@@ -42,13 +42,13 @@
 		},
 		{
 			"name": "Fast Travel",
-			"version": "0.3.0",
-			"updated": "2026-04-21",
-			"downloadURL": "https://github.com/Pathoschild/TheLongDarkMods/releases/download/fast-travel%2F0.3.0/FastTravel.dll",
+			"version": "0.3.1",
+			"updated": "2026-04-28",
+			"downloadURL": "https://github.com/Pathoschild/TheLongDarkMods/releases/download/fast-travel%2F0.3.1/FastTravel.dll",
 			"status": {
 				"working": true,
 				"beta": true,
-				"patchnotes": "Added optional restrictions by weather or when under attack; balance restrictions are now disabled by default.",
+				"patchnotes": "Internal changes to be more futureproof.",
 				"notes": "⚠ This mod is still experimental before its 1.0.0 release. Keeping save backups is recommended when using this mod.",
 				"issues": ""
 			},
@@ -114,13 +114,13 @@
 		},
 		{
 			"name": "Show Trader Trust",
-			"version": "1.0.0",
-			"updated": "2026-04-26",
-			"downloadURL": "https://github.com/Pathoschild/TheLongDarkMods/releases/download/show-trader-trust%2F1.0.0/ShowTraderTrust.dll",
+			"version": "1.0.1",
+			"updated": "2026-04-28",
+			"downloadURL": "https://github.com/Pathoschild/TheLongDarkMods/releases/download/show-trader-trust%2F1.0.1/ShowTraderTrust.dll",
 			"status": {
 				"working": true,
 				"beta": false,
-				"patchnotes": "Initial release.",
+				"patchnotes": "Fixed performance impact for some players; internal changes to be more futureproof.",
 				"notes": "",
 				"issues": ""
 			},

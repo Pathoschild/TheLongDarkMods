@@ -8,7 +8,7 @@ internal class ModInfo
 
     /// <summary>The semantic version for the mod.</summary>
     /// <remarks>This affects both the MelonLoader mod version and DLL version.</remarks>
-    public const string Version = "0.3.0";
+    public const string Version = "0.3.1";
 
     /// <summary>The assembly version, if different from the <see cref="Version"/>.</summary>
     /// <remarks>This is only needed when the version has a pre-release tag, which isn't valid in assembly versions.</remarks>
