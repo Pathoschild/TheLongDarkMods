@@ -21,6 +21,12 @@ public class ModEntry : MelonMod
     /// <summary>An overlay which shows the current trust level.</summary>
     private TraderTrustOverlay TrustOverlay = null!; // set in OnInitializeMelon
 
+    /// <summary>The last radio state for which the overlay was updated.</summary>
+    private RadioState LastRadioState = RadioState.Off;
+
+    /// <summary>The last trust level for which the overlay was updated.</summary>
+    private int? LastTrust;
+
 
     /*********
     ** Public methods
@@ -34,11 +40,21 @@ public class ModEntry : MelonMod
     /// <inheritdoc />
     public override void OnUpdate()
     {
-        TraderRadio? radio = SceneHelper.IsPlayableScene() && !InterfaceManager.IsPanelEnabled<Panel_PauseMenu>()
-            ? (this.TraderRadio ??= new Lazy<TraderRadio?>(Object.FindObjectOfType<TraderRadio>)).Value
-            : null;
+        // skip if not applicable
+        if (!SceneHelper.IsPlayableScene())
+        {
+            this.Clear(forgetRadio: true);
+            return;
+        }
+        if (InterfaceManager.IsPanelEnabled<Panel_PauseMenu>())
+        {
+            this.Clear(forgetRadio: false);
+            return;
+        }
 
-        switch (radio?.m_CurrentState)
+        // update overlay
+        RadioState radioState = this.GetRadioState();
+        switch (radioState)
         {
             case RadioState.PlayingVoiceLine:     // trader speaking
             case RadioState.ShowingConversations: // showing conversation lists
@@ -47,12 +63,20 @@ public class ModEntry : MelonMod
             case RadioState.Trading:              // selecting trades
                 {
                     TraderManager trader = GameManager.GetTraderManager();
-                    this.TrustOverlay.Show($"Trust level: {trader.CurrentTrust} / {trader.MaxTrust}");
+                    int trust = trader.CurrentTrust;
+
+                    if (radioState != this.LastRadioState || trust != this.LastTrust)
+                    {
+                        this.TrustOverlay.Show($"Trust level: {trust} / {trader.MaxTrust}");
+
+                        this.LastRadioState = radioState;
+                        this.LastTrust = trust;
+                    }
                 }
                 break;
 
             default:
-                this.Clear();
+                this.Clear(forgetRadio: false);
                 break;
         }
     }
@@ -60,17 +84,31 @@ public class ModEntry : MelonMod
     /// <inheritdoc />
     public override void OnSceneWasInitialized(int buildIndex, string sceneName)
     {
-        this.Clear();
+        this.Clear(forgetRadio: true);
     }
 
 
     /*********
     ** Private methods
     *********/
-    /// <summary>Clear all trader state and hide the overlay.</summary>
-    private void Clear()
+    /// <summary>Get the radio state in the current scene.</summary>
+    private RadioState GetRadioState()
     {
-        this.TraderRadio = null;
-        this.TrustOverlay.Hide();
+        TraderRadio? radio = (this.TraderRadio ??= new Lazy<TraderRadio?>(Object.FindObjectOfType<TraderRadio>)).Value;
+        return radio?.m_CurrentState ?? RadioState.Off;
+    }
+
+    /// <summary>Clear all trader state and hide the overlay.</summary>
+    /// <param name="forgetRadio">Whether to reset the detected radio reference.</param>
+    private void Clear(bool forgetRadio)
+    {
+        if (forgetRadio)
+            this.TraderRadio = null;
+
+        if (this.TrustOverlay.IsVisible)
+            this.TrustOverlay.Hide();
+
+        this.LastRadioState = RadioState.Off;
+        this.LastTrust = null;
     }
 }

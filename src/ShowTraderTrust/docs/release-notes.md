@@ -2,6 +2,7 @@
 
 # Release notes
 ## Upcoming release
+* Fixed performance impact for some players.
 * Internal changes to be more futureproof.
 
 ## 1.0.0

@@ -18,6 +18,13 @@ internal class TraderTrustOverlay : MonoBehaviour
 
 
     /*********
+    ** Accessors
+    *********/
+    /// <summary>Whether the overlay is currently visible.</summary>
+    public bool IsVisible => this.Overlay.IsVisible;
+
+
+    /*********
     ** Public methods
     *********/
     /// <inheritdoc />
