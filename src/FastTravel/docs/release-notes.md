@@ -3,6 +3,7 @@
 # Release notes
 ## Upcoming release
 * Fixed wrong region name shown on-screen after fast traveling across regions.
+* Fixed destination list showing redundant region-in-region label for outdoor destinations.
 
 ## 0.3.1
 Released 28 April 2026 for The Long Dark 2.50+.

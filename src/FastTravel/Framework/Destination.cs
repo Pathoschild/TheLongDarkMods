@@ -83,7 +83,11 @@ internal class Destination
         {
             showRegion ??= !SceneHelper.IsOutdoors(this.Scene.Name) && this.Region.Id != SceneHelper.TryGetRegion()?.GetName();
             if (showRegion.Value)
-                name += $" in {Localization.Get(this.Region.NameLocalizationId)}"; // don't use `this.LastTransition.LastOutdoorScene`, since it sometimes shows the wrong location
+            {
+                string regionName = Localization.Get(this.Region.NameLocalizationId);
+                if (regionName != name)
+                    name += $" in {regionName}"; // don't use `this.LastTransition.LastOutdoorScene`, since it sometimes shows the wrong location
+            }
         }
 
         return name;
