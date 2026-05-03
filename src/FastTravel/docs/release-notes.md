@@ -1,6 +1,9 @@
 [← back to readme](README.md)
 
 # Release notes
+## Upcoming release
+* Fixed wrong region name shown on-screen after fast traveling across regions.
+
 ## 0.3.1
 Released 28 April 2026 for The Long Dark 2.50+.
 

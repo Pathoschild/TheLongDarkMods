@@ -5,6 +5,7 @@ using MelonLoader;
 using Pathoschild.TheLongDarkMods.Common;
 using Pathoschild.TheLongDarkMods.FastTravel.Framework;
 using Pathoschild.TheLongDarkMods.FastTravel.Framework.DataModels;
+using Pathoschild.TheLongDarkMods.FastTravel.Framework.Patches;
 using UnityEngine;
 
 namespace Pathoschild.TheLongDarkMods.FastTravel;
@@ -33,8 +34,12 @@ public class ModEntry : MelonMod
     /// <summary>Handles checking for fast travel restrictions.</summary>
     private FastTravelRestrictionHelper FastTravelRestrictions = null!; // set in OnInitializeMelon
 
-    /// <summary>The player's most recent fast travel transition.</summary>
+    /// <summary>The player's ongoing fast travel transition, if they haven't arrived yet.</summary>
     private FastTravelTransition? FastTravel;
+
+    /// <summary>The destination info to show to the player on arrival.</summary>
+    /// <remarks>This is cached temporarily for the location name shown on-screen when the player arrives.</remarks>
+    private Destination? ShowOnArrival;
 
     /// <summary>An overlay which lists available fast travel destinations.</summary>
     private DestinationListOverlay DestinationListOverlay = null!; // set in OnInitializeMelon
@@ -51,6 +56,8 @@ public class ModEntry : MelonMod
         this.InteractionHelper = new InteractionHelper(this.Log);
         this.DestinationListOverlay = DestinationListOverlay.Create();
         this.FastTravelRestrictions = new FastTravelRestrictionHelper(this.Config);
+
+        PanelHudPatches.Initialize(this.Log, this.ConsumeDestinationOnArrival);
 
         this.Config.AddToModSettings(ModInfo.DisplayName);
     }
@@ -365,6 +372,7 @@ public class ModEntry : MelonMod
 
                 // start transition
                 this.FastTravel = new FastTravelTransition(this.DestinationManager.GetCurrentLocation(), destination);
+                this.ShowOnArrival = destination;
                 GameManager.LoadScene(destination.Scene.Name, SaveGameSystem.GetCurrentSaveName()); // need to load the Unity scene name; the game will get the instance ID from the transition data
             })
         );
@@ -397,6 +405,14 @@ public class ModEntry : MelonMod
         camera.m_Yaw = cameraYaw;
         camera.m_TargetYaw = cameraYaw;
         camera.m_CurrentYaw = cameraYaw;
+    }
+
+    /// <summary>Get the destination that should be shown on-screen when the player arrives. This deletes the cached value, if any.</summary>
+    private Destination? ConsumeDestinationOnArrival()
+    {
+        Destination? destination = this.ShowOnArrival;
+        this.ShowOnArrival = null;
+        return destination;
     }
 
     /// <summary>Show or reset the destination list overlay.</summary>
