@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Il2Cpp;
 using MelonLoader;
 using MelonLoader.Utils;
+using Pathoschild.TheLongDarkMods.Common;
 using Pathoschild.TheLongDarkMods.SaveBackup.assets;
 using Pathoschild.TheLongDarkMods.SaveBackup.Framework;
 
@@ -24,6 +25,9 @@ public class ModEntry : MelonMod
 
     /// <summary>The name of the subfolder for hourly backups.</summary>
     private const string HourlyFolderName = "hourly";
+
+    /// <summary>The name of the subfolder for manual backups.</summary>
+    private const string ManualFolderName = "manual";
 
     /// <summary>The folder containing saves to back up.</summary>
     private readonly string SavesPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Hinterland", "TheLongDark");
@@ -43,8 +47,14 @@ public class ModEntry : MelonMod
     /// <summary>The loaded MelonLoader API version.</summary>
     private string MelonLoaderVersion = null!; // set in OnLateInitializeMelon
 
+    /// <summary>Provides utility methods for reading input and showing UI.</summary>
+    private InteractionHelper InteractionHelper = null!; // set in OnInitializeMelon
+
     /// <summary>The next time when the mod should create save backups if needed.</summary>
     private DateTimeOffset NextBackupCheck = DateTimeOffset.MaxValue; // wait until migrations complete
+
+    /// <summary>The next time when we can handle a manual backup key.</summary>
+    private DateTimeOffset NextManualBackupAllowed = DateTimeOffset.MinValue;
 
 
     /*********
@@ -54,6 +64,7 @@ public class ModEntry : MelonMod
     public override void OnInitializeMelon()
     {
         this.Log = Melon<ModEntry>.Logger;
+        this.InteractionHelper = new InteractionHelper(this.Log);
 
         this.Config.AddToModSettings(ModInfo.DisplayName);
     }
@@ -67,6 +78,17 @@ public class ModEntry : MelonMod
         Task
             .Run(this.MoveLegacyBackups)
             .ContinueWith(_ => this.NextBackupCheck = DateTimeOffset.UtcNow);
+    }
+
+    /// <inheritdoc />
+    public override void OnUpdate()
+    {
+        if (this.InteractionHelper.IsKeyJustPressed(this.Config.ManualBackupKey) && DateTimeOffset.UtcNow >= this.NextManualBackupAllowed)
+        {
+            this.NextManualBackupAllowed = DateTimeOffset.UtcNow.AddSeconds(2); // debounce multiple presses
+
+            Task.Run(this.TakeManualBackup);
+        }
     }
 
     /// <inheritdoc />
@@ -113,6 +135,17 @@ public class ModEntry : MelonMod
         }
     }
 
+    /// <summary>Create a backup of the current saves for a manual trigger and prune older backups as needed.</summary>
+    private void TakeManualBackup()
+    {
+        string backupLabel = this.GetBackupLabel();
+        DateTimeOffset now = DateTimeOffset.Now;
+
+        this.UpdateBackupsOfType(ManualFolderName, $"{now:yyyy-MM-ddTHH-mm-ss} ({backupLabel})");
+
+        this.PruneBackups(ManualFolderName, this.Config.ManualBackupCount);
+    }
+
     /// <summary>Back up the current saves and prune older backups as needed.</summary>
     private void UpdateBackups()
     {
@@ -126,6 +159,7 @@ public class ModEntry : MelonMod
 
         this.PruneBackups(DailyFolderName, this.Config.DailyBackupCount);
         this.PruneBackups(HourlyFolderName, this.Config.HourlyBackupCount);
+        this.PruneBackups(ManualFolderName, this.Config.ManualBackupCount);
     }
 
     /// <summary>Get the name for a backup taken now (excluding the data).</summary>
