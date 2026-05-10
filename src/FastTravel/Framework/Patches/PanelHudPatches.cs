@@ -35,8 +35,9 @@ internal static class PanelHudPatches
     }
 
     /// <summary>Prefix <see cref="Panel_HUD.ShowLocationReveal"/> to set the region name to the correct value after fast travel.</summary>
-    /// <param name="subText">The localized region name that will be shown in-game.</param>
-    public static void Prefix(ref string subText)
+    /// <param name="text">The localized location name.</param>
+    /// <param name="subText">The localized subtext (e.g. the region name, or the literal text 'region').</param>
+    public static void Prefix(string text, ref string subText)
     {
         MelonLogger.Instance log = PanelHudPatches.Log;
         Destination? destination = PanelHudPatches.ConsumeDestinationOnArrival();
@@ -57,6 +58,8 @@ internal static class PanelHudPatches
             return;
         }
 
-        subText = Localization.Get(destination.Region.NameLocalizationId);
+        string regionName = Localization.Get(destination.Region.NameLocalizationId);
+        if (text != regionName)
+            subText = regionName;
     }
 }
