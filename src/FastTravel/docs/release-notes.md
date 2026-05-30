@@ -2,6 +2,7 @@
 
 # Release notes
 ## Upcoming release
+* Added [pause menu UI](README.md#use) to manage fast travel destinations.
 * Fixed wrong region name shown on-screen after fast traveling across regions.
 * Fixed destination list showing redundant region-in-region label for outdoor destinations.
 

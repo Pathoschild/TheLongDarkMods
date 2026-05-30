@@ -8,4 +8,7 @@ public static class SuppressReasons
 
     /// <summary>Indicates that patches are applied by MelonLoader automatically.</summary>
     public const string MethodsReferencedByHarmony = "Harmony patches are applied by MelonLoader automatically.";
+
+    /// <summary>Indicates that parameters can't be renamed since they match Harmony conventions.</summary>
+    public const string ParametersMatchHarmonyConventions = "Parameter names must match Harmony conventions.";
 }

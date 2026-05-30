@@ -67,7 +67,7 @@
 			"tags": "fast travel, teleport, warp",
 			"categories": [ "Gameplay", "Utility Mod", "Cheats" ],
 			"gameversion": [ "vanilla" ],
-			"images": [ "https://raw.githubusercontent.com/Pathoschild/TheLongDarkMods/stable/src/FastTravel/docs/images/travel.png", "https://raw.githubusercontent.com/Pathoschild/TheLongDarkMods/stable/src/FastTravel/docs/images/save-location.png", "https://raw.githubusercontent.com/Pathoschild/TheLongDarkMods/stable/src/FastTravel/docs/images/config.png" ],
+			"images": [ "https://raw.githubusercontent.com/Pathoschild/TheLongDarkMods/stable/src/FastTravel/docs/images/travel.png", "https://raw.githubusercontent.com/Pathoschild/TheLongDarkMods/stable/src/FastTravel/docs/images/pause-menu-2.png", "https://raw.githubusercontent.com/Pathoschild/TheLongDarkMods/stable/src/FastTravel/docs/images/config.png" ],
 			"dependencies": [ "ModSettings", "ModData" ],
 			"updater": {
 				"enable": true,

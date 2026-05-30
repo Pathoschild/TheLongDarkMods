@@ -71,6 +71,19 @@ internal class InteractionHelper
         );
     }
 
+    /// <summary>Force the current message or confirmation prompt to exit, if any.</summary>
+    public void ForceClosePrompt()
+    {
+        var panel = InterfaceManager.GetPanel<Panel_Confirmation>();
+        panel?.CloseSelf();
+    }
+
+    /// <summary>Get whether a message or confirmation prompt is currently displayed.</summary>
+    public bool IsAnyPromptOpen()
+    {
+        return InterfaceManager.GetPanel<Panel_Confirmation>()?.isActiveAndEnabled is true;
+    }
+
 
     /*********
     ** Private methods

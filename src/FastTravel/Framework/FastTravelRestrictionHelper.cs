@@ -34,6 +34,19 @@ internal class FastTravelRestrictionHelper
     /// <returns>Returns whether restrictions prohibit this fast travel.</returns>
     public bool IsAllowed(Destination from, Destination? to, SaveModel data, [NotNullWhen(false)] out string? reasonPhrase)
     {
+        bool isFromSavedScene = data.Destinations.Any(p => p.Value.Scene.Name == from.Scene.Name);
+
+        return this.IsAllowed(from, to, isFromSavedScene, out reasonPhrase);
+    }
+
+    /// <summary>Get whether the player's mod settings prohibit a fast travel.</summary>
+    /// <param name="from">The scene from which the player would travel.</param>
+    /// <param name="to">The scene in which the player would arrive.</param>
+    /// <param name="isFromSavedScene">Whether the <see cref="from"/> scene is saved as a fast travel destination.</param>
+    /// <param name="reasonPhrase">If fast travel is restricted, a phrase which can fit in the sentence <c>Can't fast travel {0}</c>.</param>
+    /// <returns>Returns whether restrictions prohibit this fast travel.</returns>
+    public bool IsAllowed(Destination from, Destination? to, bool isFromSavedScene, [NotNullWhen(false)] out string? reasonPhrase)
+    {
         bool isSameScene = from.Scene.Name == to?.Scene.Name;
         bool isFromOutside = SceneHelper.IsOutdoors(from.Scene.Name);
 
@@ -45,7 +58,7 @@ internal class FastTravelRestrictionHelper
         }
 
         // from non-fast travel point
-        if (!this.Config.CanTravelFromNonFastTravelPoint && data.Destinations.All(p => p.Value.Scene.Name != from.Scene.Name))
+        if (!this.Config.CanTravelFromNonFastTravelPoint && !isFromSavedScene)
         {
             reasonPhrase = "from a non-saved destination";
             return false;

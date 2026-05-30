@@ -32,12 +32,12 @@ internal class DestinationListOverlay : MonoBehaviour
     public DestinationListOverlay(IntPtr pointer)
         : base(pointer) { }
 
-    /// <summary>Create and attach the component to a persistent GameObject.</summary>
+    /// <summary>Create and attach the component to a persistent game object.</summary>
     public static DestinationListOverlay Create()
     {
-        var gameObj = new GameObject($"{ModInfo.UniqueId}_{nameof(DestinationListOverlay)}");
-        GameObject.DontDestroyOnLoad(gameObj);
-        return gameObj.AddComponent<DestinationListOverlay>();
+        var anchor = new GameObject($"{ModInfo.UniqueId}_{nameof(DestinationListOverlay)}");
+        GameObject.DontDestroyOnLoad(anchor);
+        return anchor.AddComponent<DestinationListOverlay>();
     }
 
     /// <summary>Show the overlay.</summary>
