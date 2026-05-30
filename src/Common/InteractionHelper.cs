@@ -71,14 +71,40 @@ internal class InteractionHelper
         );
     }
 
-    /// <summary>Force the current message or confirmation prompt to exit, if any.</summary>
+    /// <summary>Show a textbox dialogue box which lets the user enter text, and confirm or cancel.</summary>
+    /// <param name="question">The question to display.</param>
+    /// <param name="initialValue">The initial textbox value.</param>
+    /// <param name="onConfirm">Handle the player clicking accept. This receives the textbox content.</param>
+    /// <param name="allowLowerCase">Whether to let the player enter lowercase text, instead of the ALL CAPS format preferred by the game.</param>
+    /// <param name="maxLength">The maximum text length to allow.</param>
+    public void ShowTextDialogue(string question, string initialValue, Action<string> onConfirm, bool allowLowerCase = true, uint maxLength = 100)
+    {
+        if (!this.TryGetUnusedConfirmationPanel(out Panel_Confirmation? panel))
+            return;
+
+        panel.SetupInputField(virtualKeyboardDescriptionLocId: "", maxLength: maxLength, capsLock: !allowLowerCase);
+        panel.ShowRenamePanel(
+            locID: question,
+            currentName: initialValue,
+            buttonPromptLocId1: "GAMEPLAY_Accept",
+            buttonPromptLocId2: "GAMEPLAY_Cancel",
+            confirmCallback: (Action)(() =>
+            {
+                string newText = panel.GetInputFieldText();
+                onConfirm(newText);
+            }),
+            enableCallback: null
+        );
+    }
+
+    /// <summary>Force the current message/confirmation/textbox prompt to exit, if any.</summary>
     public void ForceClosePrompt()
     {
         var panel = InterfaceManager.GetPanel<Panel_Confirmation>();
         panel?.CloseSelf();
     }
 
-    /// <summary>Get whether a message or confirmation prompt is currently displayed.</summary>
+    /// <summary>Get whether a message/confirmation/textbox prompt is currently displayed.</summary>
     public bool IsAnyPromptOpen()
     {
         return InterfaceManager.GetPanel<Panel_Confirmation>()?.isActiveAndEnabled is true;

@@ -335,6 +335,10 @@ internal class DestinationManagerPanel : MonoBehaviour
                 this.InteractivelyFastTravel(destination);
             GUI.enabled = true;
 
+            // draw 'rename' button
+            if (GUILayout.Button("RENAME", this.StyleButton!, GUILayout.Width(65)))
+                this.InteractivelyRename(destination);
+
             // draw 'forget' button
             if (GUILayout.Button("FORGET", this.StyleButton!, GUILayout.Width(60)))
                 this.InteractivelyDelete(destination);
@@ -373,6 +377,23 @@ internal class DestinationManagerPanel : MonoBehaviour
         this.InteractionHelper.ShowConfirmDialogue(
             question,
             () => this.Destinations.Remove(destination)
+        );
+    }
+
+    /// <summary>Rename a destination with player interaction.</summary>
+    /// <param name="destination">The destination to rename.</param>
+    [HideFromIl2Cpp]
+    private void InteractivelyRename(Destination destination)
+    {
+        this.InteractionHelper.ShowTextDialogue(
+            question: "Rename destination (or blank to reset)",
+            initialValue: destination.GetDisplayName(showRegion: true),
+            onConfirm: newName =>
+            {
+                destination.CustomName = string.IsNullOrWhiteSpace(newName)
+                    ? null
+                    : newName.Trim();
+            }
         );
     }
 
