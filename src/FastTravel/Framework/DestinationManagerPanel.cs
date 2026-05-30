@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text.Json;
 using Il2Cpp;
 using Il2CppInterop.Runtime.Attributes;
-using Il2CppInterop.Runtime.InteropTypes.Arrays;
 using MelonLoader;
 using Pathoschild.TheLongDarkMods.Common;
 using Pathoschild.TheLongDarkMods.FastTravel.Framework.DataModels;
@@ -28,6 +27,9 @@ internal class DestinationManagerPanel : MonoBehaviour
 
     /// <summary>The height of the panel in pixels.</summary>
     private const float PanelHeight = 560;
+
+    /// <summary>The game's UI font name.</summary>
+    private const string TextFontName = "Nazhdak-Regular";
 
     /// <summary>The default text color.</summary>
     private static readonly Color TextColor = new(0.78f, 0.78f, 0.78f);
@@ -219,7 +221,7 @@ internal class DestinationManagerPanel : MonoBehaviour
             this.ButtonActiveBackground = CreatePixel(ButtonActiveBackgroundColor);
             this.Divider = CreatePixel(DividerColor);
 
-            Font? font = TryGetGameFont();
+            Font? font = TryGetFont(TextFontName);
 
             this.StyleTitle = this.CreateLabel(font, 14, FontStyle.Normal, Color.white, TextAnchor.MiddleLeft);
             this.StyleKeybind = this.CreateLabel(font, 13, FontStyle.Normal, TextDimColor, TextAnchor.MiddleLeft);
@@ -559,28 +561,15 @@ internal class DestinationManagerPanel : MonoBehaviour
         return texture;
     }
 
-    /// <summary>Get the UI text font.</summary>
-    private static Font? TryGetGameFont()
+    /// <summary>Get a text font, if it exists.</summary>
+    /// <param name="name">The name of the font to get.</param>
+    private static Font? TryGetFont(string name)
     {
         try
         {
-            Il2CppArrayBase<Font>? availableFonts = Resources.FindObjectsOfTypeAll<Font>();
-
-            foreach (Font font in availableFonts)
+            foreach (Font font in Resources.FindObjectsOfTypeAll<Font>())
             {
-                if (
-                    font.name.IndexOf("Nazhdak", StringComparison.OrdinalIgnoreCase) >= 0
-                    && font.name.IndexOf("Dialogue", StringComparison.OrdinalIgnoreCase) < 0
-                )
-                    return font;
-            }
-
-            foreach (Font font in availableFonts)
-            {
-                if (
-                    font.name.IndexOf("PiS", StringComparison.OrdinalIgnoreCase) >= 0
-                    && font.name.IndexOf("Dialogue", StringComparison.OrdinalIgnoreCase) < 0
-                )
+                if (font.name == name)
                     return font;
             }
         }
