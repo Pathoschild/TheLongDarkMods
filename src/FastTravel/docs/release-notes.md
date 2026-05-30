@@ -6,6 +6,7 @@
 * Added support for naming destinations.
 * Added support for reordering destinations.
 * Added support for adding any number of destinations beyond 9.
+* Mod is no longer experimental.
 * Fixed wrong region name shown on-screen after fast traveling across regions.
 * Fixed destination list showing redundant region-in-region label for outdoor destinations.
 

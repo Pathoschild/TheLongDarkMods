@@ -6,15 +6,12 @@ transferring your hoard to each region.
 
 > ![](images/travel.png)
 
-> [!WARNING]  
-> **This mod is still experimental.**  
-> I strongly recommend [keeping save backups](../../SaveBackup#readme) when using this mod.
-
 ## Contents
 * [Install](#install)
 * [Use](#use)
 * [Configure](#configure)
 * [Compatibility](#compatibility)
+* [Save safety](#save-safety)
 * [Security](#security)
 * [See also](#see-also)
 
@@ -71,6 +68,15 @@ cursor at any field to see an explanation on the right.
   travel in Wintermute even if you get it to work.
 
 Pairs well with [Save Backup](../SaveBackup) in case of any issue.
+
+## Save safety
+The mod is typically safe to use. It doesn't make any changes to your save data, so you can add or
+remove it anytime.
+
+**However:** in very very rare cases, the game may get confused after a fast travel (e.g. launching
+you into the sky). The mod autosaves before you fast travel; so if something goes wrong, just
+immediately exit and reload the save to fix it. You can also use [Save Backup](../../SaveBackup#readme)
+to be extra safe.
 
 ## Security
 This mod is fully open-source. All its source code is public in this repository, so anyone can
