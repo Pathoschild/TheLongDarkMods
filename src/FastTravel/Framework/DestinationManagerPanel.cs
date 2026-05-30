@@ -275,8 +275,22 @@ internal class DestinationManagerPanel : MonoBehaviour
             KeyCode? slotKey = this.GetSlotKey(i);
 
             int saveIndex = i;
-            this.DrawDestinationRow(destination, slotKey, canMoveUp: i > 0, canMoveDown: i < ModConstants.MaxFavorites - 1, overwriteWithCurrentLocation: () => this.Destinations.SaveFavorite(saveIndex, this.CurrentLocation));
+            this.DrawDestinationRow(destination, slotKey, canMoveUp: i > 0, canMoveDown: true, overwriteWithCurrentLocation: () => this.Destinations.SaveFavorite(saveIndex, this.CurrentLocation));
         }
+
+        // draw remaining destinations
+        for (int i = 0, lastIndex = this.Destinations.OtherDestinations.Count - 1; i <= lastIndex; i++)
+        {
+            Destination destination = this.Destinations.OtherDestinations[i];
+            this.DrawDestinationRow(destination, null, canMoveUp: true, canMoveDown: i < lastIndex);
+        }
+
+        // draw final 'add new' button
+        GUILayout.BeginHorizontal(GUILayout.Height(28));
+        GUILayout.FlexibleSpace();
+        if (GUILayout.Button("ADD NEW", this.StyleButton!, GUILayout.Width(190)))
+            this.Destinations.SaveOther(this.CurrentLocation);
+        GUILayout.EndHorizontal();
 
         // end scroll area
         GUILayout.EndScrollView();
@@ -312,7 +326,7 @@ internal class DestinationManagerPanel : MonoBehaviour
     /// <param name="canMoveDown">Whether the destination can be moved down in the list.</param>
     /// <param name="overwriteWithCurrentLocation">Save the current location to this slot, if supported.</param>
     [HideFromIl2Cpp]
-    private void DrawDestinationRow(Destination? destination, KeyCode? slotKey, bool canMoveUp, bool canMoveDown, Action overwriteWithCurrentLocation)
+    private void DrawDestinationRow(Destination? destination, KeyCode? slotKey, bool canMoveUp, bool canMoveDown, Action? overwriteWithCurrentLocation = null)
     {
         // start row
         GUILayout.BeginHorizontal(GUILayout.Height(26));
@@ -354,7 +368,7 @@ internal class DestinationManagerPanel : MonoBehaviour
                 this.Destinations.MoveDestination(destination, 1);
             GUI.enabled = true;
         }
-        else
+        else if (overwriteWithCurrentLocation != null)
         {
             GUILayout.FlexibleSpace();
             if (GUILayout.Button("ADD NEW", this.StyleButton!, GUILayout.Width(95)))
@@ -440,6 +454,9 @@ internal class DestinationManagerPanel : MonoBehaviour
         foreach ((int index, Destination destination) in this.Destinations.FavoriteDestinations)
             data.Destinations[index] = destination;
 
+        for (int i = 0; i < this.Destinations.OtherDestinations.Count; i++)
+            data.Destinations[i + ModConstants.MaxFavorites] = this.Destinations.OtherDestinations[i];
+
         this.SaveData(data);
     }
 
@@ -454,7 +471,11 @@ internal class DestinationManagerPanel : MonoBehaviour
     [HideFromIl2Cpp]
     private string GetSerializedRepresentation(NormalizedDestinations destinations)
     {
-        var data = destinations.FavoriteDestinations.OrderBy(p => p.Key);
+        var data = new
+        {
+            Favorites = destinations.FavoriteDestinations.OrderBy(p => p.Key),
+            Others = destinations.OtherDestinations
+        };
 
         return JsonSerializer.Serialize(data);
     }

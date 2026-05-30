@@ -13,6 +13,9 @@ internal class NormalizedDestinations
     /// <summary>The mutable backing field for <see cref="FavoriteDestinations"/>.</summary>
     private readonly Dictionary<int, Destination> Favorites = [];
 
+    /// <summary>The mutable backing field for <see cref="OtherDestinations"/>.</summary>
+    private readonly List<Destination> Others = [];
+
     /// <summary>The saved scenes, or <c>null</c> if it's not initialized yet.</summary>
     private HashSet<string>? SavedSceneNames;
 
@@ -22,6 +25,9 @@ internal class NormalizedDestinations
     *********/
     /// <summary>The player's favorite destinations, which are mapped to optional keybinds.</summary>
     public IReadOnlyDictionary<int, Destination> FavoriteDestinations => this.Favorites;
+
+    /// <summary>The remaining destinations outside the <see cref="FavoriteDestinations"/> range.</summary>
+    public IReadOnlyList<Destination> OtherDestinations => this.Others;
 
 
     /*********
@@ -35,7 +41,10 @@ internal class NormalizedDestinations
 
         foreach ((int index, Destination destination) in destinations.OrderBy(p => p.Key))
         {
-            this.Favorites[index] = destination;
+            if (index < ModConstants.MaxFavorites)
+                this.Favorites[index] = destination;
+            else
+                this.Others.Add(destination);
 
             this.SavedSceneNames.Add(destination.Scene.Name);
         }
@@ -54,6 +63,14 @@ internal class NormalizedDestinations
         this.SavedSceneNames = null;
     }
 
+    /// <summary>Save a destination to the bottom of the non-favorites list.</summary>
+    /// <param name="destination">The destination to save.</param>
+    public void SaveOther(Destination destination)
+    {
+        this.Others.Add(destination);
+        this.SavedSceneNames = null;
+    }
+
     /// <summary>Move a destination in the list.</summary>
     /// <param name="destination">The destination to move.</param>
     /// <param name="direction">The direction in which to shift the destination (-1 to move up, or 1 to move down).</param>
@@ -68,8 +85,16 @@ internal class NormalizedDestinations
             if (!object.ReferenceEquals(destination, match))
                 continue;
 
-            // special case: can't move past top or bottom
-            if ((index is 0 && direction is -1) || (index is ModConstants.MaxFavorites - 1 && direction is 1))
+            // special case: move last favorite down into 'other' list
+            if (index is ModConstants.MaxFavorites - 1 && direction is 1)
+            {
+                this.Favorites.Remove(index);
+                this.Others.Insert(0, destination);
+                return true;
+            }
+
+            // special case: can't move past top
+            if (index is 0 && direction is -1)
                 return false;
 
             // else swap into place
@@ -81,6 +106,41 @@ internal class NormalizedDestinations
             else
                 this.Favorites.Remove(index);
             return true;
+        }
+
+        // move other
+        for (int index = 0, lastIndex = this.Others.Count - 1; index <= lastIndex; index++)
+        {
+            Destination match = this.Others[index];
+            if (!object.ReferenceEquals(destination, match))
+                continue;
+
+            // special case: move up into favorites
+            if (index is 0 && direction is -1)
+            {
+                int newIndex = ModConstants.MaxFavorites - 1;
+                Destination? swapWith = this.Favorites.GetValueOrDefault(newIndex);
+
+                this.Favorites[newIndex] = destination;
+
+                if (swapWith != null)
+                    this.Others[index] = swapWith;
+                else
+                    this.Others.RemoveAt(index);
+
+                return true;
+            }
+
+            // special case: can't move down past bottom
+            if (index == lastIndex && direction is 1)
+                return false;
+
+            // else swap into place
+            {
+                int newIndex = index + direction;
+                (this.Others[index], this.Others[newIndex]) = (this.Others[newIndex], this.Others[index]);
+                return true;
+            }
         }
 
         // not found
@@ -100,7 +160,7 @@ internal class NormalizedDestinations
             }
         }
 
-        return false;
+        return this.Others.Remove(destination);
     }
 
     /// <summary>Get whether a scene contains any saved destinations.</summary>
@@ -112,6 +172,9 @@ internal class NormalizedDestinations
             this.SavedSceneNames = [];
 
             foreach (Destination destination in this.Favorites.Values)
+                this.SavedSceneNames.Add(destination.Scene.Name);
+
+            foreach (Destination destination in this.Others)
                 this.SavedSceneNames.Add(destination.Scene.Name);
         }
 

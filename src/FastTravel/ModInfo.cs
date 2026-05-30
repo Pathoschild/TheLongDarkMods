@@ -18,7 +18,7 @@ internal class ModInfo
     public const string Author = "Pathoschild";
 
     /// <summary>A short human-readable description of the mod.</summary>
-    public const string Description = "Lets you save up to 9 places (like your home base), and fast travel to them anytime at the press of a button.";
+    public const string Description = "Lets you save any number of places (like your home base), and fast travel to them anytime at the press of a button.";
 
     /// <summary>The URL of the page where the player can find the mod.</summary>
     public const string DownloadLink = "https://www.nexusmods.com/thelongdark/mods/54";

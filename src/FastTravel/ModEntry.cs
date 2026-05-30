@@ -41,7 +41,7 @@ public class ModEntry : MelonMod
     /// <summary>An overlay which lists available fast travel destinations.</summary>
     private DestinationListOverlay DestinationListOverlay = null!; // set in OnInitializeMelon
 
-    /// <summary>The pause menu panel for managing the destinations list.</summary>
+    /// <summary>The pause menu panel for managing the full destinations list.</summary>
     private DestinationManagerPanel DestinationManagerPanel = null!; // set in OnInitializeMelon
 
 

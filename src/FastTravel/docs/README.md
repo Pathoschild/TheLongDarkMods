@@ -1,5 +1,5 @@
-**Fast Travel** is a [The Long Dark] survival mode mod that lets you save up to 9 places (like your
-home base), and fast travel to them anytime at the press of a button.
+**Fast Travel** is a [The Long Dark] survival mode mod that lets you save any number of places
+(like your home base), and fast travel to them anytime at the press of a button.
 
 For example, you can have one home base while you explore the world without the tedium of
 transferring your hoard to each region.
@@ -26,7 +26,7 @@ transferring your hoard to each region.
 You can [edit the mod settings](#configure) to choose when you can fast travel.
 
 ## Use
-You can save up to 9 places as fast travel destinations, and travel to them anytime. The mod
+You can save any number of places as fast travel destinations, and travel to them anytime. The mod
 always asks for confirmation, so you can't fast travel or change your saved destinations by
 mistake.
 
@@ -39,13 +39,15 @@ On the pause screen, click the 'Fast Travel' option to show the in-game UI:
 > [<img src="images/pause-menu-2.png" height="300px" />](images/pause-menu-2.png)
 
 This UI lets you...
-- Add and forget fast travel destinations.
+- Add and forget any number of destinations. Click "Add new" to save your current location as a
+  destination.
 - Reorder destinations by clicking the arrow buttons.
 - Name destinations. (You can reset a destination to the default name by leaving the name box
   blank.)
 - Travel to any destination by clicking "Travel".
 
-The destinations can also be [managed using keybinds](#using-keybinds).
+The top nine destinations can also be [managed using keybinds](#using-keybinds). You use the arrow
+buttons to move destinations into or out of that top list.
 
 ### Using keybinds
 Use keyboard buttons ([configurable](#configure)) to save and use up to nine favorite destinations.

@@ -5,6 +5,7 @@
 * Added [pause menu UI](README.md#use) to manage fast travel destinations.
 * Added support for naming destinations.
 * Added support for reordering destinations.
+* Added support for adding any number of destinations beyond 9.
 * Fixed wrong region name shown on-screen after fast traveling across regions.
 * Fixed destination list showing redundant region-in-region label for outdoor destinations.
 

@@ -5,8 +5,8 @@ See the individual mods for documentation and release notes.
 * **Auto-Fill Map on Explore** <small>([readme](src/AutoFillMapOnExplore#readme))</small>  
   _Fills in the map around you as you explore._
 * **Fast Travel** <small>([readme](src/FastTravel#readme))</small>  
-  _Lets you save up to 9 fast travel points (e.g. your home base), and fast travel to them anytime
-  at the press of a button._
+  _Lets you save any number of fast travel points (e.g. your home base), and fast travel to them
+  anytime at the press of a button._
 * **Save Backup** <small>([readme](src/SaveBackup#readme))</small>  
   _Automatically backs up all your saves once per real day into its subfolder._
 * **Show Trader Trust** <small>([readme](src/ShowTraderTrust#readme))</small>  
