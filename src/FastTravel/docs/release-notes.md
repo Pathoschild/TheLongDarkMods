@@ -1,7 +1,9 @@
 [← back to readme](README.md)
 
 # Release notes
-## Upcoming release
+## 1.0.0
+Released 30 May 2026 for The Long Dark 2.50+.
+
 * Added [pause menu UI](README.md#use) to manage fast travel destinations.
 * Added support for naming destinations.
 * Added support for reordering destinations.

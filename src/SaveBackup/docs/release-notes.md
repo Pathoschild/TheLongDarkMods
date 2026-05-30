@@ -1,7 +1,9 @@
 [← back to readme](README.md)
 
 # Release notes
-## Upcoming release
+## 1.4.0
+Released 30 May 2026 for The Long Dark 2.50+.
+
 * Added option to trigger a backup at any time.
 
 ## 1.3.0

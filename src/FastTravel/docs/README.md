@@ -1,5 +1,5 @@
-**Fast Travel** is a [The Long Dark] survival mode mod that lets you save any number of places
-(like your home base), and fast travel to them anytime at the press of a button.
+**Fast Travel** is a [The Long Dark] survival mode mod that lets you save any number of places, and
+fast travel to them anytime at the press of a button.
 
 For example, you can have one home base while you explore the world without the tedium of
 transferring your hoard to each region.
