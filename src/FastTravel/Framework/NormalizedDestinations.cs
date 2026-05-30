@@ -54,6 +54,39 @@ internal class NormalizedDestinations
         this.SavedSceneNames = null;
     }
 
+    /// <summary>Move a destination in the list.</summary>
+    /// <param name="destination">The destination to move.</param>
+    /// <param name="direction">The direction in which to shift the destination (-1 to move up, or 1 to move down).</param>
+    public bool MoveDestination(Destination destination, int direction)
+    {
+        if (direction is not (-1 or 1))
+            throw new InvalidOperationException($"Invalid offset direction '{direction}', must be -1 (up) or 1 (down).");
+
+        // move favorite
+        foreach ((int index, Destination match) in this.Favorites)
+        {
+            if (!object.ReferenceEquals(destination, match))
+                continue;
+
+            // special case: can't move past top or bottom
+            if ((index is 0 && direction is -1) || (index is ModConstants.MaxFavorites - 1 && direction is 1))
+                return false;
+
+            // else swap into place
+            int newIndex = index + direction;
+            Destination? swapWith = this.Favorites.GetValueOrDefault(newIndex);
+            this.Favorites[newIndex] = destination;
+            if (swapWith != null)
+                this.Favorites[index] = swapWith;
+            else
+                this.Favorites.Remove(index);
+            return true;
+        }
+
+        // not found
+        return false;
+    }
+
     /// <summary>Remove a destination.</summary>
     /// <param name="destination">The destination to remove.</param>
     public bool Remove(Destination destination)

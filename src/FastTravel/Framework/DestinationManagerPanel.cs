@@ -275,7 +275,7 @@ internal class DestinationManagerPanel : MonoBehaviour
             KeyCode? slotKey = this.GetSlotKey(i);
 
             int saveIndex = i;
-            this.DrawDestinationRow(destination, slotKey, overwriteWithCurrentLocation: () => this.Destinations.SaveFavorite(saveIndex, this.CurrentLocation));
+            this.DrawDestinationRow(destination, slotKey, canMoveUp: i > 0, canMoveDown: i < ModConstants.MaxFavorites - 1, overwriteWithCurrentLocation: () => this.Destinations.SaveFavorite(saveIndex, this.CurrentLocation));
         }
 
         // end scroll area
@@ -308,9 +308,11 @@ internal class DestinationManagerPanel : MonoBehaviour
     /// <summary>Draw a destination slot row.</summary>
     /// <param name="destination">The destination to draw, or <c>null</c> for an empty slot.</param>
     /// <param name="slotKey">The keybind to fast travel to this destination.</param>
+    /// <param name="canMoveUp">Whether the destination can be moved up in the list.</param>
+    /// <param name="canMoveDown">Whether the destination can be moved down in the list.</param>
     /// <param name="overwriteWithCurrentLocation">Save the current location to this slot, if supported.</param>
     [HideFromIl2Cpp]
-    private void DrawDestinationRow(Destination? destination, KeyCode? slotKey, Action overwriteWithCurrentLocation)
+    private void DrawDestinationRow(Destination? destination, KeyCode? slotKey, bool canMoveUp, bool canMoveDown, Action overwriteWithCurrentLocation)
     {
         // start row
         GUILayout.BeginHorizontal(GUILayout.Height(26));
@@ -336,6 +338,17 @@ internal class DestinationManagerPanel : MonoBehaviour
             // draw 'forget' button
             if (GUILayout.Button("FORGET", this.StyleButton!, GUILayout.Width(60)))
                 this.InteractivelyDelete(destination);
+
+            // draw move-up arrow
+            GUI.enabled = canMoveUp;
+            if (GUILayout.Button("↑", this.StyleButton!, GUILayout.Width(26)))
+                this.Destinations.MoveDestination(destination, -1);
+
+            // draw move-down arrow
+            GUI.enabled = canMoveDown;
+            if (GUILayout.Button("↓", this.StyleButton!, GUILayout.Width(26)))
+                this.Destinations.MoveDestination(destination, 1);
+            GUI.enabled = true;
         }
         else
         {

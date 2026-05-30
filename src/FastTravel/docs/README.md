@@ -40,6 +40,7 @@ On the pause screen, click the 'Fast Travel' option to show the in-game UI:
 
 This UI lets you...
 - Add and forget fast travel destinations.
+- Reorder destinations by clicking the arrow buttons.
 - Travel to any destination by clicking "Travel".
 
 The destinations can also be [managed using keybinds](#using-keybinds).
