@@ -8,7 +8,6 @@ using Pathoschild.TheLongDarkMods.Common;
 namespace Pathoschild.TheLongDarkMods.FastTravel.Framework.Patches;
 
 /// <summary>Harmony patches for the <see cref="Panel_HUD"/> class.</summary>
-[HarmonyPatch(typeof(Panel_HUD), nameof(Panel_HUD.ShowLocationReveal))]
 [SuppressMessage("ReSharper", "UnusedMember.Global", Justification = SuppressReasons.MethodsReferencedByHarmony)]
 internal static class PanelHudPatches
 {
@@ -34,32 +33,38 @@ internal static class PanelHudPatches
         PanelHudPatches.ConsumeDestinationOnArrival = consumeDestinationOnArrival;
     }
 
-    /// <summary>Prefix <see cref="Panel_HUD.ShowLocationReveal"/> to set the region name to the correct value after fast travel.</summary>
-    /// <param name="text">The localized location name.</param>
-    /// <param name="subText">The localized subtext (e.g. the region name, or the literal text 'region').</param>
-    public static void Prefix(string text, ref string subText)
+    /// <summary>Patches for the <see cref="Panel_HUD.ShowLocationReveal"/> method.</summary>
+    [HarmonyPatch(typeof(Panel_HUD), nameof(Panel_HUD.ShowLocationReveal))]
+    public static class ShowLocationRevealPatches
     {
-        MelonLogger.Instance log = PanelHudPatches.Log;
-        Destination? destination = PanelHudPatches.ConsumeDestinationOnArrival();
-
-        if (destination is null)
-            return;
-
-        if (destination.Region is null)
+        /// <summary>Set the region name to the correct value after fast travel.</summary>
+        /// <param name="text">The localized location name.</param>
+        /// <param name="subText">The localized subtext (e.g. the region name, or the literal text 'region').</param>
+        [HarmonyPrefix]
+        public static void SetRegionName(string text, ref string subText)
         {
-            log.Warning("Can't override location text after fast travel: the destination has no region saved.");
-            return;
-        }
+            MelonLogger.Instance log = PanelHudPatches.Log;
+            Destination? destination = PanelHudPatches.ConsumeDestinationOnArrival();
 
-        string currentSceneName = SceneHelper.GetSceneName();
-        if (destination.Scene.Name != currentSceneName)
-        {
-            log.Warning($"Can't override location text after fast travel: the current scene '{currentSceneName}' doesn't match the fast travel destination '{destination.Scene.Name}'.");
-            return;
-        }
+            if (destination is null)
+                return;
 
-        string regionName = Localization.Get(destination.Region.NameLocalizationId);
-        if (text != regionName)
-            subText = regionName;
+            if (destination.Region is null)
+            {
+                log.Warning("Can't override location text after fast travel: the destination has no region saved.");
+                return;
+            }
+
+            string currentSceneName = SceneHelper.GetSceneName();
+            if (destination.Scene.Name != currentSceneName)
+            {
+                log.Warning($"Can't override location text after fast travel: the current scene '{currentSceneName}' doesn't match the fast travel destination '{destination.Scene.Name}'.");
+                return;
+            }
+
+            string regionName = Localization.Get(destination.Region.NameLocalizationId);
+            if (text != regionName)
+                subText = regionName;
+        }
     }
 }
