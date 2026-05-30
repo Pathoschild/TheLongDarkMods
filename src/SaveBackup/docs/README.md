@@ -25,6 +25,8 @@ keep the last 10 backups of each type. If you receive a MelonLoader or game upda
 new backup just in case. This all happens in the background, so it doesn't affect the game's
 startup time.
 
+You can optionally [set a keybind](#configure) to also create a backup at the press of a button.
+
 To restore a backup, just unzip it and follow the instructions in its `README.txt` file.
 
 ### Wintermute

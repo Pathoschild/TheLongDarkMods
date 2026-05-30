@@ -2,7 +2,7 @@
 
 # Release notes
 ## Upcoming release
-* Added option to trigger a manual backup at any time.
+* Added option to trigger a backup at any time.
 
 ## 1.3.0
 Released 23 April 2026 for The Long Dark 2.50+.

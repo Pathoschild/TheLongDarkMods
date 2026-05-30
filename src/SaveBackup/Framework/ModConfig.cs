@@ -24,17 +24,17 @@ internal class ModConfig : JsonModSettings
     public int HourlyBackupCount = 10;
 
     /****
-    ** Manual backups
+    ** Custom backups
     ****/
-    [Section("Manual backups")]
+    [Section("Custom backups")]
     [Name("Backup key")]
     [Description("The button to press to create an immediate backup. This doesn't trigger a save, it only backs up any current saves on disk.")]
-    public KeyCode ManualBackupKey = KeyCode.None;
+    public KeyCode CustomBackupKey = KeyCode.None;
 
     [Name("Number of backups")]
-    [Description("The number of manual backups to keep. Older backups are deleted automatically.")]
+    [Description("The number of custom backups to keep. Older backups are deleted automatically.")]
     [Slider(0, 30)]
-    public int ManualBackupCount = 10;
+    public int CustomBackupCount = 10;
 
 
     /****

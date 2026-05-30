@@ -26,8 +26,8 @@ public class ModEntry : MelonMod
     /// <summary>The name of the subfolder for hourly backups.</summary>
     private const string HourlyFolderName = "hourly";
 
-    /// <summary>The name of the subfolder for manual backups.</summary>
-    private const string ManualFolderName = "manual";
+    /// <summary>The name of the subfolder for custom backups.</summary>
+    private const string CustomFolderName = "custom";
 
     /// <summary>The folder containing saves to back up.</summary>
     private readonly string SavesPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Hinterland", "TheLongDark");
@@ -53,8 +53,8 @@ public class ModEntry : MelonMod
     /// <summary>The next time when the mod should create save backups if needed.</summary>
     private DateTimeOffset NextBackupCheck = DateTimeOffset.MaxValue; // wait until migrations complete
 
-    /// <summary>The next time when we can handle a manual backup key.</summary>
-    private DateTimeOffset NextManualBackupAllowed = DateTimeOffset.MinValue;
+    /// <summary>The next time when we can handle a custom backup key.</summary>
+    private DateTimeOffset NextCustomBackupAllowed = DateTimeOffset.MinValue;
 
 
     /*********
@@ -83,11 +83,11 @@ public class ModEntry : MelonMod
     /// <inheritdoc />
     public override void OnUpdate()
     {
-        if (this.InteractionHelper.IsKeyJustPressed(this.Config.ManualBackupKey) && DateTimeOffset.UtcNow >= this.NextManualBackupAllowed)
+        if (this.InteractionHelper.IsKeyJustPressed(this.Config.CustomBackupKey) && DateTimeOffset.UtcNow >= this.NextCustomBackupAllowed)
         {
-            this.NextManualBackupAllowed = DateTimeOffset.UtcNow.AddSeconds(2); // debounce multiple presses
+            this.NextCustomBackupAllowed = DateTimeOffset.UtcNow.AddSeconds(2); // debounce multiple presses
 
-            Task.Run(this.TakeManualBackup);
+            Task.Run(this.TakeCustomBackup);
         }
     }
 
@@ -135,15 +135,15 @@ public class ModEntry : MelonMod
         }
     }
 
-    /// <summary>Create a backup of the current saves for a manual trigger and prune older backups as needed.</summary>
-    private void TakeManualBackup()
+    /// <summary>Create a backup of the current saves for a custom trigger and prune older backups as needed.</summary>
+    private void TakeCustomBackup()
     {
         string backupLabel = this.GetBackupLabel();
         DateTimeOffset now = DateTimeOffset.Now;
 
-        this.UpdateBackupsOfType(ManualFolderName, $"{now:yyyy-MM-ddTHH-mm-ss} ({backupLabel})");
+        this.UpdateBackupsOfType(CustomFolderName, $"{now:yyyy-MM-ddTHH-mm-ss} ({backupLabel})");
 
-        this.PruneBackups(ManualFolderName, this.Config.ManualBackupCount);
+        this.PruneBackups(CustomFolderName, this.Config.CustomBackupCount);
     }
 
     /// <summary>Back up the current saves and prune older backups as needed.</summary>
@@ -159,7 +159,7 @@ public class ModEntry : MelonMod
 
         this.PruneBackups(DailyFolderName, this.Config.DailyBackupCount);
         this.PruneBackups(HourlyFolderName, this.Config.HourlyBackupCount);
-        this.PruneBackups(ManualFolderName, this.Config.ManualBackupCount);
+        this.PruneBackups(CustomFolderName, this.Config.CustomBackupCount);
     }
 
     /// <summary>Get the name for a backup taken now (excluding the data).</summary>
