@@ -42,14 +42,14 @@
 		},
 		{
 			"name": "Fast Travel",
-			"version": "0.3.1",
-			"updated": "2026-04-28",
-			"downloadURL": "https://github.com/Pathoschild/TheLongDarkMods/releases/download/fast-travel%2F0.3.1/FastTravel.dll",
+			"version": "1.0.0",
+			"updated": "2026-05-30",
+			"downloadURL": "https://github.com/Pathoschild/TheLongDarkMods/releases/download/fast-travel%2F1.0.0/FastTravel.dll",
 			"status": {
 				"working": true,
-				"beta": true,
-				"patchnotes": "Internal changes to be more futureproof.",
-				"notes": "⚠ This mod is still experimental before its 1.0.0 release. Keeping save backups is recommended when using this mod.",
+				"beta": false,
+				"patchnotes": "Added new GUI to manage fast travel destinations. Added support for naming and reordering destinations. Added support for any number of destinations beyond 9. Fixed wrong region name shown on-screen when traveling across regions. The mod is no longer experimental.",
+				"notes": "",
 				"issues": ""
 			},
 			"testedon": {
@@ -63,11 +63,11 @@
 			"previousAuthors": "",
 			"released": "2026-04-19",
 			"modURL": "https://github.com/Pathoschild/TheLongDarkMods/tree/stable/src/FastTravel#readme",
-			"description": "<p>Lets you save up to 9 places like your home base, and fast travel to them anytime at the press of a button. Includes balance options. For example, you can have one home base while you explore the world, without the tedium of transferring your hoard to each region.</p><p>See <a href=\"https://github.com/Pathoschild/TheLongDarkMods/tree/stable/src/FastTravel#readme\">readme for more info</a>.</p>",
+			"description": "<p>Lets you save any number of places, and fast travel to them anytime at the press of a button. Includes balance options. For example, you can have one home base while you explore the world, without the tedium of transferring your hoard to each region.</p><p>See <a href=\"https://github.com/Pathoschild/TheLongDarkMods/tree/stable/src/FastTravel#readme\">readme</a> and <a href=\"https://github.com/Pathoschild/TheLongDarkMods/tree/stable/src/FastTravel#save-safety\">save safety</a> for more info.</p>",
 			"tags": "fast travel, teleport, warp",
 			"categories": [ "Gameplay", "Utility Mod", "Cheats" ],
 			"gameversion": [ "vanilla" ],
-			"images": [ "https://raw.githubusercontent.com/Pathoschild/TheLongDarkMods/stable/src/FastTravel/docs/images/travel.png", "https://raw.githubusercontent.com/Pathoschild/TheLongDarkMods/stable/src/FastTravel/docs/images/save-location.png", "https://raw.githubusercontent.com/Pathoschild/TheLongDarkMods/stable/src/FastTravel/docs/images/config.png" ],
+			"images": [ "https://raw.githubusercontent.com/Pathoschild/TheLongDarkMods/stable/src/FastTravel/docs/images/travel.png", "https://raw.githubusercontent.com/Pathoschild/TheLongDarkMods/stable/src/FastTravel/docs/images/pause-menu-2.png", "https://raw.githubusercontent.com/Pathoschild/TheLongDarkMods/stable/src/FastTravel/docs/images/config.png" ],
 			"dependencies": [ "ModSettings", "ModData" ],
 			"updater": {
 				"enable": true,
@@ -78,13 +78,13 @@
 		},
 		{
 			"name": "Save Backup",
-			"version": "1.3.0",
-			"updated": "2026-04-24",
-			"downloadURL": "https://github.com/Pathoschild/TheLongDarkMods/releases/download/save-backup%2F1.3.0/SaveBackup.dll",
+			"version": "1.4.0",
+			"updated": "2026-05-30",
+			"downloadURL": "https://github.com/Pathoschild/TheLongDarkMods/releases/download/save-backup%2F1.4.0/SaveBackup.dll",
 			"status": {
 				"working": true,
 				"beta": false,
-				"patchnotes": "Backups now include mod save data, and a README.txt explaining how to restore them.",
+				"patchnotes": "Added option to trigger a backup at any time.",
 				"notes": "",
 				"issues": ""
 			},

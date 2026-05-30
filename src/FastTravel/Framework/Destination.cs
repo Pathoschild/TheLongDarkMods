@@ -33,6 +33,9 @@ internal class Destination
     /// <summary>The transition which led to this location.</summary>
     public TransitionModel LastTransition { get; }
 
+    /// <summary>The custom display name set by the player, if any.</summary>
+    public string? CustomName { get; set; }
+
 
     /*********
     ** Public methods
@@ -44,8 +47,9 @@ internal class Destination
     /// <param name="cameraPitch"><inheritdoc cref="CameraPitch" path="/summary"/></param>
     /// <param name="cameraYaw"><inheritdoc cref="CameraYaw" path="/summary"/></param>
     /// <param name="lastTransition"><inheritdoc cref="LastTransition" path="/summary"/></param>
+    /// <param name="customName"><inheritdoc cref="CustomName" path="/summary"/></param>
     [JsonConstructor]
-    public Destination(RegionModel? region, SceneModel scene, Vector3Model position, float cameraPitch, float cameraYaw, TransitionModel lastTransition)
+    public Destination(RegionModel? region, SceneModel scene, Vector3Model position, float cameraPitch, float cameraYaw, TransitionModel lastTransition, string? customName)
     {
         this.Region = region;
         this.Scene = scene;
@@ -53,6 +57,7 @@ internal class Destination
         this.CameraPitch = cameraPitch;
         this.CameraYaw = cameraYaw;
         this.LastTransition = lastTransition;
+        this.CustomName = customName;
     }
 
     /// <summary>Construct an instance.</summary>
@@ -62,28 +67,37 @@ internal class Destination
     /// <param name="cameraPitch"><inheritdoc cref="CameraPitch" path="/summary"/></param>
     /// <param name="cameraYaw"><inheritdoc cref="CameraYaw" path="/summary"/></param>
     /// <param name="lastTransition"><inheritdoc cref="LastTransition" path="/summary"/></param>
-    public Destination(RegionSpecification? region, Scene scene, Vector3 position, float cameraPitch, float cameraYaw, SceneTransitionData lastTransition)
+    /// <param name="customName"><inheritdoc cref="CustomName" path="/summary"/></param>
+    public Destination(RegionSpecification? region, Scene scene, Vector3 position, float cameraPitch, float cameraYaw, SceneTransitionData lastTransition, string? customName)
         : this(
             region: region != null ? new RegionModel(region) : null,
             scene: new SceneModel(scene),
             position: new Vector3Model(position),
             cameraPitch: cameraPitch,
             cameraYaw: cameraYaw,
-            lastTransition: new TransitionModel(lastTransition)
+            lastTransition: new TransitionModel(lastTransition),
+            customName: customName
         )
     { }
 
-    /// <summary>Get the destination's translated display name, including the region if it's not the one containing the player.</summary>
+    /// <summary>Get the destination's display name, including the region if it's not the one containing the player.</summary>
     /// <param name="showRegion">Whether to include the region name, or <c>null</c> to show it if different from the player's current region.</param>
     public string GetDisplayName(bool? showRegion = false)
     {
+        if (this.CustomName is not null)
+            return this.CustomName;
+
         string name = SceneHelper.GetDisplayName(this.Scene.Name);
 
         if (this.Region != null)
         {
             showRegion ??= !SceneHelper.IsOutdoors(this.Scene.Name) && this.Region.Id != SceneHelper.TryGetRegion()?.GetName();
             if (showRegion.Value)
-                name += $" in {Localization.Get(this.Region.NameLocalizationId)}"; // don't use `this.LastTransition.LastOutdoorScene`, since it sometimes shows the wrong location
+            {
+                string regionName = Localization.Get(this.Region.NameLocalizationId);
+                if (regionName != name)
+                    name += $" in {regionName}"; // don't use `this.LastTransition.LastOutdoorScene`, since it sometimes shows the wrong location
+            }
         }
 
         return name;

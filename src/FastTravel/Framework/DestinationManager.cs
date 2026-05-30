@@ -60,7 +60,8 @@ internal class DestinationManager
             position: player.position,
             cameraPitch: camera.m_Pitch,
             cameraYaw: camera.m_Yaw,
-            lastTransition: GameManager.m_SceneTransitionData
+            lastTransition: GameManager.m_SceneTransitionData,
+            customName: null
         );
     }
 

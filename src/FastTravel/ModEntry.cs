@@ -5,6 +5,7 @@ using MelonLoader;
 using Pathoschild.TheLongDarkMods.Common;
 using Pathoschild.TheLongDarkMods.FastTravel.Framework;
 using Pathoschild.TheLongDarkMods.FastTravel.Framework.DataModels;
+using Pathoschild.TheLongDarkMods.FastTravel.Framework.Patches;
 using UnityEngine;
 
 namespace Pathoschild.TheLongDarkMods.FastTravel;
@@ -15,9 +16,6 @@ public class ModEntry : MelonMod
     /*********
     ** Fields
     *********/
-    /// <summary>The maximum number of destinations which the player can save.</summary>
-    private const int MaxDestinations = 9;
-
     /// <summary>The mod settings.</summary>
     private readonly ModConfig Config = new();
 
@@ -33,11 +31,18 @@ public class ModEntry : MelonMod
     /// <summary>Handles checking for fast travel restrictions.</summary>
     private FastTravelRestrictionHelper FastTravelRestrictions = null!; // set in OnInitializeMelon
 
-    /// <summary>The player's most recent fast travel transition.</summary>
+    /// <summary>The player's ongoing fast travel transition, if they haven't arrived yet.</summary>
     private FastTravelTransition? FastTravel;
+
+    /// <summary>The destination info to show to the player on arrival.</summary>
+    /// <remarks>This is cached temporarily for the location name shown on-screen when the player arrives.</remarks>
+    private Destination? ShowOnArrival;
 
     /// <summary>An overlay which lists available fast travel destinations.</summary>
     private DestinationListOverlay DestinationListOverlay = null!; // set in OnInitializeMelon
+
+    /// <summary>The pause menu panel for managing the full destinations list.</summary>
+    private DestinationManagerPanel DestinationManagerPanel = null!; // set in OnInitializeMelon
 
 
     /*********
@@ -46,21 +51,47 @@ public class ModEntry : MelonMod
     /// <inheritdoc />
     public override void OnInitializeMelon()
     {
+        // init components
         this.Log = Melon<ModEntry>.Logger;
         this.DestinationManager = new DestinationManager(this.Log);
         this.InteractionHelper = new InteractionHelper(this.Log);
         this.DestinationListOverlay = DestinationListOverlay.Create();
         this.FastTravelRestrictions = new FastTravelRestrictionHelper(this.Config);
 
+        // init pause menu panel
+        this.DestinationManagerPanel = DestinationManagerPanel.Create();
+        this.DestinationManagerPanel.Initialize(
+            interactionHelper: this.InteractionHelper,
+            loadData: this.DestinationManager.GetData,
+            saveData: data =>
+            {
+                this.DestinationManager.SaveData(data);
+                this.UpdateDestinationListIfVisible(data);
+            },
+            getSlotKey: this.GetKeyForSlot,
+            interactivelyFastTravel: this.InteractivelyFastTravel,
+            canFastTravel: (from, to, isFromSavedScene) => this.FastTravelRestrictions.IsAllowed(from, to, isFromSavedScene, out _)
+        );
+
+        // init patches
+        PanelHudPatches.Initialize(this.Log, this.ConsumeDestinationOnArrival);
+        PanelPauseMenuPatches.Initialize(this.DestinationManagerPanel, this.DestinationManager.GetCurrentLocation);
+
+        // init config
         this.Config.AddToModSettings(ModInfo.DisplayName);
     }
 
     /// <inheritdoc />
     public override void OnUpdate()
     {
-        // hide overlay on exit
-        if (this.DestinationListOverlay.IsVisible && !SceneHelper.IsSaveLoaded())
-            this.DestinationListOverlay.Hide();
+        // hide overlays on exit
+        if ((this.DestinationListOverlay.IsVisible || this.DestinationManagerPanel.IsVisible) && !SceneHelper.IsSaveLoaded())
+        {
+            if (this.DestinationListOverlay.IsVisible)
+                this.DestinationListOverlay.Hide();
+            if (this.DestinationManagerPanel.IsVisible)
+                this.DestinationManagerPanel.Hide();
+        }
 
         // handle key presses
         if (InputManager.HasPressedKey() && SceneHelper.IsSaveLoaded())
@@ -81,11 +112,11 @@ public class ModEntry : MelonMod
             // saved destination
             else
             {
-                for (int i = 0; i < MaxDestinations; i++)
+                for (int i = 0; i < ModConstants.MaxFavorites; i++)
                 {
                     // skip if not pressed
-                    KeyCode key = this.GetKeyForSlot(i);
-                    if (!this.InteractionHelper.IsKeyJustPressed(key))
+                    KeyCode? key = this.GetKeyForSlot(i);
+                    if (key is null || !this.InteractionHelper.IsKeyJustPressed(key.Value))
                         continue;
 
                     // apply
@@ -227,18 +258,8 @@ public class ModEntry : MelonMod
     private void InteractivelyFastTravel(int slotIndex)
     {
         SaveModel data = this.DestinationManager.GetData();
-        Destination here = this.DestinationManager.GetCurrentLocation();
         Destination? destination = data.Get(slotIndex);
-        Destination? returnPoint = data.ReturnPoint;
 
-        // check restrictions
-        if (!this.FastTravelRestrictions.IsAllowed(here, destination, data, out string? reasonPhrase))
-        {
-            this.Log.Warning($"Can't fast travel {reasonPhrase} (per your mod settings).");
-            return;
-        }
-
-        // not set yet
         if (destination is null)
         {
             string message = $"You haven't saved anywhere as fast travel point {slotIndex + 1} yet.";
@@ -249,7 +270,34 @@ public class ModEntry : MelonMod
             return;
         }
 
-        // else travel
+        this.InteractivelyFastTravel(data, destination);
+    }
+
+    /// <summary>Fast travel to a saved destination with player interaction.</summary>
+    /// <param name="destination">The destination to travel to.</param>
+    private void InteractivelyFastTravel(Destination destination)
+    {
+        SaveModel data = this.DestinationManager.GetData();
+
+        this.InteractivelyFastTravel(data, destination);
+    }
+
+    /// <summary>Fast travel to a saved destination with player interaction.</summary>
+    /// <param name="data">The destination data model.</param>
+    /// <param name="destination">The destination to travel to.</param>
+    private void InteractivelyFastTravel(SaveModel data, Destination destination)
+    {
+        Destination here = this.DestinationManager.GetCurrentLocation();
+        Destination? returnPoint = data.ReturnPoint;
+
+        // check restrictions
+        if (!this.FastTravelRestrictions.IsAllowed(here, destination, data, out string? reasonPhrase))
+        {
+            this.Log.Warning($"Can't fast travel {reasonPhrase} (per your mod settings).");
+            return;
+        }
+
+        // travel
         string question = $"Travel to {destination.GetDisplayName()}?";
         if (this.Config.ReturnPointKey != KeyCode.None && this.Config.ShowUsageHints)
         {
@@ -266,6 +314,13 @@ public class ModEntry : MelonMod
                 data.ReturnPoint = here;
                 this.DestinationManager.SaveData(data);
                 this.UpdateDestinationListIfVisible(data);
+
+                if (this.DestinationManagerPanel.IsVisible)
+                {
+                    this.DestinationManagerPanel.Hide();
+                    InterfaceManager.GetPanel<Panel_PauseMenu>()?.OnDone(); // unpause the game
+                }
+
                 this.FastTravelTo(destination);
             }
         );
@@ -365,6 +420,7 @@ public class ModEntry : MelonMod
 
                 // start transition
                 this.FastTravel = new FastTravelTransition(this.DestinationManager.GetCurrentLocation(), destination);
+                this.ShowOnArrival = destination;
                 GameManager.LoadScene(destination.Scene.Name, SaveGameSystem.GetCurrentSaveName()); // need to load the Unity scene name; the game will get the instance ID from the transition data
             })
         );
@@ -397,6 +453,14 @@ public class ModEntry : MelonMod
         camera.m_Yaw = cameraYaw;
         camera.m_TargetYaw = cameraYaw;
         camera.m_CurrentYaw = cameraYaw;
+    }
+
+    /// <summary>Get the destination that should be shown on-screen when the player arrives. This deletes the cached value, if any.</summary>
+    private Destination? ConsumeDestinationOnArrival()
+    {
+        Destination? destination = this.ShowOnArrival;
+        this.ShowOnArrival = null;
+        return destination;
     }
 
     /// <summary>Show or reset the destination list overlay.</summary>
@@ -436,7 +500,7 @@ public class ModEntry : MelonMod
 
     /// <summary>Get the key bound to a given fast travel slot.</summary>
     /// <param name="slotIndex">The fast travel slot index.</param>
-    private KeyCode GetKeyForSlot(int slotIndex)
+    private KeyCode? GetKeyForSlot(int slotIndex)
     {
         return slotIndex switch
         {
@@ -449,7 +513,7 @@ public class ModEntry : MelonMod
             6 => this.Config.Destination7,
             7 => this.Config.Destination8,
             8 => this.Config.Destination9,
-            _ => throw new InvalidOperationException($"Unsupported destination slot {slotIndex}.")
+            _ => null
         };
     }
 

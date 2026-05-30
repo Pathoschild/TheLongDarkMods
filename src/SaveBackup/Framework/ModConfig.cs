@@ -1,4 +1,5 @@
 using ModSettings;
+using UnityEngine;
 
 namespace Pathoschild.TheLongDarkMods.SaveBackup.Framework;
 
@@ -8,6 +9,10 @@ internal class ModConfig : JsonModSettings
     /*********
     ** Accessors
     *********/
+    /****
+    ** Automatic backups
+    ****/
+    [Section("Automatic backups")]
     [Name("Number of daily backups")]
     [Description("The number of daily backups to keep. Older backups are deleted automatically.")]
     [Slider(0, 30)]
@@ -18,6 +23,24 @@ internal class ModConfig : JsonModSettings
     [Slider(0, 30)]
     public int HourlyBackupCount = 10;
 
+    /****
+    ** Custom backups
+    ****/
+    [Section("Custom backups")]
+    [Name("Backup key")]
+    [Description("The button to press to create an immediate backup. This doesn't trigger a save, it only backs up any current saves on disk.")]
+    public KeyCode CustomBackupKey = KeyCode.None;
+
+    [Name("Number of backups")]
+    [Description("The number of custom backups to keep. Older backups are deleted automatically.")]
+    [Slider(0, 30)]
+    public int CustomBackupCount = 10;
+
+
+    /****
+    ** What to back up
+    ****/
+    [Section("What to back up")]
     [Name("Include survival saves")]
     [Description("Whether to back up saves created in survival mode.")]
     public bool IncludeSurvival = true;

@@ -1,6 +1,17 @@
 [← back to readme](README.md)
 
 # Release notes
+## 1.0.0
+Released 30 May 2026 for The Long Dark 2.50+.
+
+* Added [pause menu UI](README.md#use) to manage fast travel destinations.
+* Added support for naming destinations.
+* Added support for reordering destinations.
+* Added support for adding any number of destinations beyond 9.
+* Mod is no longer experimental.
+* Fixed wrong region name shown on-screen after fast traveling across regions.
+* Fixed destination list showing redundant region-in-region label for outdoor destinations.
+
 ## 0.3.1
 Released 28 April 2026 for The Long Dark 2.50+.
 
