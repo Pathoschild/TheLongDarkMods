@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using MelonLoader;
+using Pathoschild.TheLongDarkMods.Common;
 using Pathoschild.TheLongDarkMods.Common.Overlays;
 using UnityEngine;
 
@@ -53,7 +54,7 @@ internal class DestinationListOverlay : MonoBehaviour
     }
 
     /// <summary>Draw the overlay.</summary>
-    [SuppressMessage("ReSharper", "UnusedMember.Global", Justification = "Unity loads the method dynamically.")]
+    [SuppressMessage("ReSharper", "UnusedMember.Global", Justification = SuppressReasons.MethodReferencedByUnity)]
     public void OnGUI()
     {
         this.Overlay.Draw();

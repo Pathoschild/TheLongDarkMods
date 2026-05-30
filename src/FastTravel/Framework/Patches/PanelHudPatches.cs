@@ -9,7 +9,7 @@ namespace Pathoschild.TheLongDarkMods.FastTravel.Framework.Patches;
 
 /// <summary>Harmony patches for the <see cref="Panel_HUD"/> class.</summary>
 [HarmonyPatch(typeof(Panel_HUD), nameof(Panel_HUD.ShowLocationReveal))]
-[SuppressMessage("ReSharper", "UnusedMember.Global", Justification = "Harmony patches are applied by MelonLoader automatically.")]
+[SuppressMessage("ReSharper", "UnusedMember.Global", Justification = SuppressReasons.MethodsReferencedByHarmony)]
 internal static class PanelHudPatches
 {
     /*********

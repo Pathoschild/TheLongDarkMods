@@ -13,5 +13,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Overlays\OverlayPosition.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Overlays\SimpleTextOverlay.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SceneHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SuppressReasons.cs" />
   </ItemGroup>
 </Project>
