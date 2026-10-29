@@ -7,7 +7,7 @@ using UnityEngine;
 namespace Pathoschild.TheLongDarkMods.ShowTraderTrust.Framework;
 
 /// <summary>An overlay which shows trader trust at the bottom of the screen.</summary>
-[RegisterTypeInIl2Cpp]
+[RegisterTypeInIl2Cpp(false)]
 internal class TraderTrustOverlay : MonoBehaviour
 {
     /*********

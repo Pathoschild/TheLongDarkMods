@@ -1,40 +1,43 @@
 [← back to readme](README.md)
 
 # Release notes
+## Upcoming release
+- Fixed MelonLoader logging unneeded "_Registered mono type … in il2cpp domain_" messages for this mod's UI types.
+
 ## 1.0.0
 Released 30 May 2026 for The Long Dark 2.50+.
 
-* Added [pause menu UI](README.md#use) to manage fast travel destinations.
-* Added support for naming destinations.
-* Added support for reordering destinations.
-* Added support for adding any number of destinations beyond 9.
-* Mod is no longer experimental.
-* Fixed wrong region name shown on-screen after fast traveling across regions.
-* Fixed destination list showing redundant region-in-region label for outdoor destinations.
+- Added [pause menu UI](README.md#use) to manage fast travel destinations.
+- Added support for naming destinations.
+- Added support for reordering destinations.
+- Added support for adding any number of destinations beyond 9.
+- Mod is no longer experimental.
+- Fixed wrong region name shown on-screen after fast traveling across regions.
+- Fixed destination list showing redundant region-in-region label for outdoor destinations.
 
 ## 0.3.1
 Released 28 April 2026 for The Long Dark 2.50+.
 
-* Internal changes to be more futureproof.
+- Internal changes to be more futureproof.
 
 ## 0.3.0
 Released 21 April 2026 for The Long Dark 2.50+.
 
-* Added optional restrictions by weather or when under attack.
-* Restrictions are no longer enabled by default.  
+- Added optional restrictions by weather or when under attack.
+- Restrictions are no longer enabled by default.  
   _This avoids unexpected new restrictions coming into effect when you update the mod. You can explicitly re-enable any restrictions you want._
 
 ## 0.2.0
 Released 21 April 2026 for The Long Dark 2.50+.
 
-* Added optional overlay to see your saved destinations (press `[numpad period]` by default).
-* The debug logs now show your fast travel origin.
-* Fixed fast travel sometimes placing you at a different spot than intended.
+- Added optional overlay to see your saved destinations (press `[numpad period]` by default).
+- The debug logs now show your fast travel origin.
+- Fixed fast travel sometimes placing you at a different spot than intended.
 
 ## 0.1.0
 Released 19 April 2026 for The Long Dark 2.50+.
 
-* Initial version.
+- Initial version.
 
 # See also
 - [Build attestations](https://github.com/Pathoschild/TheLongDarkMods/attestations)
