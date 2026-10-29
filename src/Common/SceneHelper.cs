@@ -8,11 +8,17 @@ namespace Pathoschild.TheLongDarkMods.Common;
 /// <summary>Provides utility methods for working with the game's Unity scenes.</summary>
 internal static class SceneHelper
 {
+    /// <summary>Get whether the base game has been launched.</summary>
+    public static bool IsGameLaunched()
+    {
+        return GameManager.m_Instance is not null;
+    }
+
     /// <summary>Get whether the save is loaded and ready.</summary>
     public static bool IsSaveLoaded()
     {
         return
-            GameManager.m_Instance is not null
+            SceneHelper.IsGameLaunched()
             && !GameManager.IsMainMenuActive();
     }
 

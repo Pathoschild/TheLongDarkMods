@@ -2,6 +2,7 @@
 
 # Release notes
 ## Upcoming release
+- Added safety check to avoid issues before the game is launched.
 - Fixed MelonLoader logging unneeded "_Registered mono type … in il2cpp domain_" messages for this mod's UI types.
 
 ## 1.0.0

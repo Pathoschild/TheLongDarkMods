@@ -84,6 +84,9 @@ public class ModEntry : MelonMod
     /// <inheritdoc />
     public override void OnUpdate()
     {
+        if (!SceneHelper.IsGameLaunched())
+            return;
+
         // hide overlays on exit
         if ((this.DestinationListOverlay.IsVisible || this.DestinationManagerPanel.IsVisible) && !SceneHelper.IsSaveLoaded())
         {
