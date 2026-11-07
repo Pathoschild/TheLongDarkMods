@@ -73,7 +73,12 @@ public class ModEntry : MelonMod
     public override void OnLateInitializeMelon()
     {
         this.GameVersion = GameManager.GetVersionString().Trim();
-        this.MelonLoaderVersion = BuildInfo.Version;
+        this.MelonLoaderVersion =
+#if THE_LONG_DARK_2_55
+            BuildInfo.Version;
+#else
+            MelonLoader.Properties.BuildInfo.Version;
+#endif
 
         Task
             .Run(this.MoveLegacyBackups)

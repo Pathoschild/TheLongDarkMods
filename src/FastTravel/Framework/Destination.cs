@@ -91,7 +91,7 @@ internal class Destination
 
         if (this.Region != null)
         {
-            showRegion ??= !SceneHelper.IsOutdoors(this.Scene.Name) && this.Region.Id != SceneHelper.TryGetRegion()?.GetName();
+            showRegion ??= !SceneHelper.IsOutdoors(this.Scene.Name) && this.Region.Id != SceneHelper.TryGetRegionName();
             if (showRegion.Value)
             {
                 string regionName = Localization.Get(this.Region.NameLocalizationId);
