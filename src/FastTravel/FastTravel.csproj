@@ -3,15 +3,22 @@
     <RootNamespace>Pathoschild.TheLongDarkMods.FastTravel</RootNamespace>
   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="MonsieurMeh.Modding.TLD.Il2CppAssemblies.Windows" />
-    <Reference Include="ModData">
-      <HintPath>$(ModsPath)\ModData.dll</HintPath>
-    </Reference>
-    <Reference Include="ModSettings">
-      <HintPath>$(ModsPath)\ModSettings.dll</HintPath>
-    </Reference>
-  </ItemGroup>
+  <Choose>
+    <When Condition="'$(ForLegacyGameVersion)' == 'true'">
+      <ItemGroup>
+        <PackageReference Include="STBlade.Modding.TLD.Il2CppAssemblies.Windows" />
+        <PackageReference Include="stblade.Modding.TLD.ModData" />
+        <PackageReference Include="STBlade.Modding.TLD.ModSettings" />
+      </ItemGroup>
+    </When>
+    <Otherwise>
+      <ItemGroup>
+        <PackageReference Include="MonsieurMeh.Modding.TLD.Il2CppAssemblies.Windows" />
+        <Reference Include="ModData" HintPath="$(ModsPath)\ModData.dll" />
+        <Reference Include="ModSettings" HintPath="$(ModsPath)\ModSettings.dll" />
+      </ItemGroup>
+    </Otherwise>
+  </Choose>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(ModsPath)" />

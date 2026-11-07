@@ -1,5 +1,7 @@
 using Il2Cpp;
+#if !THE_LONG_DARK_2_55
 using Il2CppTLD.AddressableAssets;
+#endif
 using Il2CppTLD.Scenes;
 using UnityEngine.SceneManagement;
 using UnitySceneManager = UnityEngine.SceneManagement.SceneManager;
@@ -34,17 +36,27 @@ internal static class SceneHelper
     /// <summary>Try to get the region containing the current scene.</summary>
     public static RegionSpecification? TryGetRegion()
     {
+#if THE_LONG_DARK_2_55
+        return GameManager.TryGetCurrentRegion();
+#else
         string? name = SceneHelper.TryGetRegionName();
         return name is not null
             ? AssetHelper.SafeLoadAssetAsync<RegionSpecification>(name).WaitForCompletion()
             : null;
+#endif
     }
 
     /// <summary>Try to get the internal name of the region containing the current scene, like <c>TracksRegion</c>.</summary>
     public static string? TryGetRegionName()
     {
+#if THE_LONG_DARK_2_55
+        return SceneHelper.TryGetRegion()?.GetName();
+#else
         string? name = GameManager.TryGetCurrentRegionName();
-        return !string.IsNullOrEmpty(name) ? name : null;
+        return !string.IsNullOrEmpty(name)
+            ? name
+            : null;
+#endif
     }
 
     /// <summary>Get the active scene name.</summary>

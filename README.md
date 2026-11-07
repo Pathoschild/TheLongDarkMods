@@ -19,7 +19,10 @@ compile the mod yourself, read on.
 ### Compiling a mod for testing
 To compile a mod and add it to your game's `Mods` directory:
 
-1. Edit `src/Directory.Build.props` and change the `<GamePath>` value if needed.
+1. Edit `src/Directory.Build.props`:
+   - Change the `<GamePath>` value if needed.
+   - Comment out `<ForLegacyGameVersion>true</ForLegacyGameVersion>` if you're building for The Long Dark 2.58+ (Iron
+     Road) instead of 2.55.
 2. Rebuild the project in [Visual Studio].  
    <small>This will compile the code and package it into the mod directory.</small>
 

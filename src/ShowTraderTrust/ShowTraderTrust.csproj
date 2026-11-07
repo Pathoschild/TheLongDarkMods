@@ -3,9 +3,18 @@
     <RootNamespace>Pathoschild.TheLongDarkMods.ShowTraderTrust</RootNamespace>
   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="MonsieurMeh.Modding.TLD.Il2CppAssemblies.Windows" />
-  </ItemGroup>
+  <Choose>
+    <When Condition="'$(ForLegacyGameVersion)' == 'true'">
+      <ItemGroup>
+        <PackageReference Include="STBlade.Modding.TLD.Il2CppAssemblies.Windows" />
+      </ItemGroup>
+    </When>
+    <Otherwise>
+      <ItemGroup>
+        <PackageReference Include="MonsieurMeh.Modding.TLD.Il2CppAssemblies.Windows" />
+      </ItemGroup>
+    </Otherwise>
+  </Choose>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(ModsPath)" />
