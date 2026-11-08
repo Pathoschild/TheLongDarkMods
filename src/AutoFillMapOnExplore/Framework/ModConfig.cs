@@ -37,4 +37,9 @@ internal class ModConfig : JsonModSettings
     [Name("Show Player Arrow")]
     [Description("Whether the player arrow should appear on the map.")]
     public bool ShowPlayerArrow = true;
+
+    /// <summary>Whether to center the map on the player when it's opened.</summary>
+    [Name("Center on Player")]
+    [Description("Whether to center the map on your position when you open it.")]
+    public bool CenterOnPlayer = true;
 }

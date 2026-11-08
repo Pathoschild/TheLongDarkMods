@@ -19,8 +19,8 @@ public class ModEntry : MelonMod
     /// <summary>The delay between map auto-fills.</summary>
     private readonly DelayTimer MapAutoFillDelay = new();
 
-    /// <summary>The delay between checks to configure the open map.</summary>
-    private readonly DelayTimer MapConfigureDelay = new();
+    /// <summary>Whether the player was viewing their current region's map on the last update tick.</summary>
+    private bool WasViewingCurrentRegion;
 
     /// <summary>The pointer for the last map whose player icon was broken and for which <see cref="TryFixArrowSprite"/> was applied (regardless of whether it succeeded).</summary>
     private IntPtr LastMapFixed;
@@ -41,7 +41,7 @@ public class ModEntry : MelonMod
         ModConfig config = this.Config;
 
         // skip if disabled
-        if (config is { AutoFillEnabled: false, ShowPlayerArrow: false })
+        if (config is { AutoFillEnabled: false, ShowPlayerArrow: false, CenterOnPlayer: false })
             return;
 
         // auto-fill map
@@ -60,23 +60,16 @@ public class ModEntry : MelonMod
             this.MapAutoFillDelay.Reset();
         }
 
-        // show player arrow
-        if (config.ShowPlayerArrow && this.MapConfigureDelay.Check(0.1f))
+        // configure map when the player starts viewing their current region
+        if (config.ShowPlayerArrow || config.CenterOnPlayer)
         {
             mapRef ??= GetMapIfAvailable();
 
-            if (
-                mapRef.Map?.IsEnabled() is true                                            // map is open
-                && !mapRef.Map.IsWorldMapActive()                                          // not looking at world map
-                && mapRef.Map.GetIndexOfCurrentScene() == mapRef.Map.m_RegionSelectedIndex // not looking at a different region's map
-                && mapRef.Map.m_PlayerIcon?.gameObject is { } arrow                        // arrow icon is available (should always be)
-            )
-            {
-                arrow.SetActive(true);
-                this.TryFixArrowSprite(mapRef.Map, arrow);
-            }
+            bool isViewingCurrent = mapRef.Map is not null && IsViewingCurrentRegion(mapRef.Map);
+            if (isViewingCurrent && !this.WasViewingCurrentRegion)
+                this.OnStartedViewingCurrentRegion(mapRef.Map!);
 
-            this.MapConfigureDelay.Reset();
+            this.WasViewingCurrentRegion = isViewingCurrent;
         }
     }
 
@@ -95,6 +88,39 @@ public class ModEntry : MelonMod
             return new MapReference(map);
 
         return new MapReference(null);
+    }
+
+    /// <summary>Get whether the map is open and showing the player's current region.</summary>
+    /// <param name="map">The map to check.</param>
+    private static bool IsViewingCurrentRegion(Panel_Map map)
+    {
+        return
+            map.IsEnabled()                                               // map is open
+            && !map.IsWorldMapActive()                                    // not looking at world map
+            && map.GetIndexOfCurrentScene() == map.m_RegionSelectedIndex; // not looking at a different region's map
+    }
+
+    /// <summary>Configure the map when it opens/switches to the player's current region.</summary>
+    /// <param name="map">The map to configure.</param>
+    private void OnStartedViewingCurrentRegion(Panel_Map map)
+    {
+        ModConfig config = this.Config;
+
+        // show player arrow
+        if (config.ShowPlayerArrow && map.m_PlayerIcon?.gameObject is { } arrow)
+        {
+            arrow.SetActive(true);
+            this.TryFixArrowSprite(map, arrow);
+        }
+
+        // center on player
+        if (
+            config.CenterOnPlayer
+            && map.m_IsZoomed                                                         // skip if the whole map is visible
+            && map.m_MapElementsTransform?.localPosition == map.m_MapElementsOrigPos  // skip if something else already positioned the map (e.g. memento note)
+            && GameManager.GetPlayerTransform() is { } player
+        )
+            map.CenterOnPoint(player.position);
     }
 
     /// <summary>Fix the map's player arrow icon if it's linked to the wrong atlas.</summary>

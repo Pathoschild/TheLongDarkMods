@@ -2,8 +2,9 @@
 
 # Release notes
 ## Upcoming release
-- Added player arrow on map.  
-  _This can be disabled in the mod settings._
+- Added new features (configurable):
+  - show player arrow on map;
+  - center the map on the player.
 - Added default values to the mod settings UI descriptions.
 
 **Update note:**
