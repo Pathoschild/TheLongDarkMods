@@ -6,18 +6,18 @@
 	"mods": [
 		{
 			"name": "Auto-Fill Map on Explore",
-			"version": "1.0.1",
-			"updated": "2026-04-28",
-			"downloadURL": "https://github.com/Pathoschild/TheLongDarkMods/releases/download/auto-fill-map-on-explore%2F1.0.1/AutoFillMapOnExplore.dll",
+			"version": "1.1.0",
+			"updated": "2026-11-08",
+			"downloadURL": "https://github.com/Pathoschild/TheLongDarkMods/releases/download/auto-fill-map-on-explore%2F1.1.0/AutoFillMapOnExplore.dll",
 			"status": {
 				"working": true,
 				"beta": false,
-				"patchnotes": "Internal changes to be more futureproof.",
+				"patchnotes": "Updated for The Long Dark 2.60+ (including Iron Road DLC). Added options to show your position on the map and center on your position (enabled by default). Added default values to the mod settings UI descriptions.",
 				"notes": "",
 				"issues": ""
 			},
 			"testedon": {
-				"tldversion": "2.55",
+				"tldversion": "2.60",
 				"mlversion": "0.7.2"
 			},
 
@@ -42,18 +42,18 @@
 		},
 		{
 			"name": "Fast Travel",
-			"version": "1.0.0",
-			"updated": "2026-05-30",
-			"downloadURL": "https://github.com/Pathoschild/TheLongDarkMods/releases/download/fast-travel%2F1.0.0/FastTravel.dll",
+			"version": "1.0.1",
+			"updated": "2026-11-08",
+			"downloadURL": "https://github.com/Pathoschild/TheLongDarkMods/releases/download/fast-travel%2F1.0.1/FastTravel.dll",
 			"status": {
 				"working": true,
 				"beta": false,
-				"patchnotes": "Added new GUI to manage fast travel destinations. Added support for naming and reordering destinations. Added support for any number of destinations beyond 9. Fixed wrong region name shown on-screen when traveling across regions. The mod is no longer experimental.",
+				"patchnotes": "Updated for The Long Dark 2.60+ (including Iron Road DLC). Added safety check to avoid issues before the game is launched. Fixed unneeded MelonLoader log messages.",
 				"notes": "",
 				"issues": ""
 			},
 			"testedon": {
-				"tldversion": "2.55",
+				"tldversion": "2.60",
 				"mlversion": "0.7.2"
 			},
 
@@ -78,18 +78,18 @@
 		},
 		{
 			"name": "Save Backup",
-			"version": "1.4.0",
-			"updated": "2026-05-30",
-			"downloadURL": "https://github.com/Pathoschild/TheLongDarkMods/releases/download/save-backup%2F1.4.0/SaveBackup.dll",
+			"version": "1.4.1",
+			"updated": "2026-11-08",
+			"downloadURL": "https://github.com/Pathoschild/TheLongDarkMods/releases/download/save-backup%2F1.4.1/SaveBackup.dll",
 			"status": {
 				"working": true,
 				"beta": false,
-				"patchnotes": "Added option to trigger a backup at any time.",
+				"patchnotes": "Updated for The Long Dark 2.60+ (including Iron Road DLC). Added default values to the mod settings UI descriptions. The README.txt in backup zips no longer mentions folders which don't exist.",
 				"notes": "",
 				"issues": ""
 			},
 			"testedon": {
-				"tldversion": "2.55",
+				"tldversion": "2.60",
 				"mlversion": "0.7.2"
 			},
 
@@ -114,18 +114,18 @@
 		},
 		{
 			"name": "Show Trader Trust",
-			"version": "1.0.1",
-			"updated": "2026-04-28",
-			"downloadURL": "https://github.com/Pathoschild/TheLongDarkMods/releases/download/show-trader-trust%2F1.0.1/ShowTraderTrust.dll",
+			"version": "1.0.2",
+			"updated": "2026-11-08",
+			"downloadURL": "https://github.com/Pathoschild/TheLongDarkMods/releases/download/show-trader-trust%2F1.0.2/ShowTraderTrust.dll",
 			"status": {
 				"working": true,
 				"beta": false,
-				"patchnotes": "Fixed performance impact for some players; internal changes to be more futureproof.",
+				"patchnotes": "Updated for The Long Dark 2.60+ (including Iron Road DLC). Fixed unneeded MelonLoader log messages.",
 				"notes": "",
 				"issues": ""
 			},
 			"testedon": {
-				"tldversion": "2.55",
+				"tldversion": "2.60",
 				"mlversion": "0.7.2"
 			},
 
@@ -138,7 +138,7 @@
 			"description": "<p>Shows your current trust level with the trader when talking with him on the radio.</p><p>See <a href=\"https://github.com/Pathoschild/TheLongDarkMods/tree/stable/src/ShowTraderTrust#readme\">readme for more info</a>.</p>",
 			"tags": "",
 			"categories": [ "Quality of Life" ],
-			"gameversion": [ "vanilla" ],
+			"gameversion": [ "tftft" ],
 			"images": [ "https://raw.githubusercontent.com/Pathoschild/TheLongDarkMods/stable/src/ShowTraderTrust/docs/images/overlay.png" ],
 			"dependencies": [],
 			"updater": {
