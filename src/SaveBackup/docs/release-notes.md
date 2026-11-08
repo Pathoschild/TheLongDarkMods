@@ -2,6 +2,7 @@
 
 # Release notes
 ## Upcoming release
+- Added default values to the mod settings UI descriptions.
 - In backup zips, `README.txt` no longer mentions folders which don't exist (e.g. `ModData` if you don't have that mod).
 
 ## 1.4.0
