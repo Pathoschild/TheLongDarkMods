@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Il2Cpp;
 using MelonLoader;
@@ -56,6 +57,13 @@ public class ModEntry : MelonMod
     /// <summary>The next time when we can handle a custom backup key.</summary>
     private DateTimeOffset NextCustomBackupAllowed = DateTimeOffset.MinValue;
 
+    /// <summary>The regex pattern which matches conditional sections in the <c>README.txt</c> file.</summary>
+    /// <remarks>
+    ///   <para>Each section has an XML-like tag indicating the folder to match. For example, a <c><![CDATA[<ModData>..</ModData>]]></c> section is only kept if the zip has a <c>ModData</c> folder.</para>
+    ///   <para>This has two capture groups: <c>name</c> (the folder name to match) and <c>content</c> (the inner content to include if the folder exists).</para>
+    /// </remarks>
+    private const string ReadmeSectionPattern = @"<(?<name>\w+)>\s*(?<content>.*?)\s*</\k<name>>"; // rarely accessed, so don't cache the Regex instance
+
 
     /*********
     ** Public methods
@@ -73,7 +81,12 @@ public class ModEntry : MelonMod
     public override void OnLateInitializeMelon()
     {
         this.GameVersion = GameManager.GetVersionString().Trim();
-        this.MelonLoaderVersion = BuildInfo.Version;
+        this.MelonLoaderVersion =
+#if THE_LONG_DARK_2_55
+            BuildInfo.Version;
+#else
+            MelonLoader.Properties.BuildInfo.Version;
+#endif
 
         Task
             .Run(this.MoveLegacyBackups)
@@ -83,25 +96,21 @@ public class ModEntry : MelonMod
     /// <inheritdoc />
     public override void OnUpdate()
     {
+        // trigger manual backup
         if (this.InteractionHelper.IsKeyJustPressed(this.Config.CustomBackupKey) && DateTimeOffset.UtcNow >= this.NextCustomBackupAllowed)
         {
             this.NextCustomBackupAllowed = DateTimeOffset.UtcNow.AddSeconds(2); // debounce multiple presses
 
             Task.Run(this.TakeCustomBackup);
         }
-    }
 
-    /// <inheritdoc />
-    public override void OnFixedUpdate()
-    {
-        // wait until next backup window
+        // trigger automatic backups
         DateTimeOffset now = DateTimeOffset.UtcNow;
-        if (now < this.NextBackupCheck)
-            return;
-        this.NextBackupCheck = now.Add(new TimeSpan(hours: 1, minutes: -now.Minute, seconds: -now.Second)); // set to <hour + 1>:00:00
-
-        // create backups
-        Task.Run(this.UpdateBackups);
+        if (now >= this.NextBackupCheck)
+        {
+            this.NextBackupCheck = now.Add(new TimeSpan(hours: 1, minutes: -now.Minute, seconds: -now.Second)); // set to <hour + 1>:00:00
+            Task.Run(this.UpdateBackups);
+        }
     }
 
 
@@ -213,7 +222,7 @@ public class ModEntry : MelonMod
             // add README
             File.WriteAllText(
                 Path.Combine(fallbackDir.FullName, "README.txt"),
-                Resources.SaveFolderReadme
+                this.GetReadmeText(fallbackDir)
             );
 
             // zip & delete folder
@@ -266,6 +275,39 @@ public class ModEntry : MelonMod
         }
 
         return files.Count > 0;
+    }
+
+    /// <summary>Get the <c>README.txt</c> content to add to a backup folder.</summary>
+    /// <param name="backupDir">The backup directory for which to create a README file.</param>
+    private string GetReadmeText(DirectoryInfo backupDir)
+    {
+        string readme = Resources.SaveFolderReadme;
+
+        // remove conditional sections for folders which don't exist
+        readme = Regex.Replace(
+            readme,
+            ReadmeSectionPattern,
+            match =>
+            {
+                string folderName = match.Groups["name"].Value;
+                string content = match.Groups["content"].Value;
+
+                return Directory.Exists(Path.Combine(backupDir.FullName, folderName))
+                    ? content
+                    : "";
+            },
+            RegexOptions.Singleline
+        );
+
+        // fix newlines after removing sections
+        readme = Regex.Replace(readme, @"(\r?\n){3,}", Environment.NewLine + Environment.NewLine);
+        readme = readme.Trim() + Environment.NewLine;
+
+        // renumber steps
+        int step = 0;
+        readme = Regex.Replace(readme, @"^\d+\.", _ => $"{++step}.", RegexOptions.Multiline);
+
+        return readme;
     }
 
     /// <summary>Remove old backups if we've exceeded the limit.</summary>

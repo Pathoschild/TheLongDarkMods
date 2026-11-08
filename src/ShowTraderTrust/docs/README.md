@@ -20,7 +20,7 @@ Just call the [trader] like usual. While you're on the radio with him, your trus
 shown near the bottom of the screen.
 
 ## Compatibility
-- Compatible with The Long Dark 2.50+ (including 2.55) and MelonLoader 0.7.2+.
+- Compatible with The Long Dark 2.55 and 2.60+ (including Iron Road DLC) and MelonLoader 0.7.2+.
 - For survival mode only. (There's no trader mechanic in Wintermute.)
 
 ## Security

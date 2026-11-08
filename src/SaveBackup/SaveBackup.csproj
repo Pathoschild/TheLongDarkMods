@@ -3,10 +3,20 @@
     <RootNamespace>Pathoschild.TheLongDarkMods.SaveBackup</RootNamespace>
   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="STBlade.Modding.TLD.Il2CppAssemblies.Windows" />
-    <PackageReference Include="STBlade.Modding.TLD.ModSettings" />
-  </ItemGroup>
+  <Choose>
+    <When Condition="'$(ForLegacyGameVersion)' == 'true'">
+      <ItemGroup>
+        <PackageReference Include="STBlade.Modding.TLD.Il2CppAssemblies.Windows" />
+        <PackageReference Include="STBlade.Modding.TLD.ModSettings" />
+      </ItemGroup>
+    </When>
+    <Otherwise>
+      <ItemGroup>
+        <PackageReference Include="MonsieurMeh.Modding.TLD.Il2CppAssemblies.Windows" />
+        <Reference Include="ModSettings" HintPath="$(ModsPath)\ModSettings.dll" />
+      </ItemGroup>
+    </Otherwise>
+  </Choose>
 
   <ItemGroup>
     <Compile Update="assets\Resources.Designer.cs" DesignTime="True" AutoGen="True" DependentUpon="Resources.resx" />

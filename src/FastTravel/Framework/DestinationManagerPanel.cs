@@ -13,7 +13,7 @@ using UnityEngine;
 namespace Pathoschild.TheLongDarkMods.FastTravel.Framework;
 
 /// <summary>A pause menu panel which allows managing fast travel destinations.</summary>
-[RegisterTypeInIl2Cpp]
+[RegisterTypeInIl2Cpp(false)]
 internal class DestinationManagerPanel : MonoBehaviour
 {
     /*********

@@ -14,12 +14,12 @@ internal class ModConfig : JsonModSettings
     ****/
     [Section("Automatic backups")]
     [Name("Number of daily backups")]
-    [Description("The number of daily backups to keep. Older backups are deleted automatically.")]
+    [Description("The number of daily backups to keep. Older backups are deleted automatically. Default 10.")]
     [Slider(0, 30)]
     public int DailyBackupCount = 10;
 
     [Name("Number of hourly backups")]
-    [Description("The number of hourly backups to keep. Older backups are deleted automatically.")]
+    [Description("The number of hourly backups to keep. Older backups are deleted automatically. Default 10.")]
     [Slider(0, 30)]
     public int HourlyBackupCount = 10;
 
@@ -32,7 +32,7 @@ internal class ModConfig : JsonModSettings
     public KeyCode CustomBackupKey = KeyCode.None;
 
     [Name("Number of backups")]
-    [Description("The number of custom backups to keep. Older backups are deleted automatically.")]
+    [Description("The number of custom backups to keep. Older backups are deleted automatically. Default 10.")]
     [Slider(0, 30)]
     public int CustomBackupCount = 10;
 

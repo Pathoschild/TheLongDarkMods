@@ -7,16 +7,27 @@
     <RepositoryUrl>https://github.com/Pathoschild/TheLongDarkMods</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
 
+    <!-- comment out to build for The Long Dark 2.60+ (not compatible with CI pipeline) -->
+    <ForLegacyGameVersion>true</ForLegacyGameVersion>
+
     <!-- build options -->
     <TargetFramework>net6.0</TargetFramework>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <DebugType>embedded</DebugType>
+    <DefineConstants Condition="'$(ForLegacyGameVersion)' == 'true'">$(DefineConstants);THE_LONG_DARK_2_55</DefineConstants>
 
     <!-- directory paths -->
     <GamePath>C:\Program Files\Epic Games\TheLongDark</GamePath>
     <ModsPath>$(GamePath)\Mods</ModsPath>
     <ReleasesPath>$(MSBuildThisFileDirectory)\..\_releases</ReleasesPath>
   </PropertyGroup>
+
+  <!-- don't copy referenced mod DLLs (like ModSettings) into the build output -->
+  <ItemDefinitionGroup>
+    <Reference>
+      <Private>False</Private>
+    </Reference>
+  </ItemDefinitionGroup>
 </Project>

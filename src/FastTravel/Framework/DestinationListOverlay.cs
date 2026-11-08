@@ -8,7 +8,7 @@ using UnityEngine;
 namespace Pathoschild.TheLongDarkMods.FastTravel.Framework;
 
 /// <summary>An overlay which lists available fast travel destinations in the bottom-right corner.</summary>
-[RegisterTypeInIl2Cpp]
+[RegisterTypeInIl2Cpp(false)]
 internal class DestinationListOverlay : MonoBehaviour
 {
     /*********

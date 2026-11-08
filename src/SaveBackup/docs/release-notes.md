@@ -1,27 +1,34 @@
 [← back to readme](README.md)
 
 # Release notes
+## 1.4.1
+Released 08 November 2026 for The Long Dark 2.55 and 2.60+.
+
+- Updated for The Long Dark 2.60+ (including Iron Road DLC).
+- Added default values to the mod settings UI descriptions.
+- In backup zips, `README.txt` no longer mentions folders which don't exist (e.g. `ModData` if you don't have that mod).
+
 ## 1.4.0
 Released 30 May 2026 for The Long Dark 2.50+.
 
-* Added option to trigger a backup at any time.
+- Added option to trigger a backup at any time.
 
 ## 1.3.0
 Released 23 April 2026 for The Long Dark 2.50+.
 
-* Backups now include mod save data (from `Mods/ModData/*`).
-* Backups now include a `README.txt` file explaining how to restore them.
+- Backups now include mod save data (from `Mods/ModData/*`).
+- Backups now include a `README.txt` file explaining how to restore them.
 
 ## 1.2.0
 Released 22 April 2026 for The Long Dark 2.50+.
 
-* Added options for which saves to back up (survival, Wintermute, or both).
+- Added options for which saves to back up (survival, Wintermute, or both).
 
 ## 1.1.0
 Released 21 April 2026 for The Long Dark 2.50+.
 
-* Added option for hourly backups.
-* You can now set the backup count option to zero.
+- Added option for hourly backups.
+- You can now set the backup count option to zero.
 
 **Update note:**  
 This splits _number of backups_ into two options, so you'll need to reconfigure it if you changed it.
@@ -29,7 +36,7 @@ This splits _number of backups_ into two options, so you'll need to reconfigure 
 ## 1.0.0
 Released 19 April 2026 for The Long Dark 2.50+.
 
-* Initial version.
+- Initial version.
 
 # See also
 - [Build attestations](https://github.com/Pathoschild/TheLongDarkMods/attestations)

@@ -34,12 +34,12 @@ Point the cursor at any field to see an explanation on the right.
 > ![](images/config.png)
 
 ## Compatibility
-- Compatible with The Long Dark 2.50+ (including 2.55) and MelonLoader 0.7.2+.
+- Compatible with The Long Dark 2.55 and 2.60+ (including Iron Road DLC) and MelonLoader 0.7.2+.
 - For **survival mode only**. It's not applicable to Wintermute, since the map is always fully
   visible.
-
-Pairs well with [Map Manager][TLDMods] to show your position on the map. If you use that mod, its
-"range multiplier" and "reveal vista locations" options apply to the map auto-fill too.
+- No known conflicts:
+  - Compatible with [Map Manager][TLDMods]. If you use that mod, its "range multiplier" and "reveal
+    vista locations" options apply to the map auto-fill too.
 
 ## Security
 This mod is fully open-source. All its source code is public in this repository, so anyone can
