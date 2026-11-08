@@ -30,7 +30,7 @@ public class ModEntry : MelonMod
     }
 
     /// <inheritdoc />
-    public override void OnFixedUpdate()
+    public override void OnUpdate()
     {
         ModConfig config = this.Config;
 

@@ -96,25 +96,21 @@ public class ModEntry : MelonMod
     /// <inheritdoc />
     public override void OnUpdate()
     {
+        // trigger manual backup
         if (this.InteractionHelper.IsKeyJustPressed(this.Config.CustomBackupKey) && DateTimeOffset.UtcNow >= this.NextCustomBackupAllowed)
         {
             this.NextCustomBackupAllowed = DateTimeOffset.UtcNow.AddSeconds(2); // debounce multiple presses
 
             Task.Run(this.TakeCustomBackup);
         }
-    }
 
-    /// <inheritdoc />
-    public override void OnFixedUpdate()
-    {
-        // wait until next backup window
+        // trigger automatic backups
         DateTimeOffset now = DateTimeOffset.UtcNow;
-        if (now < this.NextBackupCheck)
-            return;
-        this.NextBackupCheck = now.Add(new TimeSpan(hours: 1, minutes: -now.Minute, seconds: -now.Second)); // set to <hour + 1>:00:00
-
-        // create backups
-        Task.Run(this.UpdateBackups);
+        if (now >= this.NextBackupCheck)
+        {
+            this.NextBackupCheck = now.Add(new TimeSpan(hours: 1, minutes: -now.Minute, seconds: -now.Second)); // set to <hour + 1>:00:00
+            Task.Run(this.UpdateBackups);
+        }
     }
 
 
