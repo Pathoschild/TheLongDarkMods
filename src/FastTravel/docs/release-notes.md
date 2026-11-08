@@ -1,8 +1,10 @@
 [← back to readme](README.md)
 
 # Release notes
-## Upcoming release
-- Updated for The Long Dark 2.58+ (including Iron Road DLC). Thanks to MonsieurMeh!
+## 1.0.1
+Released 08 November 2026 for The Long Dark 2.55 and 2.60+.
+
+- Updated for The Long Dark 2.60+ (including Iron Road DLC). Thanks to MonsieurMeh!
 - Added safety check to avoid issues before the game is launched.
 - Fixed MelonLoader logging unneeded "_Registered mono type … in il2cpp domain_" messages for this mod's UI types.
 

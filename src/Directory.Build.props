@@ -7,7 +7,7 @@
     <RepositoryUrl>https://github.com/Pathoschild/TheLongDarkMods</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
 
-    <!-- comment out to build for The Long Dark 2.58+ (not compatible with CI pipeline) -->
+    <!-- comment out to build for The Long Dark 2.60+ (not compatible with CI pipeline) -->
     <ForLegacyGameVersion>true</ForLegacyGameVersion>
 
     <!-- build options -->

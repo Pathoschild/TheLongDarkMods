@@ -1,7 +1,10 @@
 [← back to readme](README.md)
 
 # Release notes
-## Upcoming release
+## 1.4.1
+Released 08 November 2026 for The Long Dark 2.55 and 2.60+.
+
+- Updated for The Long Dark 2.60+ (including Iron Road DLC).
 - Added default values to the mod settings UI descriptions.
 - In backup zips, `README.txt` no longer mentions folders which don't exist (e.g. `ModData` if you don't have that mod).
 
