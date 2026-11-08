@@ -1,4 +1,3 @@
-using System;
 using Il2Cpp;
 using MelonLoader;
 using Pathoschild.TheLongDarkMods.AutoFillMapOnExplore.Framework;
@@ -16,8 +15,8 @@ public class ModEntry : MelonMod
     /// <summary>The mod settings.</summary>
     private readonly ModConfig Config = new();
 
-    /// <summary>When the map was last filled.</summary>
-    private DateTime LastMapAutoFill = DateTime.UtcNow;
+    /// <summary>The delay between map auto-fills.</summary>
+    private readonly DelayTimer MapAutoFillDelay = new();
 
 
     /*********
@@ -34,22 +33,40 @@ public class ModEntry : MelonMod
     {
         ModConfig config = this.Config;
 
-        if (
-            config.Enabled
-            && (DateTime.UtcNow - this.LastMapAutoFill).TotalSeconds > config.AutoFillSeconds
-            && SceneHelper.IsPlayableScene()
-            && InterfaceManager.GetPanel<Panel_Map>() is { } map
-            && map.SceneCanBeMapped(map.GetMapNameOfCurrentScene())
-        )
+        // auto-fill map
+        if (config.AutoFillEnabled && this.MapAutoFillDelay.Check(config.AutoFillSeconds))
         {
-            this.LastMapAutoFill = DateTime.UtcNow;
+            MapReference mapRef = GetMapIfAvailable();
 
-            map.DoNearbyDetailsCheck(
+            mapRef.Map?.DoNearbyDetailsCheck(
                 radius: config.AutoFillRadius,
                 forceAddSurveyPosition: false,
                 useOverridePosition: false, // use player position
                 overridePostion: Vector3.zero
             );
+
+            this.MapAutoFillDelay.Reset();
         }
     }
+
+
+    /*********
+    ** Private methods
+    *********/
+    /// <summary>Get the map, if the current scene has one.</summary>
+    private static MapReference GetMapIfAvailable()
+    {
+        if (
+            SceneHelper.IsPlayableScene()
+            && InterfaceManager.GetPanel<Panel_Map>() is { } map
+            && map.SceneCanBeMapped(map.GetMapNameOfCurrentScene())
+        )
+            return new MapReference(map);
+
+        return new MapReference(null);
+    }
+
+    /// <summary>A reference to the map panel, if it's available.</summary>
+    /// <param name="Map">The map instance if it's available, else <c>null</c>.</param>
+    private sealed record MapReference(Panel_Map? Map);
 }
